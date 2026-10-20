@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI行銷自動化與服務創新實戰班</title>
+<meta name="description" content="18–35 歲、副學士以上學歷的應屆畢業生與待業青年專屬｜中華科技大學 AI行銷自動化與服務創新實戰班：264 小時培訓、最高 5 萬元學習獎勵金、企業真實題目專題與就業媒合。">
+<meta property="og:title" content="青年 AI 實戰養成班｜AI行銷自動化與服務創新實戰班">
+<meta property="og:description" content="應屆畢業生、待業青年看這裡：264 小時把自己練成企業要的 AI 行銷人才，最高領 5 萬元學習獎勵金，結訓銜接就業媒合。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#F6F5FB; --surface:#FFFFFF; --sunk:#EDEBF7;
+  --ink:#16123A; --fg:#2A2650; --muted:#625E83; --line:#DDDAEE;
+  --accent:#4B3BFF; --accent-soft:#E6E3FF; --on-accent:#FFFFFF;
+  --hot:#FF6B3D; --hot-soft:#FFE6DC;
+  --lime:#C8F542; --on-lime:#16123A;
+  --band:#16123A; --band-fg:#F2F0FF; --band-muted:#A9A4D1; --band-line:rgba(255,255,255,.14);
+  --ok:#0E9F6E; --no:#D9363E;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-num:"Space Grotesk","Noto Sans TC",system-ui,sans-serif;
+  --r:16px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0C22; --surface:#17143A; --sunk:#120F2E;
+  --ink:#F2F0FF; --fg:#DCD9F5; --muted:#A39FC9; --line:#2C2860;
+  --accent:#8B80FF; --accent-soft:#25206084; --on-accent:#0E0C22;
+  --hot:#FF8A63; --hot-soft:#3A1E17;
+  --band:#08061A; --band-fg:#F2F0FF; --band-muted:#A39FC9;
+  --ok:#3DD39B; --no:#FF6B72;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0E0C22; --surface:#17143A; --sunk:#120F2E;
+  --ink:#F2F0FF; --fg:#DCD9F5; --muted:#A39FC9; --line:#2C2860;
+  --accent:#8B80FF; --accent-soft:#25206084; --on-accent:#0E0C22;
+  --hot:#FF8A63; --hot-soft:#3A1E17;
+  --band:#08061A; --band-fg:#F2F0FF; --band-muted:#A39FC9;
+  --ok:#3DD39B; --no:#FF6B72;
+  color-scheme:dark;}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent)}
+img{max-width:100%}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px}
+@media (min-width:700px){.wrap{padding-inline:28px}}
+h1,h2,h3{color:var(--ink);margin:0;text-wrap:balance}
+p{margin:0}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.band{padding-block:88px}
+.band.alt{background:var(--surface);border-block:1px solid var(--line)}
+.band.dark{background:var(--band);color:var(--band-fg)}
+.dark h2,.dark h3{color:var(--band-fg)}
+h2{font-weight:900;font-size:clamp(26px,3.8vw,40px);line-height:1.3}
+h3{font-size:18px;font-weight:700;line-height:1.45}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);padding:4px 12px;border-radius:999px}
+.dark .kicker{color:var(--on-lime);background:var(--lime)}
+.head{display:grid;gap:14px;max-width:780px;margin-bottom:44px;justify-items:start}
+.lede{color:var(--muted);font-size:17px}
+.dark .lede{color:var(--band-muted)}
+.hl{background:linear-gradient(transparent 62%,var(--lime) 62%);color:inherit;padding-inline:2px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hl{background:linear-gradient(transparent 62%,rgba(200,245,66,.35) 62%)}}
+:root[data-theme="dark"] .hl{background:linear-gradient(transparent 62%,rgba(200,245,66,.35) 62%)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--on-accent);text-decoration:none;font-weight:700;border-radius:999px;padding:14px 26px;font-size:16px;border:0;cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .15s;font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px -8px var(--accent)}
+.btn.hot{background:var(--hot);color:#fff}
+.btn.hot:hover{box-shadow:0 8px 22px -8px var(--hot)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{box-shadow:none;border-color:var(--accent)}
+.dark .btn.ghost{color:var(--band-fg);border-color:var(--band-line)}
+:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:16px;height:62px}
+.brand{font-weight:900;color:var(--ink);text-decoration:none;font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:10px}
+.brand .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-family:var(--f-num);font-size:13px;font-weight:700;flex:none}
+.brand .bt{line-height:1.3;font-size:14px}
+.logobar{background:#fff;border-bottom:1px solid var(--line)}
+.logobar .wrap{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,28px);padding-block:10px}
+.logobar img{display:block;height:auto}
+.logobar .lg-moea{width:clamp(150px,22vw,250px)}
+.logobar .lg-cust{width:clamp(100px,13vw,150px)}
+.logobar .x{font-family:var(--f-num);font-size:clamp(18px,2.4vw,26px);color:#8A87A8;font-weight:500}
+.links{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.links::-webkit-scrollbar{display:none}
+.links a{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.links a:hover{color:var(--ink);background:var(--sunk)}
+.nav .btn{padding:8px 18px;font-size:14px}
+@media (max-width:760px){.nav .btn{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding-block:64px 72px}
+.hero::before{content:"";position:absolute;width:620px;height:620px;right:-180px;top:-200px;border-radius:50%;background:radial-gradient(circle,var(--accent-soft) 0%,transparent 70%);z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.for{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.for span{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;border:1.5px solid var(--ink);color:var(--ink)}
+.for span.on{background:var(--ink);color:var(--bg)}
+.hero h1{font-weight:900;font-size:clamp(30px,4.2vw,58px);line-height:1.18;letter-spacing:-.005em}
+.hero h1 .nw{white-space:normal}
+@media (min-width:700px){.hero h1 .nw{white-space:nowrap}}
+@media (min-width:700px) and (max-width:1000px){.hero h1{font-size:clamp(34px,6.4vw,58px)}}
+.ticket .money{white-space:nowrap}
+.hero h1 .a{color:var(--accent)}
+.hero .sub{font-size:clamp(17px,2vw,20px);color:var(--muted);margin-top:22px;max-width:34em}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.org{margin-top:28px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px}
+.org b{color:var(--ink);font-weight:700}
+
+/* hero ticket */
+.ticket{background:var(--ink);color:var(--bg);border-radius:24px;padding:28px;position:relative;transform:rotate(1.5deg);box-shadow:0 30px 60px -30px rgba(22,18,58,.6)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ticket{background:var(--surface);color:var(--ink);border:1px solid var(--line)}}
+:root[data-theme="dark"] .ticket{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.ticket .t-top{display:flex;justify-content:space-between;font-family:var(--f-num);font-size:12px;letter-spacing:.14em;opacity:.7}
+.ticket .money{font-family:var(--f-num);font-weight:700;font-size:clamp(48px,7vw,72px);line-height:1;margin:18px 0 4px;color:var(--lime)}
+.ticket .money small{font-size:.32em;margin-left:6px;color:inherit;opacity:.85}
+.ticket .cap{font-size:15px;opacity:.85}
+.ticket hr{border:0;border-top:2px dashed currentColor;opacity:.25;margin:22px 0}
+.ticket ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:15px}
+.ticket li{display:flex;justify-content:space-between;gap:12px}
+.ticket li b{font-family:var(--f-num);font-weight:700}
+.ticket .stamp{position:absolute;right:-14px;top:-18px;background:var(--hot);color:#fff;font-weight:900;font-size:14px;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;text-align:center;line-height:1.25;transform:rotate(-12deg);box-shadow:0 8px 20px -8px var(--hot)}
+
+/* marquee stats */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface);border-block:1px solid var(--line)}
+.stat{padding:24px 18px;border-right:1px solid var(--line);display:grid;gap:2px}
+.stat:last-child{border-right:0}
+.stat b{font-family:var(--f-num);font-size:clamp(28px,3.2vw,40px);color:var(--ink);line-height:1.1}
+.stat b small{font-size:.42em;margin-left:3px;color:var(--muted);font-family:var(--f-body)}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* you */
+.you{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.bubble{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:grid;gap:12px;align-content:start;position:relative}
+.bubble .q{font-weight:700;color:var(--ink);font-size:17px;line-height:1.5}
+.bubble .q::before{content:"“";display:block;font-family:var(--f-num);font-size:44px;line-height:.6;color:var(--hot);margin-bottom:6px}
+.bubble .a{font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px}
+.bubble .a b{color:var(--accent)}
+
+/* eligibility */
+.elig{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px}
+.req{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:16px;counter-reset:r}
+.req li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;counter-increment:r}
+.req li::before{content:counter(r,decimal-leading-zero);font-family:var(--f-num);font-weight:700;font-size:14px;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.req b{display:block;color:var(--ink);font-size:16px}
+.req span{font-size:14px;color:var(--muted)}
+.lede b{color:var(--ink)}
+.nw{white-space:nowrap}
+.conds{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.cond{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:var(--r);padding:20px;display:grid;gap:6px;align-content:start}
+.cond .ck{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em}
+.cond b{font-size:18px;color:var(--ink);line-height:1.4}
+.cond p{font-size:14px;color:var(--muted)}
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:44px}
+.yn{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.yn li{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;font-size:15px;color:var(--fg)}
+.yn li::before{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;margin-top:3px}
+.yn.yes li::before{content:"✓";background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.yn.no li::before{content:"✕";background:color-mix(in srgb,var(--no) 14%,transparent);color:var(--no)}
+.yn.star li::before{content:"★";background:var(--hot-soft);color:var(--hot)}
+.sub-h{font-size:22px;font-weight:900;margin-bottom:16px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.tier .yn{margin-top:4px;gap:8px}
+.tier .yn li{font-size:14px}
+#check .rule{margin:0 0 28px}
+#check .elig{grid-template-columns:1fr}
+.checker .qs{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:18px 28px}
+.card-lede{font-size:14px;color:var(--muted);margin-top:8px}
+.grp{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.grp .gl{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.grp .yn{margin-top:10px}
+.grp .bonus{margin-top:14px}
+.tier{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:grid;gap:8px;align-content:start}
+.tier .tl{justify-self:start;font-size:12px;font-weight:900;padding:3px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tier.pri{border-color:var(--hot);box-shadow:0 0 0 1px var(--hot)}
+.tier.pri .tl{background:var(--hot);color:#fff}
+.tier b{font-size:17px;color:var(--ink);line-height:1.45}
+.tier p{font-size:14px;color:var(--muted)}
+.bonus{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:20px}
+.bonus span{font-size:13px;color:var(--muted);margin-right:4px}
+.bonus b{font-size:13px;padding:4px 12px;border-radius:999px;background:var(--lime);color:var(--on-lime)}
+.rule{margin-top:20px;font-size:14px;color:var(--muted);background:var(--sunk);border-radius:10px;padding:12px 14px}
+.rule b{color:var(--ink);margin-right:8px}
+.checker h3{display:flex;align-items:center;gap:10px}
+.qs{display:grid;gap:18px;margin-top:18px}
+.qq p{font-weight:700;color:var(--ink);font-size:15px;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button{font:inherit;font-size:14px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;transition:all .15s}
+.opts button:hover{border-color:var(--accent)}
+.opts button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.result{margin-top:22px;border-radius:12px;padding:16px 18px;font-size:15px;background:var(--sunk);color:var(--muted);display:grid;gap:10px}
+.result.ok{background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--ink)}
+.result.no{background:color-mix(in srgb,var(--no) 12%,var(--surface));color:var(--ink)}
+.result b{font-size:17px}
+.result.ok b{color:var(--ok)}
+.result.no b{color:var(--no)}
+.result .btn{justify-self:start;padding:10px 20px;font-size:15px}
+.result[data-state="wait"] .btn{display:none}
+.result.no .btn{display:none}
+
+/* gains */
+.gains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.gain{border:1px solid var(--band-line);border-radius:var(--r);padding:26px;display:grid;gap:12px;align-content:start;background:rgba(255,255,255,.03)}
+.gain .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--lime);color:var(--on-lime)}
+.gain .ic svg{width:24px;height:24px}
+.gain .big{font-family:var(--f-num);font-weight:700;font-size:34px;line-height:1.1;color:var(--band-fg)}
+.gain .big small{font-size:.45em;color:var(--band-muted);font-family:var(--f-body);margin-left:4px}
+.gain p{font-size:14px;color:var(--band-muted)}
+.gain.wide{grid-column:span 1}
+
+/* reward */
+.reward{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:0;margin-top:44px;border:1px solid var(--band-line);border-radius:var(--r);overflow:hidden}
+.reward>div{padding:24px;display:grid;gap:8px;align-content:start}
+.reward .op{display:grid;place-items:center;font-family:var(--f-num);font-size:28px;color:var(--band-muted);padding:0 4px}
+.reward .ph{font-size:13px;color:var(--band-muted)}
+.reward .amt{font-family:var(--f-num);font-weight:700;font-size:clamp(30px,4vw,42px);line-height:1.1}
+.reward .amt small{font-size:.4em;color:var(--band-muted)}
+.reward ul{margin:0;padding-left:18px;font-size:14px;color:var(--band-muted)}
+.reward .sum{background:var(--lime);color:var(--on-lime)}
+.reward .sum .ph,.reward .sum ul,.reward .sum .amt small{color:var(--on-lime);opacity:.8}
+
+/* classes */
+.classes{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.cls{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid}
+.cls .top{padding:22px 26px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.cls .top b{font-size:20px;font-weight:900;color:var(--ink)}
+.cls .pill{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--hot-soft);color:var(--hot)}
+.cls .date{padding:22px 26px 6px;font-family:var(--f-num);font-weight:700;font-size:clamp(22px,3vw,30px);color:var(--accent);line-height:1.2}
+.cls .date small{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500;margin-top:4px}
+.cls dl{margin:0;padding:12px 26px 24px;display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:15px}
+.cls dt{color:var(--muted)}
+.cls dd{margin:0;color:var(--ink);font-weight:500}
+.classnote{margin-top:16px;font-size:14px;color:var(--muted)}
+
+/* curriculum */
+.phases{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:grid;gap:16px;align-content:start}
+.phase .ph-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.phase .ph-h span{font-size:13px;font-weight:700;color:var(--accent)}
+.phase .ph-h b{font-family:var(--f-num);font-size:28px;color:var(--ink)}
+.phase .ph-h b small{font-size:.5em;color:var(--muted)}
+.phase p.desc{font-size:15px;color:var(--muted)}
+.mods{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.mods li{display:grid;grid-template-columns:1fr 44px;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.mods li span{color:var(--ink)}
+.mods li i{font-style:normal;font-family:var(--f-num);font-weight:700;text-align:right;color:var(--muted)}
+.mods li.more{display:none}
+.phase.open .mods li.more{display:grid}
+.toggle{font:inherit;font-size:14px;font-weight:700;color:var(--accent);background:none;border:0;padding:4px 0;cursor:pointer;justify-self:start}
+.pass{font-size:13px;color:var(--muted);background:var(--sunk);border-radius:10px;padding:10px 14px}
+.pass b{color:var(--ink)}
+.tools{margin-top:36px;display:grid;gap:10px}
+.tools .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tools .lab{font-size:13px;font-weight:700;color:var(--muted);min-width:80px}
+.tools .row span:not(.lab){font-size:13px;padding:5px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+
+/* portfolio */
+.works{display:flex;flex-wrap:wrap;gap:10px}
+.works span{font-size:15px;font-weight:700;padding:10px 18px;border-radius:12px;background:var(--surface);border:1.5px solid var(--line);color:var(--ink)}
+.works span:nth-child(3n+1){border-color:var(--accent);color:var(--accent)}
+.works span:nth-child(4n+2){background:var(--hot-soft);border-color:transparent;color:var(--hot)}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.proj{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:8px;align-content:start}
+.proj .sector{font-size:12px;font-weight:700;color:var(--hot);letter-spacing:.04em}
+.proj .co{font-weight:900;color:var(--ink);font-size:16px;line-height:1.4}
+.proj p{font-size:13px;color:var(--muted);line-height:1.65}
+.proj .jobs{font-size:12px;font-weight:700;color:var(--accent);margin-top:4px}
+
+/* faculty */
+.faculty{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.fac{border:1px solid var(--band-line);border-radius:var(--r);padding:20px;display:grid;gap:10px;align-content:start;background:rgba(255,255,255,.03)}
+.fac .exp{margin:0;padding-left:18px;font-size:13px;color:var(--band-muted);line-height:1.6;display:grid;gap:2px}
+.fac .sk{display:flex;flex-wrap:wrap;gap:6px}
+.fac .sk span{font-size:12px;padding:2px 10px;border-radius:999px;border:1px solid var(--band-line);color:var(--band-fg)}
+.fac .teach{font-size:13px;color:var(--band-fg);border-top:1px dashed var(--band-line);padding-top:10px;line-height:1.6}
+.fac .teach span{display:block;font-size:11px;font-weight:700;color:var(--lime);letter-spacing:.06em}
+.fac .nm{display:flex;align-items:center;gap:12px}
+.fac .av{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:18px;background:var(--accent);color:#fff;flex:none}
+.fac.in .av{background:var(--lime);color:var(--on-lime)}
+.fac b{font-size:16px;color:var(--band-fg)}
+.fac .tag{font-size:11px;color:var(--lime);letter-spacing:.06em;font-weight:700}
+.fac .role{font-size:13px;color:var(--band-muted);line-height:1.55}
+.fac .role{color:var(--band-fg);font-weight:500}
+.certs{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;align-items:center}
+.certs .lab{font-size:13px;color:var(--band-muted);margin-right:4px}
+.certs span:not(.lab){font-size:13px;font-weight:700;padding:6px 14px;border-radius:8px;background:rgba(255,255,255,.08);color:var(--band-fg)}
+
+/* road */
+.road{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.road::before{content:"";position:absolute;left:0;right:0;top:21px;height:2px;background:var(--line)}
+.rd{position:relative;padding-right:16px;display:grid;gap:8px;align-content:start}
+.rd .no{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-weight:700;background:var(--accent);color:var(--on-accent);position:relative;z-index:1;border:4px solid var(--bg)}
+.band.alt .rd .no{border-color:var(--surface)}
+.rd:last-child .no{background:var(--hot);color:#fff}
+.rd h3{font-size:16px}
+.rd p{font-size:14px;color:var(--muted)}
+.follow{margin-top:36px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.follow b{font-family:var(--f-num);color:var(--ink);background:var(--sunk);border-radius:8px;padding:3px 10px;font-size:14px}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:880px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 22px}
+summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--f-num);color:var(--accent);font-size:22px;line-height:1;flex:none}
+details[open] summary::after{content:"−"}
+details p{padding-bottom:18px;color:var(--muted);font-size:15px}
+
+/* final */
+.final{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.final h2{font-size:clamp(28px,4.4vw,48px)}
+.contact{background:rgba(255,255,255,.05);border:1px solid var(--band-line);border-radius:var(--r);padding:24px;display:grid;gap:14px}
+.contact .row{display:grid;grid-template-columns:72px 1fr auto;gap:10px;align-items:center;font-size:15px}
+.contact .row span{color:var(--band-muted);font-size:13px}
+.contact .row b{color:var(--band-fg);font-weight:500;word-break:break-all}
+.copy{font:inherit;font-size:12px;border:1px solid var(--band-line);background:transparent;color:var(--band-fg);border-radius:6px;padding:3px 10px;cursor:pointer}
+footer{padding-block:28px 96px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+@media (min-width:761px){footer{padding-bottom:28px}}
+footer .legal{flex-basis:100%;border-top:1px solid var(--line);margin-top:12px;padding-top:16px;display:grid;gap:6px;justify-items:start}
+footer .ad{font-size:12px;font-weight:700;border:1px solid var(--muted);border-radius:4px;padding:0 6px;line-height:1.6}
+footer .copy-r{color:var(--ink)}
+
+/* mobile apply bar */
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:none;gap:10px;align-items:center}
+.mbar span{font-size:13px;color:var(--muted);flex:1;line-height:1.4}
+.mbar span b{color:var(--ink)}
+.mbar .btn{padding:10px 20px;font-size:15px}
+@media (max-width:760px){.mbar{display:flex}}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
+.rv.in{opacity:1;transform:none}
+
+/* responsive */
+@media (max-width:1000px){
+  .hero-grid,.final,.elig,.tiers{grid-template-columns:1fr}
+  .conds{grid-template-columns:1fr 1fr}
+  .ticket{max-width:440px;transform:none}
+  .you{grid-template-columns:1fr 1fr}
+  .gains{grid-template-columns:1fr 1fr}
+  .projects{grid-template-columns:repeat(3,1fr)}
+  .faculty{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .stat:nth-child(3){border-right:0}
+  .stat:nth-child(-n+3){border-bottom:1px solid var(--line)}
+  .reward{grid-template-columns:1fr auto 1fr}
+  .reward .op:nth-of-type(2){display:none}
+  .reward .sum{grid-column:1/-1}
+  .road{grid-template-columns:1fr;gap:20px}
+  .road::before{left:21px;right:auto;top:0;bottom:0;width:2px;height:auto}
+  .rd{grid-template-columns:44px 1fr;column-gap:16px;padding-right:0}
+  .rd .no{grid-row:span 2}
+}
+@media (max-width:680px){
+  .band{padding-block:64px}
+  .you,.gains,.classes,.phases,.conds,.fit{grid-template-columns:1fr}
+  .projects{grid-template-columns:1fr 1fr}
+  .faculty{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{border-right:1px solid var(--line)!important;border-bottom:1px solid var(--line)}
+  .stat:nth-child(2n){border-right:0!important}
+  .stat:last-child{grid-column:1/-1;border-bottom:0}
+  .reward{grid-template-columns:1fr}
+  .reward .op{display:none}
+  .reward>div{border-bottom:1px solid var(--band-line)}
+  .contact .row{grid-template-columns:1fr auto}
+  .contact .row span{grid-column:1/-1}
+  .card{padding:22px}
+  .ticket .stamp{right:-6px}
+}
+@media (max-width:420px){
+  .projects,.faculty{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="logobar">
+  <div class="wrap">
+    <img src="assets/moea-logo.gif" alt="經濟部商業發展署 Administration of Commerce, MOEA" class="lg-moea" width="1476" height="266">
+    <span class="x" aria-hidden="true">×</span>
+    <img src="assets/cust-logo.png" alt="中華科技大學 China University of Science and Technology" class="lg-cust" width="280" height="100">
+  </div>
+</div>
+
+<nav class="nav" aria-label="頁面導覽">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="bt">AI行銷自動化<br>與服務創新實戰班</span></a>
+    <div class="links">
+      <a href="#you">適合誰</a>
+      <a href="#check">資格檢測</a>
+      <a href="#gain">你會得到</a>
+      <a href="#classes">開班</a>
+      <a href="#curriculum">課程</a>
+      <a href="#faculty">師資</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即報名</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="for" aria-label="招生對象">
+        <span class="on">18–35 歲青年</span>
+        <span>副學士以上學歷</span>
+        <span>應屆畢業生</span>
+        <span>待業中</span>
+      </div>
+      <h1><span class="nw">剛畢業、</span><span class="nw">還在找方向？</span><br>用 <span class="a nw">264 小時</span><br><span class="nw">練成企業要的</span><span class="nw"> AI 行銷人才</span></h1>
+      <p class="sub">不用會寫程式，也不用 AI 背景。從生成式 AI 內容、短影音、LINE 客服、廣告投放、GA4 數據到 n8n 自動化，最後以<b>企業真實題目</b>完成專題作品，結訓銜接<b>就業媒合</b>。</p>
+      <div class="cta-row">
+        <a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即線上報名 →</a>
+        <a class="btn ghost" href="#check">30 秒檢查我的資格</a>
+      </div>
+      <div class="org">
+        <span>主辦　<b>經濟部商業發展署</b></span>
+        <span>培訓　<b>中華科技大學</b></span>
+        <span>115–116 年度 強化服務業人才韌性計畫</span>
+      </div>
+    </div>
+    <aside class="ticket" aria-label="學習獎勵金摘要">
+      <div class="stamp">每梯<br>限 33 人</div>
+      <div class="t-top"><span>LEARNING REWARD</span><span>NO. 115-116</span></div>
+      <div class="money num">50,000<small>元</small></div>
+      <p class="cap">每人最高學習獎勵金，邊學邊領</p>
+      <hr>
+      <ul>
+        <li><span>第一階段完訓</span><b>NT$20,000</b></li>
+        <li><span>第二階段完訓</span><b>NT$30,000</b></li>
+        <li><span>全程培訓時數</span><b>264 小時</b></li>
+        <li><span>第一梯開訓</span><b>115/12/07</b></li>
+      </ul>
+    </aside>
+  </div>
+</header>
+
+<div class="stats" role="list">
+  <div class="stat" role="listitem"><b class="num">264<small>小時</small></b><span>雙階段全程培訓・共 33 天</span></div>
+  <div class="stat" role="listitem"><b class="num">5<small>萬元</small></b><span>每人最高學習獎勵金</span></div>
+  <div class="stat" role="listitem"><b class="num">2<small>梯次</small></b><span>每梯 33 人・小班實作</span></div>
+  <div class="stat" role="listitem"><b class="num">26<small>單元</small></b><span>AI 應用＋企業專題實作</span></div>
+  <div class="stat" role="listitem"><b class="num">12<small>位</small></b><span>校內教師＋企業業師</span></div>
+</div>
+
+<section class="band" id="you">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">這堂課寫給你</span>
+      <h2>如果你也有這些煩惱，<span class="hl">這班就是為你開的</span></h2>
+      <p class="lede">服務業 AI 人才每季招募需求逾 9,600 人，企業缺的不是會按按鈕的人，而是能把顧客、內容、廣告、數據串起來的人。</p>
+    </div>
+    <div class="you">
+      <div class="bubble rv"><p class="q">履歷投了很多，但好像沒什麼亮點。</p><p class="a">結訓帶走一份<b>個人數位作品集</b>＋一件與企業共同評核的專題。</p></div>
+      <div class="bubble rv"><p class="q">大家都在說 AI，可是我不知道從哪開始。</p><p class="a">從提示詞與 AI 基礎教起，<b>開訓一週內做能力盤點</b>再補強。</p></div>
+      <div class="bubble rv"><p class="q">科系跟行銷、數據沒什麼關係。</p><p class="a"><b>不限科系、不需程式背景</b>，會用電腦、文書與簡報就能報名。</p></div>
+      <div class="bubble rv"><p class="q">想找工作，但不知道企業要什麼。</p><p class="a">由企業業師帶<b>真實題目專題</b>，結訓前履歷健檢、模擬面試與媒合。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="check">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">報名資格</span>
+      <h2>先確認你是否符合報名資格</h2>
+      <p class="lede">本班採<b>審核制</b>：符合以下條件即可報名，通過書面資格初審後，將依企業職缺適配度、學習意願與溝通能力進行徵選。</p>
+    </div>
+
+    <div class="conds">
+      <div class="cond rv"><span class="ck">年齡</span><b>18 至 35 歲（含）</b><p>本國籍青年。</p></div>
+      <div class="cond rv"><span class="ck">學歷</span><b>副學士以上</b><p>我國教育部認定之大專校院副學士（含二專、五專）以上學歷。</p></div>
+      <div class="cond rv"><span class="ck">身分</span><b>待業者或應屆畢業生</b><p>培訓期間須具「待業」身分，不得為全職在職、自營作業者或公司負責人。</p></div>
+      <div class="cond rv"><span class="ck">先備能力</span><b>基本電腦操作</b><p>會電腦、文書與簡報操作；無須程式基礎，但需願意動手學 AI 工具。</p></div>
+    </div>
+
+    <div class="fit">
+      <div class="card rv">
+        <h3>我們在等的學員，適合你如果…</h3>
+        <ul class="yn yes">
+          <li>剛畢業或待業中，想補上可展示的實作能力</li>
+          <li>對生活服務業 AI、行銷、資料分析與自動化有興趣</li>
+          <li>願意完成 264 小時訓練與團隊專題</li>
+          <li>想把專題成果做成面試作品集</li>
+          <li>能配合出席率與考核規定</li>
+        </ul>
+      </div>
+      <div class="card rv">
+        <h3>請先想清楚，可能不適合如果…</h3>
+        <ul class="yn no">
+          <li>只想短期體驗，不願投入專題產出</li>
+          <li>無法配合課程時段與出席要求</li>
+          <li>不願分組合作或接受企業導師回饋</li>
+          <li>期待只聽課、不實作、不發表</li>
+          <li>已同時接受其他政府人才培訓補助</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-h rv">招募對象與優先順序</h3>
+    <div class="tiers">
+      <div class="tier rv"><span class="tl">主力</span><b>18–35 歲待業青年</b><p>具副學士（含二專、五專）以上學歷，希望投入行銷、內容創作或服務業 AI 應用工作者。</p></div>
+      <div class="tier rv pri"><span class="tl">優先</span><b>應屆畢業生／6 個月內待業青年</b><p>應屆生可先以在學證明報名，培訓完成後補交畢業證書；應屆待業 6 個月內者，同等評分下優先錄取。</p></div>
+      <div class="tier rv"><span class="tl">加分</span><b>優先錄取與加分條件</b><p>符合基本資格後，徵選時於同等評分下，具備以下條件者優先錄取：</p>
+        <ul class="yn star">
+          <li>傳播、行銷、設計相關科系背景，或對社群媒體與內容創作有興趣</li>
+          <li>具生活服務業工作或實習經驗</li>
+          <li>前梯次優秀學員推薦</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rule rv"><b>補助規範</b>每人限參與本計畫一次，培訓補助期間不得同時接受其他政府人才培訓補助。</div>
+
+    <div class="elig">
+      <div class="card checker rv" aria-live="polite">
+        <h3>30 秒資格小檢測</h3>
+        <div class="qs" id="qs">
+          <div class="qq" data-k="age"><p>1. 你的年齡是？</p><div class="opts"><button type="button" data-v="0">未滿 18 歲</button><button type="button" data-v="1">18–35 歲</button><button type="button" data-v="0">36 歲以上</button></div></div>
+          <div class="qq" data-k="nat"><p>2. 你的國籍？</p><div class="opts"><button type="button" data-v="1">中華民國（本國籍）</button><button type="button" data-v="0">其他國籍</button></div></div>
+          <div class="qq" data-k="edu"><p>3. 你的最高學歷？</p><div class="opts"><button type="button" data-v="0">高中職</button><button type="button" data-v="1">二專／五專（副學士）</button><button type="button" data-v="1">大學</button><button type="button" data-v="1">碩士以上</button></div></div>
+          <div class="qq" data-k="st"><p>4. 你目前的狀態？</p><div class="opts"><button type="button" data-v="1">應屆畢業生</button><button type="button" data-v="1">待業中</button><button type="button" data-v="0">全職在職</button><button type="button" data-v="0">自營作業／公司負責人</button></div></div>
+          <div class="qq" data-k="sub"><p>5. 是否正在接受其他政府人才培訓補助，或曾參與本計畫？</p><div class="opts"><button type="button" data-v="1">都沒有</button><button type="button" data-v="0">有</button></div></div>
+        </div>
+        <div class="result" id="result" data-state="wait"><span id="rtext">回答上面 5 題，馬上知道你能不能報名。</span><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">前往報名表 →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band dark" id="gain">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">參訓你會得到</span>
+      <h2><span class="nw">技能、</span><span class="nw">作品、</span><span class="nw">證照、</span><span class="nw">獎勵金、</span><span class="nw">工作機會，</span><span class="nw">一次到位</span></h2>
+    </div>
+    <div class="gains">
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><circle cx="12" cy="12.5" r="2.5"/><path d="M6 6V4h12v2"/></svg></span><span class="big num">50,000<small>元</small></span><p>兩階段完訓分別核發學習獎勵金，合計每人最高 5 萬元。</p></div>
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span><span class="big">就業媒合</span><p>結訓前辦理企業說明會、履歷健檢、模擬面試與媒合面談，經你授權後推薦給企業。</p></div>
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/><path d="m9 9 2 2 4-4"/></svg></span><span class="big">作品集</span><p>圖文、短影音、Canva、LINE 客服、廣告、GA4 儀表板、Podcast、自動化流程，導師每月檢視。</p></div>
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></svg></span><span class="big">證照輔導</span><p>經濟部 iPAS AI 應用規劃師、AIMC AI 行銷專業能力認證輔導與模擬測驗。</p></div>
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7l9 5 9-5-9-5z"/><path d="m3 17 9 5 9-5M3 12l9 5 9-5"/></svg></span><span class="big">企業專題</span><p>4–6 人一組承接真實企業題目，由校方與企業聯合評核，可直接寫進履歷。</p></div>
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="big num">3<small>個月追蹤</small></span><p>結訓後另有三個月的就業追蹤與二次媒合機制。</p></div>
+    </div>
+    <div class="reward rv" aria-label="學習獎勵金計算">
+      <div><span class="ph">第一階段・次產業 AI 應用</span><span class="amt num">20,000<small> 元</small></span><ul><li>出席達 132 小時的 90% 以上</li><li>課程測驗 80 分以上</li></ul></div>
+      <span class="op">+</span>
+      <div><span class="ph">第二階段・企業專題實作</span><span class="amt num">30,000<small> 元</small></span><ul><li>出席達 132 小時的 90% 以上</li><li>完成專題報告與公開發表</li><li>校方／企業聯合評核 80 分以上</li></ul></div>
+      <span class="op">=</span>
+      <div class="sum"><span class="ph">合計最高</span><span class="amt num">50,000<small> 元</small></span><ul><li>應屆畢業生須取得畢業證書並符合條件後請領</li><li>實際金額與請領方式依主辦單位公告為準</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="classes">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">開班時間</span>
+      <h2>兩個梯次，挑一個最適合你的時間</h2>
+      <p class="lede">應屆畢業生、剛退伍或剛離職的你，都能找到銜接的檔期。</p>
+    </div>
+    <div class="classes">
+      <article class="cls rv">
+        <div class="top"><b>實戰班（一）</b><span class="pill">第一梯・寒假前開訓</span></div>
+        <div class="date num">115/12/07 – 116/01/22<small>週一至週五上課・共 33 天</small></div>
+        <dl>
+          <dt>上課時間</dt><dd>09:00–18:00（每日 8 小時）</dd>
+          <dt>名額</dt><dd>33 人</dd>
+          <dt>地點</dt><dd>中華科技大學（臺北市南港區研究院路三段 245 號）</dd>
+        </dl>
+      </article>
+      <article class="cls rv">
+        <div class="top"><b>實戰班（二）</b><span class="pill">第二梯・春季開訓</span></div>
+        <div class="date num">116/03/02 – 116/04/19<small>週一至週五上課・共 33 天</small></div>
+        <dl>
+          <dt>上課時間</dt><dd>09:00–18:00（每日 8 小時）</dd>
+          <dt>名額</dt><dd>33 人</dd>
+          <dt>地點</dt><dd>中華科技大學（臺北市南港區研究院路三段 245 號）</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="classnote">排除週末及政府公告放假日。兩梯共錄取 66 人，另設候補名單。</p>
+    <div class="cta-row rv"><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即報名 →</a></div>
+  </div>
+</section>
+
+<section class="band alt" id="curriculum">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">課程規劃</span>
+      <h2>先學會工具，再用在真實企業題目上</h2>
+      <p class="lede">第一階段做出的服務藍圖、內容素材、廣告方案與儀表板，會直接成為第二階段企業專題的材料。</p>
+    </div>
+    <div class="phases">
+      <div class="phase rv" id="ph1">
+        <div class="ph-h"><span>STAGE 1・次產業 AI 應用</span><b class="num">132<small> 小時</small></b></div>
+        <p class="desc">依「服務業次產業 AI 人才培訓地圖」生活服務業 14 項模組，建立營運、客服、行銷、企劃、資訊五大職能。</p>
+        <ul class="mods" id="m1"></ul>
+        <button class="toggle" type="button" data-for="ph1">展開全部 14 個單元 ↓</button>
+        <p class="pass">完訓標準：<b>出席 90% 以上＋測驗 80 分以上</b></p>
+      </div>
+      <div class="phase rv" id="ph2">
+        <div class="ph-h"><span>STAGE 2・企業專題實作</span><b class="num">132<small> 小時</small></b></div>
+        <p class="desc">在電腦教室＋企業情境中動手做：短影音、直播、LINE 官方帳號、Meta／Google Ads、GA4、AI Agent 自動化、Podcast、品牌官網。</p>
+        <ul class="mods" id="m2"></ul>
+        <button class="toggle" type="button" data-for="ph2">展開全部 12 個單元 ↓</button>
+        <p class="pass">完訓標準：<b>出席 90% 以上＋專題公開發表＋聯合評核 80 分以上</b></p>
+      </div>
+    </div>
+    <div class="tools rv">
+      <div class="row"><span class="lab">AI 工具</span><span>ChatGPT／DALL·E</span><span>Google Gemini</span><span>Microsoft Copilot</span><span>Adobe Firefly</span><span>Canva Magic Studio</span><span>Runway</span><span>ElevenLabs</span><span>Descript</span></div>
+      <div class="row"><span class="lab">自動化</span><span>n8n AI Agent</span><span>Make AI</span><span>Zapier AI</span></div>
+      <div class="row"><span class="lab">數據與通路</span><span>Google Analytics 4</span><span>Looker Studio</span><span>Google Ads</span><span>Meta Ads Manager</span><span>LINE 官方帳號</span><span>WordPress</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="portfolio">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">結訓時你的作品集裡會有</span>
+      <h2>面試時拿得出來的，<span class="hl">不只是一張結業證書</span></h2>
+    </div>
+    <div class="works rv">
+      <span>AI 生成社群圖文</span><span>9:16 短影音</span><span>Canva 商業設計</span><span>直播企劃與腳本</span><span>LINE 官方帳號選單與自動回覆</span><span>Meta Ads 投放方案</span><span>Google Ads 關鍵字廣告</span><span>GA4 × Looker Studio 儀表板</span><span>n8n／Make 自動化流程</span><span>Podcast 單集與再製素材</span><span>AI 品牌官網</span><span>顧客旅程與服務藍圖</span><span>AI 使用規範與風險評估</span><span>企業整合專題發表</span>
+    </div>
+  </div>
+</section>
+
+<section class="band dark" id="faculty">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">師資陣容</span>
+      <h2>超過 8 成課程由業界實戰業師親自帶</h2>
+      <p class="lede">每梯 264 小時中，企業業師授課 224 小時（84.85%），校內教師負責 ROI、數據分析、需求預測與導入整合。</p>
+    </div>
+    <div class="faculty" id="facGrid"></div>
+    <div class="certs"><span class="lab">結訓認證輔導</span><span>經濟部 iPAS AI 應用規劃師</span><span>AIMC AI 行銷專業能力認證</span></div>
+  </div>
+</section>
+
+<section class="band alt" id="faq">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">常見問題</span>
+      <h2>報名前你可能想問</h2>
+    </div>
+    <div class="faq">
+      <details><summary>我是五專／二專畢業，可以報名嗎？</summary><p>可以。只要具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，且年齡在 18 至 35 歲（含），即符合學歷與年齡條件。</p></details>
+      <details><summary>我還沒拿到畢業證書（應屆畢業生），可以參加嗎？</summary><p>可以。應屆畢業生可先以在學證明報名，於培訓完成後補交畢業證書；請領學習獎勵金時須已取得畢業證書並符合各階段完訓條件。</p></details>
+      <details><summary>我目前有在打工或兼職，可以報名嗎？</summary><p>培訓期間須具「待業」身分，不得為全職在職、自營作業者或公司負責人。課程為週一至週五 09:00–18:00 全日上課，兩階段出席率都須達 90%。兼職的身分認定請以主辦單位公告為準，建議報名前先來電詢問承辦窗口。</p></details>
+      <details><summary>沒有程式設計或 AI 背景可以參加嗎？</summary><p>可以。徵選不以程式設計或既有 AI 背景為必要條件，只要會基本的電腦、瀏覽器、文書與試算表操作即可。開訓一週內會做數位能力盤點，再依結果安排補強。</p></details>
+      <details><summary>一定要全程參加嗎？</summary><p>是的。每梯共 33 個上課日、每日 8 小時，兩階段出席率都要達 90% 以上才算完訓，也才能請領學習獎勵金。</p></details>
+      <details><summary>報名後就直接錄取嗎？</summary><p>不是。本班採審核制，通過書面資格初審後，將依企業職缺適配度、學習意願與溝通能力進行徵選，並公告錄取與候補名單。</p></details>
+      <details><summary>結訓後一定有工作嗎？</summary><p>課程提供企業說明會、履歷健檢、模擬面試與媒合面談；實際錄用仍由企業依面談結果決定。結訓後另有三個月的就業追蹤與二次媒合機制。</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="band dark" id="contact">
+  <div class="wrap final">
+    <div class="rv">
+      <span class="kicker">別讓空窗期空著</span>
+      <h2 style="margin-top:16px">畢業後的第一份工作，<br>從這 264 小時開始。</h2>
+      <p class="lede" style="margin-top:16px">每梯僅 33 個名額。填寫線上報名表即可進入徵選，有任何問題歡迎來電或來信。</p>
+      <div class="cta-row"><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即線上報名 →</a></div>
+    </div>
+    <div class="contact rv">
+      <h3>中華科技大學 就業輔導組</h3>
+      <div class="row"><span>聯絡窗口</span><b>古淑雯 專員</b></div>
+      <div class="row"><span>電話</span><b>02-2782-1862 轉 121</b><button class="copy" type="button" data-copy="02-27821862#121">複製</button></div>
+      <div class="row"><span>Email</span><b>emilyku@cc.cust.edu.tw</b><button class="copy" type="button" data-copy="emilyku@cc.cust.edu.tw">複製</button></div>
+      <div class="row"><span>地址</span><b>臺北市南港區研究院路三段 245 號</b></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>主辦單位：經濟部商業發展署　執行單位：商業服務業 AI 人才辦公室　培訓單位：中華科技大學</span>
+    <span>115–116 年度強化服務業人才韌性計畫・青年AI實戰養成班｜AI行銷自動化與服務創新實戰班</span>
+    <div class="legal">
+      <span class="ad">廣告</span>
+      <p>本頁時程與內容為預計開班資訊，實際開課、報到、錄取與相關規定，以主辦單位及培訓單位正式公告為準。</p>
+      <p class="copy-r">© 2026 經濟部商業發展署 ｜ 商業服務業 AI 人才辦公室 ｜ 中華科技大學</p>
+    </div>
+  </div>
+</footer>
+
+<div class="mbar"><span><b>最高領 5 萬</b>・每梯限 33 人</span><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即報名</a></div>
+
+<script>
+(function(){
+  var m1=[["生成式 AI 多媒體轉化與創作",8],["AI 廣告投放與精準行銷",16],["數據導向超個人化服務",20],["AI 客服工具操作與應變管理",16],["業務部門（LOB）數據分析",12],["行政與財務流程 AI 自動化",8],["AI 代理協作",8],["AI 投報率（ROI）評估",8],["AI 驅動市場需求預測",8],["科技賦能之服務流程創新",8],["負責任 AI 與倫理設計",8],["預測性運作維護",4],["數據治理與隱私架構",4],["AI 解決方案導入與整合",4]];
+  var m2=[["AI 影音生成與短影音製作",8],["生成式 AI 圖文與行銷內容製作",8],["AI × Canva 圖文商業設計",8],["Facebook 社群經營與 Meta Ads 實作",16],["GA4 網站分析",16],["Google Ads 實作",16],["LINE 官方帳號實作",8],["直播企劃與實戰應用",8],["AI Agent 與行銷自動化流程實戰",8],["Podcast 錄音、剪輯、上架與再製",8],["AI 網站製作與品牌官網實作",4],["企業整合專題製作與成果發表",24]];
+  function list(arr){return arr.map(function(r,i){return '<li'+(i>=6?' class="more"':'')+'><span>'+r[0]+'</span><i>'+r[1]+'h</i></li>';}).join('');}
+  document.getElementById('m1').innerHTML=list(m1);
+  document.getElementById('m2').innerHTML=list(m2);
+  document.querySelectorAll('.toggle').forEach(function(b){
+    var label=b.textContent;
+    b.addEventListener('click',function(){
+      var p=document.getElementById(b.getAttribute('data-for'));
+      var open=p.classList.toggle('open');
+      b.textContent=open?'收合 ↑':label;
+    });
+  });
+
+  // [姓名, 校內教師?, 現職, 經歷, 專長, 本班授課]
+  var fac=[
+    ["蘇承樂",0,"中華網路行銷講師協會 理事長｜康柏國際企業 執行長",["經濟部中小企業署 新創圓夢網 創業顧問","曾任 資策會、中國生產力中心、公務人員發展學院 講師"],["Facebook／LINE 廣告","Google 關鍵字廣告","GA4 網站分析","WordPress","電商與 KOL 行銷"],"AI 廣告投放與精準行銷、Meta Ads 實作、企業整合專題"],
+    ["徐享",0,"中華網路行銷講師協會 秘書長｜享果國際（鮮生小姐商城）執行長",["新北市政府青年局 青創顧問","AIGCxTaiwan 顧問講師"],["n8n 自動化","Make.com 工作流","Gemini 多模態 AI","短影音拍攝剪輯","社群直播電商"],"流程 AI 自動化、AI 影音與短影音、生成式 AI 圖文、AI Agent"],
+    ["吳盛光",0,"織夢人國際行銷 總經理",["美商 Intel 網通產品事業群 亞太區主管","技嘉科技 網通事業群 大中國區總經理","國立台北商業大學、龍華科大 兼任講師"],["AIGC 生成式應用","客戶需求洞察","顧問式銷售","消費者心理學","一頁式銷售頁"],"數據導向超個人化服務、AI 客服工具操作與應變管理"],
+    ["曾湘雯",0,"明新科大 行銷與流通管理系 常駐兼任講師",["泰國暹羅大學 全球創新學院 講師","勞動部勞動力發展署各分署 數位行銷與 AI 講師","Gemini Certified Educator・Google 數位行銷認證"],["AI × Canva 設計","AI 短影音","Looker Studio","社群經營","AI 簡報"],"AI × Canva 圖文商業設計、直播企劃、LINE 官方帳號"],
+    ["劉維立",0,"中華網路行銷講師協會 副秘書長",["資策會教育研究所 顧問・緯育 TibaMe AI 講師","曾任 趨勢科技、資策會 氣象大數據分析與建模","交通大數據與 AI 應用團隊主管"],["AI 應用","AI 輔助程式設計","Python","大數據分析"],"預測性運作維護"],
+    ["楊白全",0,"中華網路行銷講師協會 理事・教育訓練委員會 主委",["台灣個資保護促進協會 個資保護研究發展委員會 主委","白氏興業 總經理"],["個資法實務顧問","契約審閱","AI＋法務文書應用"],"負責任 AI 與倫理設計"],
+    ["林宏一",0,"虎之呼吸科技 執行長",["巨匠電腦 講師"],["GA4","SEO","Google Ads","生成式影像"],"GA4 網站分析、Google Ads 實作"],
+    ["王國鴻",0,"馬耀文創 執行長",["「青年返鄉 Are You Ready？」網路電台 主持人","WBSA 行銷經理"],["生成式 AI 多媒體","Podcast 製作","內容再製"],"生成式 AI 多媒體轉化、Podcast 錄音剪輯與上架"],
+    ["白維哲",0,"購易國際實業 行銷顧問",["初階行銷企劃規劃師"],["AI 代理協作","電商行銷"],"AI 代理協作"],
+    ["孫義勝",0,"捷理科技 總監",["講師協會 AI 教育訓練委員會 副主委","ISO 27001:2022 主導稽核員"],["數據治理","資訊安全","AI 網站製作"],"數據治理與隱私架構、AI 網站製作與品牌官網"],
+    ["傅彥凱",1,"中華科技大學 校長",["國立台北大學 博士","AI 應用規劃師（初級）"],["AI 投報率","服務流程創新","AI 導入整合"],"AI 投報率評估、服務流程創新、AI 解決方案導入"],
+    ["邱華凱",1,"中華科技大學 行銷系副教授",["交通大學 科技管理博士"],["LOB 數據分析","需求預測","顧客分群"],"LOB 數據分析、AI 驅動市場需求預測"]
+  ];
+  document.getElementById('facGrid').innerHTML=fac.map(function(f){
+    return '<article class="fac rv'+(f[1]?' in':'')+'"><div class="nm"><span class="av">'+f[0].charAt(0)+'</span><div><b>'+f[0]+'</b><div class="tag">'+(f[1]?'校內教師':'企業業師')+'</div></div></div>'
+      +'<span class="role">'+f[2]+'</span>'
+      +'<ul class="exp">'+f[3].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'
+      +'<div class="sk">'+f[4].map(function(x){return '<span>'+x+'</span>'}).join('')+'</div>'
+      +'<p class="teach"><span>本班授課</span>'+f[5]+'</p></article>';
+  }).join('');
+
+  // eligibility checker
+  var ans={},keys=['age','nat','edu','st','sub'];
+  var msgs={age:'年齡須為 18 至 35 歲（含）',nat:'須為本國籍青年',edu:'學歷須為副學士（含二專、五專）以上',st:'培訓期間須為待業或應屆畢業身分，不得為全職在職、自營作業者或公司負責人',sub:'每人限參與本計畫一次，且不得同時接受其他政府人才培訓補助'};
+  var res=document.getElementById('result'),rt=document.getElementById('rtext');
+  document.querySelectorAll('.qq').forEach(function(q){
+    var bs=q.querySelectorAll('button');
+    bs.forEach(function(b){
+      b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){
+        bs.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+        ans[q.getAttribute('data-k')]=b.getAttribute('data-v')==='1';
+        update();
+      });
+    });
+  });
+  function update(){
+    var done=keys.filter(function(k){return k in ans}).length;
+    var fails=keys.filter(function(k){return k in ans&&!ans[k]});
+    res.className='result';
+    if(fails.length){
+      res.classList.add('no');res.setAttribute('data-state','no');
+      rt.innerHTML='<b>目前可能不符合資格</b><br>'+fails.map(function(k){return '・'+msgs[k]}).join('<br>')+'<br>有特殊狀況歡迎來電 02-2782-1862 轉 121 詢問。';
+    }else if(done<keys.length){
+      res.setAttribute('data-state','wait');
+      rt.textContent='已回答 '+done+'／5 題，繼續作答…';
+    }else{
+      res.classList.add('ok');res.setAttribute('data-state','ok');
+      rt.innerHTML='<b>你符合報名條件！</b><br>通過書面初審後將進入徵選，名額每梯 33 人，趕快填寫報名表。';
+    }
+  }
+
+  // reveal on scroll
+  var els=document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){io.observe(e)});
+  }else{els.forEach(function(e){e.classList.add('in')})}
+
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.getAttribute('data-copy');
+      var ok=function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製'},1600)};
+      try{navigator.clipboard.writeText(t).then(ok,function(){sel(b)})}catch(e){sel(b)}
+    });
+  });
+  function sel(b){var r=document.createRange();r.selectNodeContents(b.previousElementSibling);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+})();
+</script>
+</body>
+</html>
