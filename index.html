@@ -24,11 +24,8 @@ function gtag_report_conversion(url) {
   });
   return false;
 }
-// 點擊任一「報名」按鈕（連到 Google 表單）時回報轉換；表單照常於新分頁開啟
-document.addEventListener('click', function (e) {
-  var a = e.target.closest && e.target.closest('a[href*="forms.gle"]');
-  if (a) gtag_report_conversion();
-});
+// 有人打開網頁時回報一次轉換（網頁瀏覽）
+gtag_report_conversion();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>中華科技大學 AI行銷自動化與服務創新實戰班｜青年AI實戰養成班</title>
