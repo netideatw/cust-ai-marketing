@@ -99,6 +99,7 @@ gtag_report_conversion();
   color-scheme:dark;}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -389,6 +390,72 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-betw
 footer .legal{flex-basis:100%;border-top:1px solid var(--line);margin-top:12px;padding-top:16px;display:grid;gap:6px;justify-items:start}
 footer .ad{font-size:12px;font-weight:700;border:1px solid var(--muted);border-radius:4px;padding:0 6px;line-height:1.6}
 footer .copy-r{color:var(--ink)}
+footer .copy-r a{color:inherit;text-decoration:none}
+
+/* apply form */
+.apply{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:start}
+.apply .head{margin-bottom:0}
+.apply .head .yn{margin-top:4px}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.fld{display:grid;gap:6px;align-content:start}
+.fld.full{grid-column:1/-1}
+.fld label{font-size:14px;font-weight:700;color:var(--ink)}
+.fld label i{color:var(--hot);font-style:normal}
+.fld input:not([type=checkbox]),.fld select,.fld textarea{font:inherit;font-size:16px;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);min-height:48px}
+.fld textarea{resize:vertical}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fld [aria-invalid="true"]{border-color:var(--no)!important}
+.fld small{color:var(--no);font-size:13px;min-height:0}
+.fld small:empty{display:none}
+.fld.chk label{font-weight:500;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.fld.chk input{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--accent)}
+.reg .btn{margin-top:22px;width:100%}
+.reg .btn:disabled{opacity:.6;cursor:wait;transform:none}
+.done{display:grid;gap:12px;justify-items:center;text-align:center;padding:32px 8px}
+.done .ok-ic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:900;background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.done h3{font-size:22px}
+.done p{color:var(--muted);max-width:30em}
+.done .mail-tip{font-size:14px;text-align:left;background:var(--hot-soft);color:var(--fg);border-radius:12px;padding:12px 16px;margin-top:6px}
+.done .mail-tip b{display:block;color:var(--ink);margin-bottom:2px}
+@media (min-width:1001px){.apply .head{position:sticky;top:86px}}
+.reg fieldset{border:0;margin:0 0 26px;padding:0 0 26px;border-bottom:1px solid var(--line);min-width:0}
+.reg legend{padding:0;margin-bottom:14px;font-size:17px;font-weight:900;color:var(--ink)}
+.reg legend i,.fld .lb i{color:var(--hot);font-style:normal}
+.reg legend .sub{font-size:13px;font-weight:500;color:var(--muted);margin-left:6px}
+.fld .lb{font-size:14px;font-weight:700;color:var(--ink)}
+.reg small.e{color:var(--no);font-size:13px;display:block;margin-top:8px}
+.reg small.e:empty{display:none}
+.pick{display:flex;flex-wrap:wrap;gap:10px}
+.pick label{position:relative;cursor:pointer;flex:1 1 220px}
+.pick input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.pick span{display:block;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);transition:all .15s;border-radius:12px;padding:14px 16px;font-family:var(--f-num);font-size:15px;line-height:1.5}
+.pick span b{display:block;font-family:var(--f-body);font-size:16px;color:var(--ink)}
+.pick span small{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted)}
+.pick span small.q{color:var(--hot);font-weight:700;margin-top:2px}
+.pick span:hover{border-color:var(--accent)}
+.pick input:checked+span{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent)}
+.pick input:focus-visible+span{outline:3px solid var(--hot);outline-offset:2px}
+.pick label.closed{cursor:not-allowed}
+.pick label.closed input{cursor:not-allowed}
+.pick label.closed span{background:var(--sunk);border-style:dashed;opacity:.7}
+.pick label.closed span:hover{border-color:var(--line)}
+.pick label.closed span small.q{color:var(--no)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips label{position:relative;cursor:pointer}
+.chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chips span{display:block;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);transition:all .15s;border-radius:999px;padding:7px 14px;font-size:14px}
+.chips span:hover{border-color:var(--accent)}
+.chips input:checked+span{border-color:var(--accent);background:var(--accent-soft);color:var(--ink);box-shadow:0 0 0 1px var(--accent)}
+.chips input:checked+span::before{content:"✓ ";color:var(--accent);font-weight:900}
+.chips input:focus-visible+span{outline:3px solid var(--hot);outline-offset:2px}
+.fld.other{margin-top:12px;max-width:420px}
+.pdpa{background:var(--sunk);border-radius:12px;padding:16px;display:grid;gap:8px}
+.pdpa b{color:var(--ink);font-size:15px}
+.pdpa p{font-size:13px;color:var(--muted);line-height:1.7}
+.pdpa a{margin-left:4px}
+.pdpa .chk label{color:var(--ink)}
+@media (max-width:1000px){.apply{grid-template-columns:1fr;gap:28px}}
+@media (max-width:680px){.f-grid{grid-template-columns:1fr}}
 
 /* mobile apply bar */
 .mbar{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:none;gap:10px;align-items:center}
@@ -465,7 +532,7 @@ footer .copy-r{color:var(--ink)}
       <a href="#faculty">師資</a>
       <a href="#faq">FAQ</a>
     </div>
-    <a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即報名</a>
+    <a class="btn hot" href="#apply">立即報名</a>
   </div>
 </nav>
 
@@ -482,7 +549,7 @@ footer .copy-r{color:var(--ink)}
       <h1><span class="nw">剛畢業、</span><span class="nw">還在找方向？</span><br>用 <span class="a nw">264 小時</span><br><span class="nw">練成企業要的</span><span class="nw"> AI 行銷人才</span></h1>
       <p class="sub">不用會寫程式，也不用 AI 背景。從生成式 AI 內容、短影音、LINE 客服、廣告投放、GA4 數據到 n8n 自動化，最後以<b>企業真實題目</b>完成專題作品，結訓銜接<b>就業媒合</b>。</p>
       <div class="cta-row">
-        <a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即線上報名 →</a>
+        <a class="btn hot" href="#apply">立即線上報名 →</a>
         <a class="btn ghost" href="#check">30 秒檢查我的資格</a>
       </div>
       <div class="org">
@@ -593,7 +660,7 @@ footer .copy-r{color:var(--ink)}
           <div class="qq" data-k="st"><p>4. 你目前的狀態？</p><div class="opts"><button type="button" data-v="1">應屆畢業生</button><button type="button" data-v="1">待業中</button><button type="button" data-v="0">全職在職</button><button type="button" data-v="0">自營作業／公司負責人</button></div></div>
           <div class="qq" data-k="sub"><p>5. 是否正在接受其他政府人才培訓補助，或曾參與本計畫？</p><div class="opts"><button type="button" data-v="1">都沒有</button><button type="button" data-v="0">有</button></div></div>
         </div>
-        <div class="result" id="result" data-state="wait"><span id="rtext">回答上面 5 題，馬上知道你能不能報名。</span><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">前往報名表 →</a></div>
+        <div class="result" id="result" data-state="wait"><span id="rtext">回答上面 5 題，馬上知道你能不能報名。</span><a class="btn hot" href="#apply">前往報名表 →</a></div>
       </div>
     </div>
   </div>
@@ -655,7 +722,7 @@ footer .copy-r{color:var(--ink)}
       </article>
     </div>
     <p class="classnote">排除週末及政府公告放假日。兩梯共錄取 66 人，另設候補名單。</p>
-    <div class="cta-row rv"><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即報名 →</a></div>
+    <div class="cta-row rv"><a class="btn hot" href="#apply">立即報名 →</a></div>
   </div>
 </section>
 
@@ -732,13 +799,93 @@ footer .copy-r{color:var(--ink)}
   </div>
 </section>
 
+<section class="band" id="apply">
+  <div class="wrap apply">
+    <div class="head rv">
+      <span class="kicker">線上報名</span>
+      <h2>填寫報名表，進入徵選</h2>
+      <p class="lede">報名後由專人聯繫，說明報名流程及相關事宜。</p>
+      <ul class="yn yes">
+        <li>報名截止：實戰班（一）115/11/30、實戰班（二）116/02/22，17:00 止</li>
+        <li>每梯限 33 人，額滿提前截止</li>
+        <li>面試日期另行通知</li>
+      </ul>
+    </div>
+    <div class="card reg rv" id="regCard">
+      <form id="regForm" novalidate>
+        <fieldset>
+          <legend>報名班次 <i>*</i></legend>
+          <div class="pick">
+            <label><input type="radio" name="batch" value="實戰班（一）"><span><b>實戰班（一）</b>115/12/07 – 116/01/22<small class="q">名額 33 位＋候補 5 位（額滿為止）</small><small>報名至 115/11/30 17:00</small></span></label>
+            <label><input type="radio" name="batch" value="實戰班（二）"><span><b>實戰班（二）</b>116/03/02 – 116/04/19<small class="q">名額 33 位＋候補 5 位（額滿為止）</small><small>報名至 116/02/22 17:00</small></span></label>
+          </div>
+          <small class="e" data-err="batch"></small>
+        </fieldset>
+
+
+        <fieldset>
+          <legend>基本資料</legend>
+          <div class="f-grid">
+            <div class="fld"><label for="f-name">您的姓名 <i>*</i></label><input id="f-name" name="name" autocomplete="name" maxlength="30"><small data-err="name"></small></div>
+            <div class="fld"><label for="f-email">您的電子信箱（Email） <i>*</i></label><input id="f-email" name="email" type="email" autocomplete="email" maxlength="80"><small data-err="email"></small></div>
+            <div class="fld"><label for="f-phone">您的聯絡電話 <i>*</i></label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0912345678" maxlength="20"><small data-err="phone"></small></div>
+            <div class="fld"><label for="f-line">您的 LINE ID <i>*</i></label><input id="f-line" name="line" maxlength="40"><small data-err="line"></small></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>學歷與資格</legend>
+          <div class="f-grid">
+            <div class="fld full chk"><label><input type="checkbox" name="eligible"> 是，我是滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，應屆畢業生（日、夜進修班）或正在待業中的青年。 <i>*</i></label><small data-err="eligible"></small></div>
+            <div class="fld"><label for="f-school">您的最高學歷，請註明學校名稱 <i>*</i></label><input id="f-school" name="school" placeholder="例：中華科技大學 大學部" maxlength="60"><small data-err="school"></small></div>
+            <div class="fld"><label for="f-dept">您的畢業科系 <i>*</i></label><input id="f-dept" name="dept" maxlength="40"><small data-err="dept"></small></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>請問您是透過哪些管道得知本課程的報名資訊？ <i>*</i> <span class="sub">可複選</span></legend>
+          <div class="chips">
+            <label><input type="checkbox" name="channels" value="Facebook（臉書）"><span>Facebook（臉書）</span></label>
+            <label><input type="checkbox" name="channels" value="Instagram（IG）"><span>Instagram（IG）</span></label>
+            <label><input type="checkbox" name="channels" value="Threads（脆）"><span>Threads（脆）</span></label>
+            <label><input type="checkbox" name="channels" value="LINE 群組或訊息"><span>LINE 群組或訊息</span></label>
+            <label><input type="checkbox" name="channels" value="網路搜尋（如 Google）"><span>網路搜尋（如 Google）</span></label>
+            <label><input type="checkbox" name="channels" value="學校網站或校內公告"><span>學校網站或校內公告</span></label>
+            <label><input type="checkbox" name="channels" value="政府機關網站或公告"><span>政府機關網站或公告</span></label>
+            <label><input type="checkbox" name="channels" value="親友介紹"><span>親友介紹</span></label>
+            <label><input type="checkbox" name="channels" value="師長推薦"><span>師長推薦</span></label>
+            <label><input type="checkbox" name="channels" value="海報或宣傳單"><span>海報或宣傳單</span></label>
+            <label><input type="checkbox" name="channels" value="其他"><span>其他</span></label>
+          </div>
+          <div class="fld other" data-when="channels=其他" hidden><input name="channel_other" maxlength="60" placeholder="請說明其他管道" aria-label="其他管道說明"><small data-err="channel_other"></small></div>
+          <small class="e" data-err="channels"></small>
+        </fieldset>
+
+        <fieldset>
+          <legend>留言</legend>
+          <div class="fld"><label for="f-note">如有任何疑問，歡迎在這裡留言</label><textarea id="f-note" name="note" rows="3" maxlength="500" placeholder="選填"></textarea></div>
+        </fieldset>
+
+        <div class="pdpa">
+          <b>個人資料蒐集聲明</b>
+          <p>本表單蒐集之個人資料，僅限於「AI行銷自動化與服務創新實戰班」目的存續期間所需之必要範圍與地區內，供業務相關人員處理及利用。我們遵循個資法規範，您的資料將受完善安全控管。</p>
+          <div class="fld chk"><label><input type="checkbox" name="agree"> 我已閱讀並同意上述個人資料蒐集聲明。 <i>*</i></label><small data-err="agree"></small></div>
+        </div>
+
+        <input type="hidden" name="ref">
+        <button class="btn hot" type="submit">送出報名</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <section class="band dark" id="contact">
   <div class="wrap final">
     <div class="rv">
       <span class="kicker">別讓空窗期空著</span>
       <h2 style="margin-top:16px">畢業後的第一份工作，<br>從這 264 小時開始。</h2>
       <p class="lede" style="margin-top:16px">每梯僅 33 個名額。填寫線上報名表即可進入徵選，有任何問題歡迎來電或來信。</p>
-      <div class="cta-row"><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即線上報名 →</a></div>
+      <div class="cta-row"><a class="btn hot" href="#apply">立即線上報名 →</a></div>
     </div>
     <div class="contact rv">
       <h3>中華科技大學 就服組</h3>
@@ -757,12 +904,12 @@ footer .copy-r{color:var(--ink)}
     <div class="legal">
       <span class="ad">廣告</span>
       <p>本頁時程與內容為預計開班資訊，實際開課、報到、錄取與相關規定，以主辦單位及培訓單位正式公告為準。</p>
-      <p class="copy-r">© 2026 經濟部商業發展署 ｜ 商業服務業 AI 人才辦公室 ｜ 中華科技大學</p>
+      <p class="copy-r">© 2026 經濟部商業發展署 ｜ 商業服務業 AI 人才辦公室 ｜ <a href="admin.html" rel="nofollow">中華科技大學</a></p>
     </div>
   </div>
 </footer>
 
-<div class="mbar"><span><b>最高領 5 萬</b>・每梯限 33 人</span><a class="btn hot" href="https://forms.gle/ngyaSy8hPzDTJTkU7" target="_blank" rel="noopener">立即報名</a></div>
+<div class="mbar"><span><b>最高領 5 萬</b>・每梯限 33 人</span><a class="btn hot" href="#apply">立即報名</a></div>
 
 <script>
 (function(){
@@ -850,6 +997,93 @@ footer .copy-r{color:var(--ink)}
   });
   function sel(b){var r=document.createRange();r.selectNodeContents(b.previousElementSibling);var s=getSelection();s.removeAllRanges();s.addRange(r)}
 })();
+
+/* 推廣追蹤：推廣連結 …/cust-ai-marketing/?ref=代碼
+   進站時記住代碼 30 天，報名時一併送出；新增推廣人不用改程式，給對方新代碼連結即可 */
+(function(){
+  var KEY='cust_ref', DAYS=30, ref='';
+  var m=location.search.match(/[?&]ref=([^&#]*)/);
+  if(m){
+    try{ref=decodeURIComponent(m[1].replace(/\+/g,' '))}catch(e){ref=m[1]}
+    ref=ref.replace(/[^\w一-鿿-]/g,'').slice(0,30);
+    if(ref){try{localStorage.setItem(KEY,JSON.stringify({ref:ref,t:Date.now()}))}catch(e){}}
+  }
+  if(!ref){try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Date.now()-s.t<DAYS*864e5)ref=s.ref}catch(e){}}
+
+  var f=document.getElementById('regForm');if(!f)return;
+  f.ref.value=ref;
+
+  // 依後台設定標示已關閉（額滿）的班級
+  document.addEventListener('DOMContentLoaded',function(){
+    RegDB.batches().then(function(list){
+      var openCount=0;
+      list.forEach(function(b){
+        var inp=f.querySelector('[name=batch][value="'+b.name+'"]');if(!inp)return;
+        if(b.open){openCount++;return}
+        inp.disabled=true;inp.checked=false;
+        var lab=inp.closest('label');lab.classList.add('closed');
+        lab.querySelector('small.q').textContent='已額滿，報名已截止';
+      });
+      if(list.length&&!openCount){
+        document.getElementById('regCard').innerHTML='<div class="done"><h3>本期報名已全數額滿</h3><p>感謝您的關注！如有疑問，歡迎來電 2782-1862 轉202 /155。</p></div>';
+      }
+    },function(){});
+  });
+
+  // 勾選「其他」管道時顯示說明欄
+  function sync(){
+    var other=f.querySelector('[name=channels][value="其他"]').checked;
+    f.querySelectorAll('[data-when]').forEach(function(el){el.hidden=!other});
+  }
+  f.addEventListener('change',sync);
+  sync();
+
+  function err(name,msg){
+    var el=f.querySelector('[data-err="'+name+'"]');if(el)el.textContent=msg||'';
+    var inp=f.querySelector('[name="'+name+'"]');if(inp)inp.setAttribute('aria-invalid',msg?'true':'false');
+    return !msg;
+  }
+  function val(n){return (f.elements[n].value||'').trim()}
+
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var phone=val('phone').replace(/[\s()-]/g,'');
+    var channels=[].map.call(f.querySelectorAll('[name=channels]:checked'),function(c){return c.value});
+    var batch=f.querySelector('[name=batch]:checked');
+    var checks=[
+      err('batch',batch?'':'請選擇報名班次'),
+      err('name',val('name')?'':'請填寫姓名'),
+      err('email',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))?'':'Email 格式不正確'),
+      err('phone',/^0\d{8,9}$/.test(phone)?'':'請填寫正確的電話號碼，手機為 09 開頭 10 碼'),
+      err('line',val('line')?'':'請填寫 LINE ID'),
+      err('eligible',f.elements.eligible.checked?'':'請確認符合報名資格'),
+      err('school',val('school')?'':'請填寫最高學歷與學校名稱'),
+      err('dept',val('dept')?'':'請填寫畢業科系'),
+      err('channels',channels.length?'':'請至少選擇一個管道'),
+      err('channel_other',channels.indexOf('其他')<0||val('channel_other')?'':'請說明其他管道'),
+      err('agree',f.elements.agree.checked?'':'請勾選同意個人資料蒐集聲明')
+    ];
+    if(!checks.every(Boolean)){
+      var first=f.querySelector('[aria-invalid="true"]');
+      if(first){(first.closest('.fld')||first.closest('fieldset')).scrollIntoView({behavior:'smooth',block:'center'});first.focus({preventScroll:true})}
+      return;
+    }
+
+    var btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='送出中…';
+    var rec={batch:batch.value,name:val('name'),email:val('email'),phone:phone,line:val('line'),school:val('school'),dept:val('dept'),
+      channels:channels.map(function(c){return c==='其他'?'其他：'+val('channel_other'):c}),
+      note:val('note'),ref:f.ref.value};
+    RegDB.add(rec).then(function(){
+      document.getElementById('regCard').innerHTML='<div class="done"><span class="ok-ic" aria-hidden="true">✓</span><h3>感謝您報名本培訓班！</h3><p>我們已收到您的報名資料，後續將由專人與您聯繫，說明報名流程及相關事宜。<br>如有任何疑問，歡迎隨時留言或與我們聯繫，期待您的加入！</p><p class="mail-tip"><b>📧 報名確認信已寄到您填寫的 Email</b>若幾分鐘內沒有收到，請到信箱的「垃圾郵件」或「促銷內容」資料夾找找看，並將寄件者設為「非垃圾郵件」，以免錯過後續的面試通知。</p></div>';
+      document.getElementById('apply').scrollIntoView({behavior:'smooth'});
+      if(typeof gtag==='function')gtag('event','sign_up',{method:'site_form'});
+    },function(){
+      btn.disabled=false;btn.textContent='送出報名';
+      alert('送出失敗：所選班級可能剛額滿關閉，請重新整理頁面確認；或來電 2782-1862 轉202 /155 報名。');
+    });
+  });
+})();
 </script>
+<script src="assets/regdb.js?v=8"></script>
 </body>
 </html>

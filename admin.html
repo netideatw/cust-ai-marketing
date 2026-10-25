@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>報名後台｜AI行銷自動化與服務創新實戰班</title>
+<style>
+:root{
+  --bg:#F6F5FB; --surface:#FFFFFF; --sunk:#EDEBF7;
+  --ink:#16123A; --fg:#2A2650; --muted:#625E83; --line:#DDDAEE;
+  --accent:#4B3BFF; --accent-soft:#E6E3FF; --on-accent:#FFFFFF;
+  --hot:#FF6B3D; --hot-soft:#FFE6DC; --ok:#0E9F6E; --no:#D9363E;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-num:"Space Grotesk","Noto Sans TC",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0C22; --surface:#17143A; --sunk:#120F2E;
+  --ink:#F2F0FF; --fg:#DCD9F5; --muted:#A39FC9; --line:#2C2860;
+  --accent:#8B80FF; --accent-soft:#25206084; --on-accent:#0E0C22;
+  --hot:#FF8A63; --hot-soft:#3A1E17; --ok:#3DD39B; --no:#FF6B72;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0E0C22; --surface:#17143A; --sunk:#120F2E;
+  --ink:#F2F0FF; --fg:#DCD9F5; --muted:#A39FC9; --line:#2C2860;
+  --accent:#8B80FF; --accent-soft:#25206084; --on-accent:#0E0C22;
+  --hot:#FF8A63; --hot-soft:#3A1E17; --ok:#3DD39B; --no:#FF6B72;
+  color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 16px 64px}
+@media (min-width:700px){.wrap{padding-inline:28px}}
+h1,h2{color:var(--ink);margin:0}
+h1{font-size:24px;font-weight:900}
+h2{font-size:18px;font-weight:700;margin-bottom:14px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+header a{color:var(--accent);font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi b{display:block;font-family:var(--f-num);font-size:32px;color:var(--ink);line-height:1.2}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:24px}
+.tbl{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}
+td.n{font-family:var(--f-num);font-weight:700;font-size:18px;color:var(--ink);text-align:right;white-space:nowrap}
+tr.sel td{background:var(--accent-soft)}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:var(--sunk)}
+.names{color:var(--fg);width:45%;min-width:280px;line-height:1.8}
+.code{font-family:var(--f-num);font-size:13px;background:var(--sunk);border-radius:6px;padding:1px 8px;color:var(--ink);white-space:nowrap}
+.muted{color:var(--muted)}
+button,.btn{font:inherit;font-size:13px;font-weight:700;border-radius:999px;padding:6px 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap}
+button:hover{border-color:var(--accent)}
+button.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.del{color:var(--no)}
+:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.add{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line)}
+.add label{display:grid;gap:4px;font-size:13px;color:var(--muted);font-weight:700}
+input,select{font:inherit;font-size:15px;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);min-height:40px}
+.add input{width:180px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.bar .l{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.bar h2{margin:0}
+.empty{text-align:center;color:var(--muted);padding:28px 0}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+td.acts,td.nw{white-space:nowrap}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+.login .card{width:min(400px,100%);display:grid;gap:14px;margin:0;padding:28px}
+.login h1{font-size:22px}
+.login .muted{margin:-8px 0 4px;font-size:14px}
+.login label{display:grid;gap:6px;font-size:14px;font-weight:700;color:var(--ink)}
+.login input{font-size:16px;min-height:46px}
+.login a{color:var(--accent);font-size:14px;justify-self:center}
+button.big{font-size:16px;padding:12px 20px}
+.lerr{color:var(--no);font-size:14px;margin:0}
+.okmsg{color:var(--ok);font-size:14px;margin:0}
+.okmsg:empty{display:none}
+button.link{border:0;background:none;padding:0;color:var(--accent);font-weight:500;font-size:14px;justify-self:center}
+button.link:hover{text-decoration:underline}
+.lerr:empty{display:none}
+.who{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:14px}
+.tabs{display:flex;gap:4px;border-bottom:1.5px solid var(--line);margin-bottom:-1px}
+.tabs button{border:0;border-radius:10px 10px 0 0;background:none;color:var(--muted);font-size:15px;padding:12px 18px;border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tabs button:hover{color:var(--ink);background:var(--sunk)}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tabs .cnt{font-family:var(--f-num);font-size:12px;background:var(--sunk);color:var(--muted);border-radius:999px;padding:1px 8px;margin-left:4px}
+.tabs button[aria-selected="true"] .cnt{background:var(--accent-soft);color:var(--accent)}
+.panel{border-top-left-radius:0}
+.chip{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.sw{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
+.sw input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+h2.sec{margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
+.batches{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.bt{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1.5px solid var(--ok);border-radius:14px;padding:14px 16px;background:color-mix(in srgb,var(--ok) 6%,var(--surface))}
+.bt b{color:var(--ink);font-size:16px;margin-right:8px}
+.bt .st{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.bt small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.bt.off{border-color:var(--no);border-style:dashed;background:color-mix(in srgb,var(--no) 5%,var(--surface))}
+.bt.off .st{background:color-mix(in srgb,var(--no) 14%,transparent);color:var(--no)}
+.msg{flex-basis:100%;margin:0;font-size:14px}
+.msg:empty{display:none}
+.msg.ok{color:var(--ok)}
+.msg.bad{color:var(--no)}
+.pwf{display:grid;gap:14px}
+.pwf label{display:grid;gap:6px;font-size:14px;font-weight:700;color:var(--ink)}
+.who button{font-size:13px}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--fg);padding:20px 22px;width:min(640px,calc(100vw - 32px));max-height:calc(100vh - 48px)}
+dialog::backdrop{background:rgba(14,12,34,.5)}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dh h2{margin:0}
+#dBody dl{display:grid;grid-template-columns:120px 1fr;gap:8px 14px;margin:0;font-size:14px}
+#dBody dt{color:var(--muted)}
+#dBody dd{margin:0;color:var(--ink);word-break:break-word}
+#dBody ul{margin:0;padding-left:18px}
+@media (max-width:600px){#dBody dl{grid-template-columns:1fr;gap:2px}#dBody dd{margin-bottom:8px}}
+@media (max-width:600px){.kpis{grid-template-columns:1fr 1fr}.add input{width:100%}.add label{flex:1 1 100%}}
+</style>
+</head>
+<body>
+<main class="login" id="login">
+  <form class="card" id="loginForm" method="post" action="#">
+    <h1>報名後台登入</h1>
+    <p class="muted">AI行銷自動化與服務創新實戰班</p>
+    <label>管理員帳號（Email）<input name="email" type="email" autocomplete="username" required></label>
+    <label>密碼<input name="password" type="password" autocomplete="current-password" required></label>
+    <p class="lerr" id="lerr" role="alert"></p>
+    <button class="pri big" type="submit">登入</button>
+    <button type="button" class="link" id="toForgot">忘記密碼／第一次登入？</button>
+    <a href="./">← 回課程網頁</a>
+  </form>
+  <form class="card" id="forgotForm" method="post" action="#" hidden>
+    <h1>忘記密碼／第一次登入</h1>
+    <p class="muted">輸入管理員 Email，我們會寄一封設定密碼的信給你。</p>
+    <label>管理員帳號（Email）<input name="email" type="email" autocomplete="username" required></label>
+    <p class="okmsg" id="fMsg" role="status"></p>
+    <button class="pri big" type="submit">寄出設定密碼信</button>
+    <button type="button" class="link" id="toLogin">← 回登入</button>
+  </form>
+  <form class="card" id="recoverForm" method="post" action="#" hidden>
+    <h1>設定新密碼</h1>
+    <p class="muted" id="rcWho"></p>
+    <label>新密碼（至少 8 碼）<input name="pw" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+    <label>再輸入一次<input name="pw2" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+    <p class="lerr" id="rcErr" role="alert"></p>
+    <button class="pri big" type="submit">更新密碼並登入</button>
+  </form>
+</main>
+
+<div class="wrap" id="app" hidden>
+  <header>
+    <h1>報名後台</h1>
+    <div class="who"><span id="who" class="muted"></span><button type="button" id="pwBtn">修改密碼</button><button type="button" id="logout">登出</button><a href="./">回課程網頁</a></div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><span>報名總人數</span><b id="kTotal">0</b></div>
+    <div class="kpi"><span>透過推廣連結</span><b id="kRef">0</b></div>
+    <div class="kpi"><span>直接報名（無推廣人）</span><b id="kDirect">0</b></div>
+    <div class="kpi"><span>實戰班（一）</span><b id="kB1">0</b></div>
+    <div class="kpi"><span>實戰班（二）</span><b id="kB2">0</b></div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="後台頁籤">
+    <button type="button" role="tab" id="tab-r" aria-controls="panel-r" aria-selected="true">報名名單 <span class="cnt" id="rCnt">0</span></button>
+    <button type="button" role="tab" id="tab-p" aria-controls="panel-p" aria-selected="false" tabindex="-1">推廣人成效</button>
+    <button type="button" role="tab" id="tab-s" aria-controls="panel-s" aria-selected="false" tabindex="-1">設定</button>
+  </div>
+
+  <section class="card panel" id="panel-p" role="tabpanel" aria-labelledby="tab-p" hidden>
+    <div class="tbl"><table>
+      <thead><tr><th>推廣人</th><th>代碼</th><th style="text-align:right">報名人數</th><th>報名者</th><th>專屬推廣連結</th><th></th></tr></thead>
+      <tbody id="pBody"></tbody>
+    </table></div>
+    <p class="hint">點一列會切換到「報名名單」，只顯示該推廣人介紹的報名者。</p>
+    <form class="add" id="pForm">
+      <label>推廣人名稱<input name="name" placeholder="例：甲方" maxlength="30" required></label>
+      <label>代碼（英數字）<input name="code" placeholder="例：A" maxlength="20" pattern="[A-Za-z0-9_\-]+" required></label>
+      <button class="pri" type="submit">新增推廣人</button>
+    </form>
+  </section>
+
+  <section class="card panel" id="panel-r" role="tabpanel" aria-labelledby="tab-r">
+    <div class="bar">
+      <div class="l">
+        <input type="hidden" id="fRef" value="*"><button type="button" class="chip" id="fChip" hidden></button>
+        <select id="fB" aria-label="依班次篩選"><option value="*">全部班次</option><option>實戰班（一）</option><option>實戰班（二）</option></select>
+        <input id="fQ" type="search" placeholder="搜尋姓名、電話、Email" aria-label="搜尋">
+      </div>
+      <button id="csv">匯出 Excel（CSV）</button>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>推廣人</th><th></th></tr></thead>
+      <tbody id="rBody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="card panel" id="panel-s" role="tabpanel" aria-labelledby="tab-s" hidden>
+    <h2>班級報名</h2>
+    <p class="hint" style="margin:-6px 0 14px">某一班額滿時按「關閉報名」，報名表上該班會顯示「已額滿，報名已截止」，無法再選。需要時可隨時重新開放。</p>
+    <div class="batches" id="bList"></div>
+    <h2 class="sec">管理員</h2>
+    <p class="hint" style="margin:-6px 0 14px">管理員可以登入本後台查看所有報名資料；勾選「接收」的管理員，每有新報名都會收到通知信。新增時請設定一組初始密碼告知對方，對方登入後可按右上角「修改密碼」自行更改。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Email</th><th>接收新報名通知信</th><th>加入時間</th><th></th></tr></thead>
+      <tbody id="aBody"></tbody>
+    </table></div>
+    <form class="add" id="aForm">
+      <label>新管理員 Email<input name="email" type="email" maxlength="80" required autocomplete="off"></label>
+      <label>初始密碼（至少 8 碼）<input name="password" type="text" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+      <button class="pri" type="submit">新增管理員</button>
+      <p class="msg" id="aMsg" role="status"></p>
+    </form>
+
+    <h2 class="sec" id="myPw">我的密碼</h2>
+    <form class="add" id="pwForm">
+      <label>目前密碼<input name="cur" type="password" maxlength="72" required autocomplete="current-password"></label>
+      <label>新密碼（至少 8 碼）<input name="pw" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+      <label>再輸入一次新密碼<input name="pw2" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+      <button class="pri" type="submit">更新密碼</button>
+      <p class="msg" id="pwMsg" role="status"></p>
+    </form>
+  </section>
+</div>
+
+<dialog id="dlg" aria-labelledby="dTitle">
+  <div class="dh"><h2 id="dTitle">報名資料</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <div id="dBody"></div>
+</dialog>
+
+<dialog id="rsDlg" aria-labelledby="rsTitle">
+  <div class="dh"><h2 id="rsTitle">重設管理員密碼</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <form id="rsForm" class="pwf">
+    <p>帳號：<b id="rsEmail"></b></p>
+    <label>新密碼（至少 8 碼）<input name="pw" type="text" minlength="8" maxlength="72" required autocomplete="off"></label>
+    <p class="hint" style="margin:0">重設後請將新密碼告知對方，對方登入後可在「設定 → 我的密碼」自行更改。</p>
+    <p class="msg" id="rsMsg" role="status"></p>
+    <button class="pri big" type="submit">重設密碼</button>
+  </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="assets/regdb.js?v=8"></script>
+<script>
+(function(){
+  var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
+  var regs=[],proms=[];
+  var $=function(id){return document.getElementById(id)};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function link(code){return SITE+'?ref='+encodeURIComponent(code)}
+  function pname(code){if(!code)return '（直接報名）';var p=proms.find(function(x){return x.code===code});return p?p.name:code+'（未登記）'}
+  function fmt(iso){var d=new Date(iso),p=function(n){return String(n).padStart(2,'0')};return (d.getFullYear()-1911)+'/'+p(d.getMonth()+1)+'/'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
+
+
+  // 登入
+  function enter(email){me=(email||'').toLowerCase();$('login').hidden=true;$('app').hidden=false;$('who').textContent=email||'';load()}
+  function show(id){['loginForm','forgotForm','recoverForm'].forEach(function(k){$(k).hidden=k!==id});var i=$(id).querySelector('input');if(i)i.focus()}
+  var qs=new URLSearchParams(location.search);
+  if(qs.get('type')==='recovery'&&qs.get('token_hash')){
+    // 從重設密碼信的連結進來
+    history.replaceState(null,'',location.pathname);
+    RegDB.recover(qs.get('token_hash')).then(function(email){$('rcWho').textContent='帳號：'+email;show('recoverForm')},
+      function(){show('loginForm');$('lerr').textContent='重設連結已失效或已使用過，請重新申請「忘記密碼」。'});
+  }else{
+    RegDB.session().then(function(email){if(email)enter(email);else show('loginForm')},function(){show('loginForm')});
+  }
+  $('toForgot').addEventListener('click',function(){$('forgotForm').elements.email.value=$('loginForm').elements.email.value;$('fMsg').textContent='';show('forgotForm')});
+  $('toLogin').addEventListener('click',function(){show('loginForm')});
+  $('forgotForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,btn=f.querySelector('button[type=submit]');btn.disabled=true;
+    RegDB.forgot(f.elements.email.value.trim()).then(function(){},function(){}).then(function(){
+      btn.disabled=false;$('fMsg').textContent='如果這是管理員帳號，重設信已寄出，請到信箱收信（也請看看垃圾郵件匣）。連結 1 小時內有效。';
+    });
+  });
+  $('recoverForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target;$('rcErr').textContent='';
+    if(f.elements.pw.value!==f.elements.pw2.value){$('rcErr').textContent='兩次輸入的密碼不一致';return}
+    RegDB.setNewPassword(f.elements.pw.value).then(function(email){f.reset();enter(email)},
+      function(err){$('rcErr').textContent=err.message||'更新失敗，請重新申請。'});
+  });
+  $('loginForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,btn=f.querySelector('button');$('lerr').textContent='';btn.disabled=true;
+    RegDB.signIn(f.elements.email.value.trim(),f.elements.password.value).then(function(email){f.reset();enter(email)},
+      function(){$('lerr').textContent='帳號或密碼錯誤，或此帳號沒有後台權限。'}).then(function(){btn.disabled=false});
+  });
+  $('logout').addEventListener('click',function(){RegDB.signOut().then(function(){location.reload()})});
+
+  // 頁籤
+  var TABS=['r','p','s'];
+  function tab(which){
+    TABS.forEach(function(k){var on=k===which;$('tab-'+k).setAttribute('aria-selected',on);$('tab-'+k).tabIndex=on?0:-1;$('panel-'+k).hidden=!on});
+    if(which==='s')loadSettings();
+  }
+  TABS.forEach(function(k){$('tab-'+k).addEventListener('click',function(){tab(k)})});
+  document.querySelector('.tabs').addEventListener('keydown',function(e){
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+    var cur=TABS.findIndex(function(k){return $('tab-'+k).getAttribute('aria-selected')==='true'});
+    var next=TABS[(cur+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length];tab(next);$('tab-'+next).focus();
+  });
+
+  // 設定：班級報名開關＋管理員
+  var me='';
+  function loadSettings(){
+    RegDB.batches().then(function(list){
+      $('bList').innerHTML=list.map(function(b){
+        var n=regs.filter(function(r){return r.batch===b.name}).length;
+        return '<div class="bt'+(b.open?'':' off')+'"><div><b>'+esc(b.name)+'</b><span class="st">'+(b.open?'報名中':'已關閉（額滿）')+'</span><small>目前報名 '+n+' 人・名額 33＋候補 5</small></div>'+
+          '<button type="button" class="'+(b.open?'del':'pri')+'" data-batch="'+esc(b.name)+'" data-open="'+(b.open?'0':'1')+'">'+(b.open?'關閉報名':'重新開放')+'</button></div>';
+      }).join('');
+    });
+    RegDB.admins().then(function(list){
+      $('aBody').innerHTML=list.map(function(a){
+        var self=a.email===me;
+        return '<tr><td>'+esc(a.email)+(self?' <span class="code">你</span>':'')+'</td><td><label class="sw"><input type="checkbox" data-notify="'+esc(a.email)+'"'+(a.notify!==false?' checked':'')+'><span>'+(a.notify!==false?'接收':'不接收')+'</span></label></td><td class="num">'+fmt(a.created_at)+'</td><td class="acts">'+(self?'':'<button type="button" data-reset="'+esc(a.email)+'">重設密碼</button> <button type="button" class="del" data-rmadmin="'+esc(a.email)+'">移除</button>')+'</td></tr>';
+      }).join('');
+    });
+  }
+  $('bList').addEventListener('click',function(e){
+    var b=e.target.closest('[data-batch]');if(!b)return;
+    var open=b.dataset.open==='1',name=b.dataset.batch;
+    if(!confirm(open?'重新開放「'+name+'」報名？':'確定關閉「'+name+'」報名？\n關閉後報名表上該班會顯示「已額滿」，無法再選。'))return;
+    b.disabled=true;
+    RegDB.setBatchOpen(name,open).then(loadSettings,function(){b.disabled=false;alert('更新失敗，請重新整理後再試。')});
+  });
+  $('aBody').addEventListener('click',function(e){
+    var b=e.target.closest('[data-rmadmin]');if(!b)return;
+    var em=b.dataset.rmadmin;
+    if(!confirm('移除管理員 '+em+'？\n移除後對方將無法再登入後台。'))return;
+    b.disabled=true;
+    RegDB.removeAdmin(em).then(loadSettings,function(err){b.disabled=false;alert(err.message)});
+  });
+  $('aBody').addEventListener('change',function(e){
+    var c=e.target.closest('[data-notify]');if(!c)return;
+    var on=c.checked;c.disabled=true;
+    RegDB.setAdminNotify(c.dataset.notify,on).then(function(){c.nextElementSibling.textContent=on?'接收':'不接收'},
+      function(){c.checked=!on;alert('更新失敗，請稍後再試。')}).then(function(){c.disabled=false});
+  });
+  $('aForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,btn=f.querySelector('button'),em=f.elements.email.value.trim().toLowerCase();
+    $('aMsg').textContent='';$('aMsg').className='msg';btn.disabled=true;
+    RegDB.addAdmin(em,f.elements.password.value).then(function(res){
+      f.reset();$('aMsg').classList.add('ok');
+      $('aMsg').textContent=res&&res.existed?'已加入管理員：'+em+'（此 Email 原本就有帳號，請用原密碼登入）':'已新增管理員：'+em+'，請將登入網址與初始密碼告知對方。';
+      loadSettings();
+    },function(err){$('aMsg').classList.add('bad');$('aMsg').textContent=err.message}).then(function(){btn.disabled=false});
+  });
+
+  // 我的密碼（右上角按鈕直接帶到設定頁）
+  $('pwBtn').addEventListener('click',function(){tab('s');$('myPw').scrollIntoView({behavior:'smooth',block:'start'});$('pwForm').elements.cur.focus({preventScroll:true})});
+  $('pwForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,m=$('pwMsg'),btn=f.querySelector('button');m.className='msg';
+    if(f.elements.pw.value!==f.elements.pw2.value){m.classList.add('bad');m.textContent='兩次輸入的新密碼不一致';return}
+    if(f.elements.pw.value===f.elements.cur.value){m.classList.add('bad');m.textContent='新密碼不能和目前密碼相同';return}
+    btn.disabled=true;
+    RegDB.changePassword(me,f.elements.cur.value,f.elements.pw.value).then(function(){m.classList.add('ok');m.textContent='密碼已更新，下次請用新密碼登入。';f.reset()},
+      function(err){m.classList.add('bad');m.textContent=err.message||'更新失敗，請稍後再試'}).then(function(){btn.disabled=false});
+  });
+
+  // 重設其他管理員的密碼
+  $('aBody').addEventListener('click',function(e){
+    var b=e.target.closest('[data-reset]');if(!b)return;
+    $('rsForm').reset();$('rsMsg').textContent='';$('rsEmail').textContent=b.dataset.reset;$('rsDlg').showModal();
+  });
+  $('rsForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,m=$('rsMsg'),btn=f.querySelector('button'),em=$('rsEmail').textContent;m.className='msg';btn.disabled=true;
+    RegDB.resetAdminPassword(em,f.elements.pw.value).then(function(){m.classList.add('ok');m.textContent='已重設 '+em+' 的密碼，請告知對方新密碼。';f.reset()},
+      function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
+  });
+
+  function load(){Promise.all([RegDB.list(),RegDB.promoters()]).then(function(r){regs=r[0];proms=r[1];render()},function(){alert('資料讀取失敗，請重新整理或重新登入。')})}
+
+  function render(){
+    var withRef=regs.filter(function(r){return r.ref});
+    $('kTotal').textContent=regs.length;$('kRef').textContent=withRef.length;$('kDirect').textContent=regs.length-withRef.length;
+    $('kB1').textContent=regs.filter(function(r){return r.batch==='實戰班（一）'}).length;$('kB2').textContent=regs.filter(function(r){return r.batch==='實戰班（二）'}).length;
+
+    // 推廣人彙總：已登記的 + 名單中出現但未登記的代碼 + 直接報名
+    var codes=proms.map(function(p){return p.code});
+    regs.forEach(function(r){if(r.ref&&codes.indexOf(r.ref)<0)codes.push(r.ref)});
+    var rows=codes.map(function(c){return {code:c,list:regs.filter(function(r){return r.ref===c})}});
+    rows.sort(function(a,b){return b.list.length-a.list.length});
+    rows.push({code:'',list:regs.filter(function(r){return !r.ref})});
+    var cur=$('fRef').value;
+    $('pBody').innerHTML=rows.map(function(row){
+      var reg=row.code&&proms.some(function(p){return p.code===row.code});
+      return '<tr class="click'+(cur===row.code?' sel':'')+'" data-code="'+esc(row.code)+'">'+
+        '<td><b>'+esc(pname(row.code))+'</b></td>'+
+        '<td>'+(row.code?'<span class="code">'+esc(row.code)+'</span>':'<span class="muted">—</span>')+'</td>'+
+        '<td class="n">'+row.list.length+'</td>'+
+        '<td class="names">'+(row.list.length?row.list.map(function(r){return esc(r.name)}).join('、'):'<span class="muted">尚無</span>')+'</td>'+
+        '<td>'+(row.code?'<button type="button" data-copy="'+esc(link(row.code))+'">複製連結</button>':'')+'</td>'+
+        '<td>'+(reg?'<button type="button" class="del" data-delp="'+esc(row.code)+'">移除</button>':'')+'</td></tr>';
+    }).join('');
+
+    if(cur!=='*'&&!rows.some(function(r){return r.code===cur}))$('fRef').value='*';
+    renderList();
+  }
+
+  function filtered(){
+    var c=$('fRef').value,bt=$('fB').value,q=$('fQ').value.trim().toLowerCase();
+    return regs.filter(function(r){
+      if(c!=='*'&&(r.ref||'')!==c)return false;
+      if(bt!=='*'&&r.batch!==bt)return false;
+      if(q&&[r.name,r.phone,r.email].join(' ').toLowerCase().indexOf(q)<0)return false;
+      return true;
+    });
+  }
+  function renderList(){
+    var l=filtered();
+    $('rCnt').textContent=l.length;
+    $('rBody').innerHTML=l.length?l.map(function(r){
+      return '<tr><td class="num">'+fmt(r.created_at)+'</td><td class="nw">'+esc(r.batch||'—')+'</td><td><b>'+esc(r.name)+'</b></td><td class="num">'+esc(r.phone)+'</td><td>'+esc(r.line)+'</td><td>'+esc(r.email)+'</td>'+
+        '<td>'+esc(r.school)+'<br><span class="muted">'+esc(r.dept)+'</span></td><td class="muted">'+esc((r.channels||[]).join('、'))+'</td>'+
+        '<td>'+esc(pname(r.ref))+'</td><td class="acts"><button type="button" data-view="'+esc(r.id)+'">詳細</button> <button type="button" class="del" data-del="'+esc(r.id)+'">刪除</button></td></tr>';
+    }).join(''):'<tr><td colspan="10" class="empty">目前沒有報名資料</td></tr>';
+    var c=$('fRef').value,chip=$('fChip');
+    chip.hidden=c==='*';chip.textContent='只顯示：'+pname(c)+' ✕';chip.setAttribute('aria-label','清除推廣人篩選（目前：'+pname(c)+'）');
+    document.querySelectorAll('#pBody tr').forEach(function(tr){tr.classList.toggle('sel',tr.dataset.code===c)});
+  }
+
+  $('pBody').addEventListener('click',function(e){
+    var b=e.target.closest('button');
+    if(b&&b.dataset.copy!=null){
+      var t=b.dataset.copy;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製連結'},1500)},function(){prompt('複製這個連結：',t)});
+      return;
+    }
+    if(b&&b.dataset.delp){if(confirm('移除推廣人「'+pname(b.dataset.delp)+'」？（已報名的資料不會刪除）'))RegDB.removePromoter(b.dataset.delp).then(load);return}
+    var tr=e.target.closest('tr');if(!tr)return;
+    $('fRef').value=tr.dataset.code;$('fQ').value='';renderList();tab('r');
+  });
+  function view(r){
+    var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
+      ['最高學歷／學校',r.school],['畢業科系',r.dept],['得知管道',(r.channels||[]).join('、')],['留言',r.note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
+    $('dBody').innerHTML='<dl>'+rows.map(function(x){return '<dt>'+x[0]+'</dt><dd>'+esc(x[1])+'</dd>'}).join('')+'</dl>';
+    $('dlg').showModal();
+  }
+  $('rBody').addEventListener('click',function(e){
+    var v=e.target.closest('[data-view]');
+    if(v){view(regs.find(function(r){return r.id===v.dataset.view}));return}
+    var b=e.target.closest('[data-del]');if(!b)return;
+    if(confirm('確定刪除這筆報名資料？刪除後無法復原。'))RegDB.remove(b.dataset.del).then(load);
+  });
+  $('fChip').addEventListener('click',function(){$('fRef').value='*';renderList()});
+  $('fB').addEventListener('change',renderList);
+  $('fQ').addEventListener('input',renderList);
+  $('pForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,name=f.elements.name.value.trim(),code=f.elements.code.value.trim();
+    if(!name||!/^[A-Za-z0-9_-]+$/.test(code))return;
+    RegDB.savePromoter({name:name,code:code}).then(function(){f.reset();load()});
+  });
+  $('csv').addEventListener('click',function(){
+    var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','得知管道','留言','推廣人','推廣代碼'];
+    var lines=[head].concat(filtered().map(function(r){return [fmt(r.created_at),r.batch||'',r.name,r.email,r.phone,r.line,r.school,r.dept,(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'']}));
+    var csv='﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n');
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='報名名單.csv';a.click();
+  });
+})();
+</script>
+</body>
+</html>
