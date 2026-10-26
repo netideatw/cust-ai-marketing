@@ -83,6 +83,13 @@ button.big{font-size:16px;padding:12px 20px}
 button.link{border:0;background:none;padding:0;color:var(--accent);font-weight:500;font-size:14px;justify-self:center}
 button.link:hover{text-decoration:underline}
 .lerr:empty{display:none}
+textarea{font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);resize:vertical}
+.toreg{margin:4px 0 0;padding-top:14px;border-top:1px dashed var(--line);text-align:center;font-size:14px;color:var(--muted)}
+.toreg button.link{display:inline}
+.apps{border:1.5px solid var(--hot);background:color-mix(in srgb,var(--hot) 5%,var(--surface));border-radius:14px;padding:16px;margin-bottom:22px}
+.apps h2{font-size:16px;margin-bottom:10px}
+.apps .note{color:var(--muted);font-size:13px;max-width:280px}
+.tabs .cnt.hot{background:var(--hot);color:#fff}
 .who{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:14px}
 .tabs{display:flex;gap:4px;border-bottom:1.5px solid var(--line);margin-bottom:-1px}
 .tabs button{border:0;border-radius:10px 10px 0 0;background:none;color:var(--muted);font-size:15px;padding:12px 18px;border-bottom:3px solid transparent;margin-bottom:-1.5px}
@@ -162,8 +169,27 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <p class="lerr" id="lerr" role="alert"></p>
     <button class="pri big" type="submit">登入</button>
     <button type="button" class="link" id="toForgot">忘記密碼／第一次登入？</button>
+    <p class="toreg">想成為推廣者？<button type="button" class="link" id="toSignup">註冊推廣者帳號</button></p>
     <a href="./">← 回課程網頁</a>
   </form>
+  <form class="card" id="signupForm" method="post" action="#" hidden>
+    <h1>註冊推廣者帳號</h1>
+    <p class="muted">送出後由管理員審核，通過後會寄信通知你，就能用這組 Email 與密碼登入，取得專屬推廣連結並查看成效。</p>
+    <label>姓名或單位名稱<input name="name" maxlength="30" required autocomplete="name"></label>
+    <label>Email（登入帳號）<input name="email" type="email" maxlength="80" required autocomplete="email"></label>
+    <label>聯絡電話<input name="phone" type="tel" maxlength="20" required autocomplete="tel" placeholder="例：0912345678"></label>
+    <label>推廣方式（選填）<textarea name="note" maxlength="300" rows="3" placeholder="例：在系上 LINE 群組、IG 分享課程"></textarea></label>
+    <label>密碼（至少 8 碼）<input name="pw" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+    <label>再輸入一次密碼<input name="pw2" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
+    <p class="lerr" id="suErr" role="alert"></p>
+    <button class="pri big" type="submit">送出註冊申請</button>
+    <button type="button" class="link" data-back>← 已有帳號，回登入</button>
+  </form>
+  <div class="card" id="signupDone" hidden>
+    <h1>已送出申請</h1>
+    <p class="okmsg">我們已收到你的推廣者註冊申請，確認信已寄到你的 Email。管理員審核通過後會再寄信通知你，屆時用註冊的 Email 與密碼登入即可。</p>
+    <button type="button" class="link" data-back>← 回登入</button>
+  </div>
   <form class="card" id="forgotForm" method="post" action="#" hidden>
     <h1>忘記密碼／第一次登入</h1>
     <p class="muted">輸入你的後台帳號 Email，我們會寄一封設定密碼的信給你。</p>
@@ -198,18 +224,25 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 
   <div class="tabs" role="tablist" aria-label="後台頁籤">
     <button type="button" role="tab" id="tab-r" aria-controls="panel-r" aria-selected="true">報名名單 <span class="cnt" id="rCnt">0</span></button>
-    <button type="button" role="tab" id="tab-p" aria-controls="panel-p" aria-selected="false" tabindex="-1">推廣人成效</button>
+    <button type="button" role="tab" id="tab-p" aria-controls="panel-p" aria-selected="false" tabindex="-1">推廣人成效 <span class="cnt hot" id="appCnt" hidden title="待審核申請">0</span></button>
     <button type="button" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="false" tabindex="-1">數據分析</button>
     <button type="button" role="tab" id="tab-m" aria-controls="panel-m" aria-selected="false" tabindex="-1" hidden>我介紹的報名者 <span class="cnt" id="mCnt">0</span></button>
     <button type="button" role="tab" id="tab-s" aria-controls="panel-s" aria-selected="false" tabindex="-1">設定</button>
   </div>
 
   <section class="card panel" id="panel-p" role="tabpanel" aria-labelledby="tab-p" hidden>
+    <div class="apps" id="appsBox" hidden>
+      <h2>待審核的推廣者申請</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>申請時間</th><th>姓名／單位</th><th>Email</th><th>電話</th><th>推廣方式</th><th></th></tr></thead>
+        <tbody id="appBody"></tbody>
+      </table></div>
+    </div>
     <div class="tbl"><table>
       <thead><tr><th>推廣人</th><th>代碼</th><th style="text-align:right">報名人數</th><th>報名者</th><th>專屬推廣連結</th><th>推廣者登入帳號</th><th></th></tr></thead>
       <tbody id="pBody"></tbody>
     </table></div>
-    <p class="hint">點一列會切換到「報名名單」，只顯示該推廣人介紹的報名者。按「開通帳號」可替推廣人建立登入帳號，對方登入後只能看到自己的瀏覽、點擊與報名成效（報名者姓名會遮蔽，看不到聯絡資料）。</p>
+    <p class="hint">點一列會切換到「報名名單」，只顯示該推廣人介紹的報名者。推廣者請到登入頁按「註冊推廣者帳號」自行註冊（可直接把 <span class="code" id="suLink"></span> 給對方），審核通過後即可登入，只看得到自己的瀏覽、點擊與報名成效（報名者姓名會遮蔽，看不到聯絡資料）。</p>
     <form class="add" id="pForm">
       <label>推廣人名稱<input name="name" placeholder="例：甲方" maxlength="30" required></label>
       <label>代碼（英數字）<input name="code" placeholder="例：A" maxlength="20" pattern="[A-Za-z0-9_\-]+" required></label>
@@ -333,19 +366,30 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 </dialog>
 
 <dialog id="pmDlg" aria-labelledby="pmTitle">
-  <div class="dh"><h2 id="pmTitle">開通推廣者帳號</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <div class="dh"><h2 id="pmTitle">重設推廣者密碼</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
   <form id="pmForm" class="pwf">
     <p>推廣人：<b id="pmWho"></b></p>
-    <label id="pmEmailL">推廣者登入 Email<input name="email" type="email" maxlength="80" autocomplete="off"></label>
-    <label>密碼（至少 8 碼）<input name="pw" type="text" minlength="8" maxlength="72" required autocomplete="off"></label>
-    <p class="hint" style="margin:0">請將登入網址、Email 與密碼告知對方，對方登入後可在「設定 → 我的密碼」自行更改。</p>
+    <label>新密碼（至少 8 碼）<input name="pw" type="text" minlength="8" maxlength="72" required autocomplete="off"></label>
+    <p class="hint" style="margin:0">重設後請將新密碼告知對方，對方登入後可在「設定 → 我的密碼」自行更改。推廣者也可以在登入頁按「忘記密碼」自行重設。</p>
     <p class="msg" id="pmMsg" role="status"></p>
-    <button class="pri big" type="submit">確定</button>
+    <button class="pri big" type="submit">重設密碼</button>
+  </form>
+</dialog>
+
+<dialog id="apDlg" aria-labelledby="apTitle">
+  <div class="dh"><h2 id="apTitle">核准推廣者申請</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <form id="apForm" class="pwf">
+    <p>申請人：<b id="apWho"></b></p>
+    <label>推廣人名稱（後台顯示用）<input name="name" maxlength="30" required></label>
+    <label>推廣代碼（英數字，會出現在推廣連結 ?ref= 後面）<input name="code" maxlength="20" pattern="[A-Za-z0-9_\-]+" required autocomplete="off"></label>
+    <p class="hint" style="margin:0">核准後系統會寄信通知對方，信中附上專屬推廣連結與登入按鈕。</p>
+    <p class="msg" id="apMsg" role="status"></p>
+    <button class="pri big" type="submit">核准並通知</button>
   </form>
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=9"></script>
+<script src="assets/regdb.js?v=10"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -369,9 +413,12 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('myLink').textContent=link(role.promoter.code);
     loadMine();tab('a');
   }
-  function show(id){['loginForm','forgotForm','recoverForm'].forEach(function(k){$(k).hidden=k!==id});var i=$(id).querySelector('input');if(i)i.focus()}
+  function show(id){['loginForm','forgotForm','recoverForm','signupForm','signupDone'].forEach(function(k){$(k).hidden=k!==id});var i=$(id).querySelector('input');if(i)i.focus()}
   var qs=new URLSearchParams(location.search);
-  if(qs.get('type')==='recovery'&&qs.get('token_hash')){
+  if(qs.has('signup')){
+    // 推廣者註冊連結：admin.html?signup
+    show('signupForm');
+  }else if(qs.get('type')==='recovery'&&qs.get('token_hash')){
     // 從重設密碼信的連結進來
     history.replaceState(null,'',location.pathname);
     RegDB.recover(qs.get('token_hash')).then(function(email){$('rcWho').textContent='帳號：'+email;show('recoverForm')},
@@ -399,7 +446,22 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     e.preventDefault();
     var f=e.target,btn=f.querySelector('button');$('lerr').textContent='';btn.disabled=true;
     RegDB.signIn(f.elements.email.value.trim(),f.elements.password.value).then(function(role){f.reset();enter(role)},
-      function(){$('lerr').textContent='帳號或密碼錯誤，或此帳號沒有後台權限。'}).then(function(){btn.disabled=false});
+      function(err){$('lerr').textContent=err&&err.friendly?err.message:'帳號或密碼錯誤，或此帳號沒有後台權限。'}).then(function(){btn.disabled=false});
+  });
+
+  // 推廣者自行註冊
+  $('toSignup').addEventListener('click',function(){$('suErr').textContent='';show('signupForm')});
+  document.querySelectorAll('[data-back]').forEach(function(b){b.addEventListener('click',function(){show('loginForm')})});
+  $('signupForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,el=f.elements,btn=f.querySelector('button[type=submit]'),er=$('suErr');er.textContent='';
+    var phone=el.phone.value.replace(/[\s()-]/g,'');
+    if(!/^0\d{8,9}$/.test(phone)){er.textContent='請填寫正確的電話號碼，手機為 09 開頭 10 碼';el.phone.focus();return}
+    if(el.pw.value!==el.pw2.value){er.textContent='兩次輸入的密碼不一致';el.pw2.focus();return}
+    btn.disabled=true;btn.textContent='送出中…';
+    RegDB.signUpPromoter({name:el.name.value.trim(),email:el.email.value.trim(),phone:phone,note:el.note.value.trim(),password:el.pw.value}).then(function(){
+      $('loginForm').elements.email.value=el.email.value.trim();f.reset();show('signupDone');
+    },function(err){er.textContent=err.message}).then(function(){btn.disabled=false;btn.textContent='送出註冊申請'});
   });
   $('logout').addEventListener('click',function(){RegDB.signOut().then(function(){location.reload()})});
 
@@ -489,7 +551,42 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
 
-  function load(){Promise.all([RegDB.list(),RegDB.promoters()]).then(function(r){regs=r[0];proms=r[1];render()},function(){alert('資料讀取失敗，請重新整理或重新登入。')})}
+  var apps=[];
+  function load(){Promise.all([RegDB.list(),RegDB.promoters(),RegDB.applications()]).then(function(r){regs=r[0];proms=r[1];apps=r[2];render();renderApps()},function(){alert('資料讀取失敗，請重新整理或重新登入。')})}
+
+  // 推廣者註冊申請（待審核）
+  function renderApps(){
+    var pend=apps.filter(function(a){return a.status==='pending'});
+    $('appsBox').hidden=!pend.length;$('appCnt').hidden=!pend.length;$('appCnt').textContent=pend.length;
+    $('appBody').innerHTML=pend.map(function(a){
+      return '<tr><td class="num">'+fmt(a.created_at)+'</td><td><b>'+esc(a.name)+'</b></td><td>'+esc(a.email)+'</td><td class="num">'+esc(a.phone)+'</td><td class="note">'+(a.note?esc(a.note):'<span class="muted">—</span>')+'</td>'+
+        '<td class="acts"><button type="button" class="pri" data-approve="'+esc(a.id)+'">核准</button> <button type="button" class="del" data-reject="'+esc(a.id)+'">拒絕</button></td></tr>';
+    }).join('');
+  }
+  // 代碼建議：Email 帳號名的英數字，重複時加數字
+  function suggestCode(email){
+    var base=(email.split('@')[0].replace(/[^A-Za-z0-9]/g,'')||'P').slice(0,12),c=base,i=2;
+    while(proms.some(function(p){return p.code.toLowerCase()===c.toLowerCase()}))c=base+(i++);
+    return c;
+  }
+  $('appBody').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    var a=apps.find(function(x){return x.id===(b.dataset.approve||b.dataset.reject)});if(!a)return;
+    if(b.dataset.approve){
+      var f=$('apForm');f.reset();$('apMsg').textContent='';$('apMsg').className='msg';f.dataset.id=a.id;
+      $('apWho').textContent=a.name+'（'+a.email+'）';f.elements.name.value=a.name;f.elements.code.value=suggestCode(a.email);
+      $('apDlg').showModal();return;
+    }
+    if(!confirm('拒絕「'+a.name+'」的推廣者申請？\n系統會寄信通知對方，並刪除其註冊的帳號（對方之後可重新申請）。'))return;
+    b.disabled=true;RegDB.reviewApplication(a.id,'reject').then(load,function(err){b.disabled=false;alert(err.message)});
+  });
+  $('apForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,m=$('apMsg'),btn=f.querySelector('button[type=submit]');m.className='msg';btn.disabled=true;
+    RegDB.reviewApplication(f.dataset.id,'approve',f.elements.code.value.trim(),f.elements.name.value.trim()).then(function(){
+      $('apDlg').close();load();
+    },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
+  });
 
   function render(){
     var withRef=regs.filter(function(r){return r.ref});
@@ -527,7 +624,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function acct(code,reg){
     if(!reg)return '';
     var p=proms.find(function(x){return x.code===code});
-    if(!p.email)return '<button type="button" data-acct="'+esc(code)+'">開通帳號</button>';
+    if(!p.email)return '<span class="muted">未註冊</span>';
     return esc(p.email)+'<br><button type="button" data-preset="'+esc(code)+'">重設密碼</button> <button type="button" class="del" data-unlink="'+esc(code)+'">停用</button>';
   }
 
@@ -560,11 +657,9 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製連結'},1500)},function(){prompt('複製這個連結：',t)});
       return;
     }
-    if(b&&(b.dataset.acct||b.dataset.preset)){
-      var reset=!!b.dataset.preset,code=b.dataset.acct||b.dataset.preset;
-      $('pmForm').reset();$('pmMsg').textContent='';$('pmForm').dataset.code=code;$('pmForm').dataset.mode=reset?'reset':'link';
-      $('pmTitle').textContent=reset?'重設推廣者密碼':'開通推廣者帳號';$('pmWho').textContent=pname(code)+'（'+code+'）';
-      $('pmEmailL').hidden=reset;$('pmForm').elements.email.required=!reset;
+    if(b&&b.dataset.preset){
+      var code=b.dataset.preset;
+      $('pmForm').reset();$('pmMsg').textContent='';$('pmForm').dataset.code=code;$('pmWho').textContent=pname(code)+'（'+code+'）';
       $('pmDlg').showModal();return;
     }
     if(b&&b.dataset.unlink){
@@ -610,18 +705,16 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function toCsv(lines){return '﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n')}
   function download(name,text){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
 
-  // 推廣者帳號：開通／重設密碼
+  // 推廣者帳號：重設密碼
   $('pmForm').addEventListener('submit',function(e){
     e.preventDefault();
-    var f=e.target,m=$('pmMsg'),btn=f.querySelector('button'),code=f.dataset.code,reset=f.dataset.mode==='reset';
-    var em=f.elements.email.value.trim().toLowerCase(),pw=f.elements.pw.value;
+    var f=e.target,m=$('pmMsg'),btn=f.querySelector('button');
     m.className='msg';btn.disabled=true;
-    (reset?RegDB.resetPromoterPassword(code,pw):RegDB.linkPromoter(code,em,pw)).then(function(res){
-      m.classList.add('ok');
-      m.textContent=reset?'密碼已重設，請告知對方新密碼。':res&&res.existed?'已開通：'+em+'（此 Email 原本就有帳號，請用原密碼登入）':'已開通：'+em+'，請將登入網址、Email 與密碼告知對方。';
-      f.reset();load();
+    RegDB.resetPromoterPassword(f.dataset.code,f.elements.pw.value).then(function(){
+      m.classList.add('ok');m.textContent='密碼已重設，請告知對方新密碼。';f.reset();
     },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
+  $('suLink').textContent=SITE+'admin.html?signup';
 
   // 推廣者：我介紹的報名者
   function loadMine(){

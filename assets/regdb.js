@@ -16,8 +16,8 @@ window.RegDB = (function () {
   }
   function ok(res) { if (res.error) throw res.error; return res.data }
   // 呼叫函式，失敗時把伺服器的中文錯誤訊息帶出來
-  function callAdmins(body) {
-    return client().functions.invoke('manage-admins', { body: body }).then(function (res) {
+  function callAdmins(body, fn) {
+    return client().functions.invoke(fn || 'manage-admins', { body: body }).then(function (res) {
       if (!res.error) return res.data;
       var ctx = res.error.context;
       return (ctx && ctx.json ? ctx.json() : Promise.resolve({})).then(function (j) {
@@ -53,32 +53,54 @@ window.RegDB = (function () {
       });
     },
 
-    // 登入身分：{ email, admin, promoter:{code,name}|null }；沒有任何後台權限時回傳 null
+    // 登入身分：{ email, admin, promoter:{code,name}|null, apply:推廣者申請狀態, access }；未登入回傳 null
     role: function () {
       var c = client();
       return c.auth.getUser().then(function (u) {
         var user = u.data && u.data.user;
         if (!user) return null;
         return c.rpc('my_role').then(ok).then(function (r) {
-          if (!r || (!r.admin && !r.promoter)) return null;
-          return { email: user.email, admin: !!r.admin, promoter: r.promoter || null };
+          r = r || {};
+          return { email: user.email, admin: !!r.admin, promoter: r.promoter || null, apply: r.apply || null, access: !!(r.admin || r.promoter) };
         });
       });
     },
     session: function () {
       var self = this;
       return client().auth.getSession().then(function (res) {
-        return res.data && res.data.session ? self.role() : null;
+        if (!res.data || !res.data.session) return null;
+        return self.role().then(function (r) { return r && r.access ? r : null });
       });
     },
+    // 沒有後台權限時登出，並依推廣者申請狀態給出提示
     signIn: function (email, pw) {
       var c = client(), self = this;
       return c.auth.signInWithPassword({ email: email, password: pw }).then(ok).then(function () {
         return self.role().then(function (r) {
-          if (!r) return c.auth.signOut().then(function () { throw new Error('no access') });
-          return r;
+          if (r && r.access) return r;
+          var msg = !r ? '' : r.apply === 'pending' ? '你的推廣者申請正在審核中，通過後會寄信通知你。'
+            : r.apply === 'approved' ? '此推廣者帳號已停用，如有疑問請聯絡管理員。' : '';
+          return c.auth.signOut().then(function () { var e = new Error(msg || 'no access'); e.friendly = !!msg; throw e });
         });
       });
+    },
+    // 推廣者自行註冊（送出後等管理員審核）
+    signUpPromoter: function (rec) {
+      return fetch(URL + '/functions/v1/notify', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'promoter_signup', name: rec.name, email: rec.email, phone: rec.phone, note: rec.note, password: rec.password })
+      }).then(function (r) {
+        return r.json().catch(function () { return {} }).then(function (j) {
+          if (!r.ok || !j.ok) throw new Error(j.error || '註冊失敗，請稍後再試');
+        });
+      });
+    },
+    // 管理員：推廣者申請（待審核在前）與審核
+    applications: function () {
+      return client().from('promoter_applications').select('*').order('created_at', { ascending: false }).then(ok);
+    },
+    reviewApplication: function (id, decision, code, name) {
+      return callAdmins({ type: 'promoter_review', id: id, decision: decision, code: code, name: name }, 'notify');
     },
     signOut: function () { return client().auth.signOut() },
 
@@ -111,13 +133,12 @@ window.RegDB = (function () {
       return c.auth.updateUser({ password: pw }).then(function (r) {
         if (r.error) throw new Error(/should be different/i.test(r.error.message) ? '新密碼不能和舊密碼相同' : '更新失敗：' + r.error.message);
         return RegDB.role().then(function (role) {
-          if (!role) return c.auth.signOut().then(function () { throw new Error('此帳號沒有後台權限') });
+          if (!role || !role.access) return c.auth.signOut().then(function () { throw new Error('此帳號沒有後台權限') });
           return role;
         });
       });
     },
-    // 推廣者登入帳號：開通（綁定 Email＋初始密碼）／重設密碼／停用
-    linkPromoter: function (code, email, password) { return callAdmins({ action: 'promoter_link', code: code, email: email, password: password }) },
+    // 推廣者登入帳號：重設密碼／停用（帳號由推廣者自行註冊、管理員審核）
     resetPromoterPassword: function (code, password) { return callAdmins({ action: 'promoter_reset', code: code, password: password }) },
     unlinkPromoter: function (code) { return callAdmins({ action: 'promoter_unlink', code: code }) },
     // 推廣者：自己介紹的報名者（姓名已遮蔽）
