@@ -95,6 +95,7 @@ button.link:hover{text-decoration:underline}
 .sw{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
 .sw input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
 h2.sec{margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
+#adminSet[hidden]+h2.sec{margin-top:0;padding-top:0;border-top:0}
 .batches{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .bt{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1.5px solid var(--ok);border-radius:14px;padding:14px 16px;background:color-mix(in srgb,var(--ok) 6%,var(--surface))}
 .bt b{color:var(--ink);font-size:16px;margin-right:8px}
@@ -119,14 +120,44 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
 #dBody ul{margin:0;padding-left:18px}
 @media (max-width:600px){#dBody dl{grid-template-columns:1fr;gap:2px}#dBody dd{margin-bottom:8px}}
 @media (max-width:600px){.kpis{grid-template-columns:1fr 1fr}.add input{width:100%}.add label{flex:1 1 100%}}
+/* 數據分析 */
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;padding:2px;background:var(--bg)}
+.seg button{border:0;background:none;padding:5px 14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.kpis.sm{margin-bottom:20px}
+.kpis.sm .kpi b{font-size:26px}
+.kpi small{display:block;font-size:12px;color:var(--muted)}
+.chart{position:relative;margin-top:6px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .ax{fill:var(--muted);font-size:11px;font-family:var(--f-num)}
+.chart .bar{fill:var(--accent)}
+.chart .hit{fill:transparent;cursor:crosshair}
+.chart .hit:hover+.bar,.chart .bar.on{fill:var(--hot)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;border-radius:8px;padding:6px 10px;white-space:nowrap;transform:translate(-50%,-110%);z-index:2}
+.tip b{font-family:var(--f-num);font-size:15px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:28px}
+.grid2 h3{font-size:15px;color:var(--ink);margin:0 0 10px}
+.hl{display:grid;gap:8px;margin:0;padding:0;list-style:none;font-size:14px}
+.hl li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center}
+.hl .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hl .v{font-family:var(--f-num);font-weight:700;color:var(--ink);text-align:right}
+.hl .b{grid-column:1/-1;height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.hl .b i{display:block;height:100%;background:var(--accent);border-radius:3px}
+details.tv{margin-top:14px}
+details.tv summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:700}
+td.r,th.r{text-align:right;font-family:var(--f-num)}
+.mylink{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--sunk);border-radius:12px;padding:12px 14px;margin-bottom:18px;word-break:break-all}
+.mylink b{color:var(--ink)}
+.acct{font-size:13px;line-height:1.9}
 </style>
 </head>
 <body>
 <main class="login" id="login">
   <form class="card" id="loginForm" method="post" action="#">
-    <h1>報名後台登入</h1>
-    <p class="muted">AI行銷自動化與服務創新實戰班</p>
-    <label>管理員帳號（Email）<input name="email" type="email" autocomplete="username" required></label>
+    <h1>後台登入</h1>
+    <p class="muted">AI行銷自動化與服務創新實戰班｜管理員、推廣者共用</p>
+    <label>帳號（Email）<input name="email" type="email" autocomplete="username" required></label>
     <label>密碼<input name="password" type="password" autocomplete="current-password" required></label>
     <p class="lerr" id="lerr" role="alert"></p>
     <button class="pri big" type="submit">登入</button>
@@ -135,8 +166,8 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
   </form>
   <form class="card" id="forgotForm" method="post" action="#" hidden>
     <h1>忘記密碼／第一次登入</h1>
-    <p class="muted">輸入管理員 Email，我們會寄一封設定密碼的信給你。</p>
-    <label>管理員帳號（Email）<input name="email" type="email" autocomplete="username" required></label>
+    <p class="muted">輸入你的後台帳號 Email，我們會寄一封設定密碼的信給你。</p>
+    <label>帳號（Email）<input name="email" type="email" autocomplete="username" required></label>
     <p class="okmsg" id="fMsg" role="status"></p>
     <button class="pri big" type="submit">寄出設定密碼信</button>
     <button type="button" class="link" id="toLogin">← 回登入</button>
@@ -153,11 +184,11 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
 
 <div class="wrap" id="app" hidden>
   <header>
-    <h1>報名後台</h1>
+    <h1 id="ttl">報名後台</h1>
     <div class="who"><span id="who" class="muted"></span><button type="button" id="pwBtn">修改密碼</button><button type="button" id="logout">登出</button><a href="./">回課程網頁</a></div>
   </header>
 
-  <div class="kpis">
+  <div class="kpis" id="regKpis">
     <div class="kpi"><span>報名總人數</span><b id="kTotal">0</b></div>
     <div class="kpi"><span>透過推廣連結</span><b id="kRef">0</b></div>
     <div class="kpi"><span>直接報名（無推廣人）</span><b id="kDirect">0</b></div>
@@ -168,15 +199,17 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
   <div class="tabs" role="tablist" aria-label="後台頁籤">
     <button type="button" role="tab" id="tab-r" aria-controls="panel-r" aria-selected="true">報名名單 <span class="cnt" id="rCnt">0</span></button>
     <button type="button" role="tab" id="tab-p" aria-controls="panel-p" aria-selected="false" tabindex="-1">推廣人成效</button>
+    <button type="button" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="false" tabindex="-1">數據分析</button>
+    <button type="button" role="tab" id="tab-m" aria-controls="panel-m" aria-selected="false" tabindex="-1" hidden>我介紹的報名者 <span class="cnt" id="mCnt">0</span></button>
     <button type="button" role="tab" id="tab-s" aria-controls="panel-s" aria-selected="false" tabindex="-1">設定</button>
   </div>
 
   <section class="card panel" id="panel-p" role="tabpanel" aria-labelledby="tab-p" hidden>
     <div class="tbl"><table>
-      <thead><tr><th>推廣人</th><th>代碼</th><th style="text-align:right">報名人數</th><th>報名者</th><th>專屬推廣連結</th><th></th></tr></thead>
+      <thead><tr><th>推廣人</th><th>代碼</th><th style="text-align:right">報名人數</th><th>報名者</th><th>專屬推廣連結</th><th>推廣者登入帳號</th><th></th></tr></thead>
       <tbody id="pBody"></tbody>
     </table></div>
-    <p class="hint">點一列會切換到「報名名單」，只顯示該推廣人介紹的報名者。</p>
+    <p class="hint">點一列會切換到「報名名單」，只顯示該推廣人介紹的報名者。按「開通帳號」可替推廣人建立登入帳號，對方登入後只能看到自己的瀏覽、點擊與報名成效（報名者姓名會遮蔽，看不到聯絡資料）。</p>
     <form class="add" id="pForm">
       <label>推廣人名稱<input name="name" placeholder="例：甲方" maxlength="30" required></label>
       <label>代碼（英數字）<input name="code" placeholder="例：A" maxlength="20" pattern="[A-Za-z0-9_\-]+" required></label>
@@ -199,7 +232,62 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
     </table></div>
   </section>
 
+  <section class="card panel" id="panel-a" role="tabpanel" aria-labelledby="tab-a" hidden>
+    <div class="bar">
+      <div class="l">
+        <div class="seg" id="aRange" role="group" aria-label="統計期間">
+          <button type="button" data-days="7" aria-pressed="true">近 7 天</button><button type="button" data-days="30" aria-pressed="false">近 30 天</button><button type="button" data-days="90" aria-pressed="false">近 90 天</button><button type="button" data-days="0" aria-pressed="false">全部</button>
+        </div>
+        <select id="aRef" aria-label="依推廣人篩選"><option value="*">全部推廣人</option></select>
+      </div>
+      <button type="button" id="aCsv">匯出每日數據（CSV）</button>
+    </div>
+    <div class="kpis sm">
+      <div class="kpi"><span>網頁瀏覽次數</span><b id="sViews">0</b></div>
+      <div class="kpi"><span>不重複訪客</span><b id="sVisitors">0</b></div>
+      <div class="kpi"><span>按鈕／連結點擊</span><b id="sClicks">0</b><small id="sClickV"></small></div>
+      <div class="kpi"><span>開始填寫報名表</span><b id="sStarts">0</b><small>人</small></div>
+      <div class="kpi"><span>完成報名</span><b id="sRegs">0</b></div>
+      <div class="kpi"><span>報名轉換率</span><b id="sConv">—</b><small>完成報名 ÷ 不重複訪客</small></div>
+    </div>
+    <div class="bar">
+      <h2 id="cTitle">每日網頁瀏覽次數</h2>
+      <div class="seg" id="aMetric" role="group" aria-label="圖表指標">
+        <button type="button" data-m="views" aria-pressed="true">瀏覽</button><button type="button" data-m="visitors" aria-pressed="false">訪客</button><button type="button" data-m="clicks" aria-pressed="false">點擊</button><button type="button" data-m="regs" aria-pressed="false">報名</button>
+      </div>
+    </div>
+    <div class="chart" id="chart"></div>
+    <details class="tv"><summary>查看每日明細表</summary><div class="tbl"><table>
+      <thead><tr><th>日期</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">報名</th></tr></thead>
+      <tbody id="dBodyT"></tbody>
+    </table></div></details>
+    <div class="grid2">
+      <div><h3>點擊最多的按鈕／連結</h3><ul class="hl" id="lTargets"></ul></div>
+      <div><h3>訪客從哪裡來</h3><ul class="hl" id="lSources"></ul></div>
+      <div><h3>使用裝置</h3><ul class="hl" id="lDevices"></ul></div>
+    </div>
+    <div id="byRefBox">
+      <h2 class="sec">各推廣人成效比較</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>推廣人</th><th>代碼</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">報名</th><th class="r">轉換率</th></tr></thead>
+        <tbody id="byRef"></tbody>
+      </table></div>
+      <p class="hint">點一列可只看該推廣人的數據。</p>
+    </div>
+    <p class="hint" id="aNote">瀏覽與點擊從 115/10/26 開始記錄；推廣連結進站後 30 天內的瀏覽、點擊與報名都算該推廣人的。同一人重複開啟網頁會算多次瀏覽、一位訪客。</p>
+  </section>
+
+  <section class="card panel" id="panel-m" role="tabpanel" aria-labelledby="tab-m" hidden>
+    <div class="mylink"><span>我的專屬推廣連結：</span><b id="myLink"></b><button type="button" id="myCopy">複製連結</button></div>
+    <div class="tbl"><table>
+      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th></tr></thead>
+      <tbody id="mBody"></tbody>
+    </table></div>
+    <p class="hint">為保護個資，姓名以○遮蔽，不顯示聯絡資料。</p>
+  </section>
+
   <section class="card panel" id="panel-s" role="tabpanel" aria-labelledby="tab-s" hidden>
+    <div id="adminSet">
     <h2>班級報名</h2>
     <p class="hint" style="margin:-6px 0 14px">某一班額滿時按「關閉報名」，報名表上該班會顯示「已額滿，報名已截止」，無法再選。需要時可隨時重新開放。</p>
     <div class="batches" id="bList"></div>
@@ -215,6 +303,7 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
       <button class="pri" type="submit">新增管理員</button>
       <p class="msg" id="aMsg" role="status"></p>
     </form>
+    </div>
 
     <h2 class="sec" id="myPw">我的密碼</h2>
     <form class="add" id="pwForm">
@@ -243,8 +332,20 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
   </form>
 </dialog>
 
+<dialog id="pmDlg" aria-labelledby="pmTitle">
+  <div class="dh"><h2 id="pmTitle">開通推廣者帳號</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <form id="pmForm" class="pwf">
+    <p>推廣人：<b id="pmWho"></b></p>
+    <label id="pmEmailL">推廣者登入 Email<input name="email" type="email" maxlength="80" autocomplete="off"></label>
+    <label>密碼（至少 8 碼）<input name="pw" type="text" minlength="8" maxlength="72" required autocomplete="off"></label>
+    <p class="hint" style="margin:0">請將登入網址、Email 與密碼告知對方，對方登入後可在「設定 → 我的密碼」自行更改。</p>
+    <p class="msg" id="pmMsg" role="status"></p>
+    <button class="pri big" type="submit">確定</button>
+  </form>
+</dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=8"></script>
+<script src="assets/regdb.js?v=9"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -256,8 +357,18 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
   function fmt(iso){var d=new Date(iso),p=function(n){return String(n).padStart(2,'0')};return (d.getFullYear()-1911)+'/'+p(d.getMonth()+1)+'/'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
 
 
-  // 登入
-  function enter(email){me=(email||'').toLowerCase();$('login').hidden=true;$('app').hidden=false;$('who').textContent=email||'';load()}
+  // 登入：管理員看全部；推廣者只看自己的數據分析與報名者
+  var ROLE=null;
+  function enter(role){
+    ROLE=role;me=(role.email||'').toLowerCase();$('login').hidden=true;$('app').hidden=false;
+    $('who').textContent=role.email+(role.promoter&&!role.admin?'（推廣者：'+role.promoter.name+'）':'');
+    if(role.admin){load();tab('r');return}
+    TABS=['a','m','s'];
+    ['regKpis','tab-r','tab-p','adminSet','byRefBox','aRef'].forEach(function(k){$(k).hidden=true});
+    $('tab-m').hidden=false;$('ttl').textContent='推廣者後台｜'+role.promoter.name;document.title='推廣者後台｜AI行銷自動化與服務創新實戰班';
+    $('myLink').textContent=link(role.promoter.code);
+    loadMine();tab('a');
+  }
   function show(id){['loginForm','forgotForm','recoverForm'].forEach(function(k){$(k).hidden=k!==id});var i=$(id).querySelector('input');if(i)i.focus()}
   var qs=new URLSearchParams(location.search);
   if(qs.get('type')==='recovery'&&qs.get('token_hash')){
@@ -266,7 +377,7 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
     RegDB.recover(qs.get('token_hash')).then(function(email){$('rcWho').textContent='帳號：'+email;show('recoverForm')},
       function(){show('loginForm');$('lerr').textContent='重設連結已失效或已使用過，請重新申請「忘記密碼」。'});
   }else{
-    RegDB.session().then(function(email){if(email)enter(email);else show('loginForm')},function(){show('loginForm')});
+    RegDB.session().then(function(role){if(role)enter(role);else show('loginForm')},function(){show('loginForm')});
   }
   $('toForgot').addEventListener('click',function(){$('forgotForm').elements.email.value=$('loginForm').elements.email.value;$('fMsg').textContent='';show('forgotForm')});
   $('toLogin').addEventListener('click',function(){show('loginForm')});
@@ -274,31 +385,32 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
     e.preventDefault();
     var f=e.target,btn=f.querySelector('button[type=submit]');btn.disabled=true;
     RegDB.forgot(f.elements.email.value.trim()).then(function(){},function(){}).then(function(){
-      btn.disabled=false;$('fMsg').textContent='如果這是管理員帳號，重設信已寄出，請到信箱收信（也請看看垃圾郵件匣）。連結 1 小時內有效。';
+      btn.disabled=false;$('fMsg').textContent='如果這是後台帳號，重設信已寄出，請到信箱收信（也請看看垃圾郵件匣）。連結 1 小時內有效。';
     });
   });
   $('recoverForm').addEventListener('submit',function(e){
     e.preventDefault();
     var f=e.target;$('rcErr').textContent='';
     if(f.elements.pw.value!==f.elements.pw2.value){$('rcErr').textContent='兩次輸入的密碼不一致';return}
-    RegDB.setNewPassword(f.elements.pw.value).then(function(email){f.reset();enter(email)},
+    RegDB.setNewPassword(f.elements.pw.value).then(function(role){f.reset();enter(role)},
       function(err){$('rcErr').textContent=err.message||'更新失敗，請重新申請。'});
   });
   $('loginForm').addEventListener('submit',function(e){
     e.preventDefault();
     var f=e.target,btn=f.querySelector('button');$('lerr').textContent='';btn.disabled=true;
-    RegDB.signIn(f.elements.email.value.trim(),f.elements.password.value).then(function(email){f.reset();enter(email)},
+    RegDB.signIn(f.elements.email.value.trim(),f.elements.password.value).then(function(role){f.reset();enter(role)},
       function(){$('lerr').textContent='帳號或密碼錯誤，或此帳號沒有後台權限。'}).then(function(){btn.disabled=false});
   });
   $('logout').addEventListener('click',function(){RegDB.signOut().then(function(){location.reload()})});
 
   // 頁籤
-  var TABS=['r','p','s'];
+  var TABS=['r','p','a','s'];
   function tab(which){
-    TABS.forEach(function(k){var on=k===which;$('tab-'+k).setAttribute('aria-selected',on);$('tab-'+k).tabIndex=on?0:-1;$('panel-'+k).hidden=!on});
-    if(which==='s')loadSettings();
+    ['r','p','a','m','s'].forEach(function(k){var on=k===which;$('tab-'+k).setAttribute('aria-selected',on);$('tab-'+k).tabIndex=on?0:-1;$('panel-'+k).hidden=!on});
+    if(which==='s'&&ROLE&&ROLE.admin)loadSettings();
+    if(which==='a')loadStats();
   }
-  TABS.forEach(function(k){$('tab-'+k).addEventListener('click',function(){tab(k)})});
+  ['r','p','a','m','s'].forEach(function(k){$('tab-'+k).addEventListener('click',function(){tab(k)})});
   document.querySelector('.tabs').addEventListener('keydown',function(e){
     if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
     var cur=TABS.findIndex(function(k){return $('tab-'+k).getAttribute('aria-selected')==='true'});
@@ -399,11 +511,24 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
         '<td class="n">'+row.list.length+'</td>'+
         '<td class="names">'+(row.list.length?row.list.map(function(r){return esc(r.name)}).join('、'):'<span class="muted">尚無</span>')+'</td>'+
         '<td>'+(row.code?'<button type="button" data-copy="'+esc(link(row.code))+'">複製連結</button>':'')+'</td>'+
+        '<td class="acct">'+acct(row.code,reg)+'</td>'+
         '<td>'+(reg?'<button type="button" class="del" data-delp="'+esc(row.code)+'">移除</button>':'')+'</td></tr>';
     }).join('');
 
     if(cur!=='*'&&!rows.some(function(r){return r.code===cur}))$('fRef').value='*';
     renderList();
+
+    // 數據分析的推廣人篩選選單
+    var sv=$('aRef').value;
+    $('aRef').innerHTML='<option value="*">全部推廣人</option><option value="">直接進站（無推廣人）</option>'+
+      proms.map(function(p){return '<option value="'+esc(p.code)+'">'+esc(p.name)+'（'+esc(p.code)+'）</option>'}).join('');
+    $('aRef').value=[].some.call($('aRef').options,function(o){return o.value===sv})?sv:'*';
+  }
+  function acct(code,reg){
+    if(!reg)return '';
+    var p=proms.find(function(x){return x.code===code});
+    if(!p.email)return '<button type="button" data-acct="'+esc(code)+'">開通帳號</button>';
+    return esc(p.email)+'<br><button type="button" data-preset="'+esc(code)+'">重設密碼</button> <button type="button" class="del" data-unlink="'+esc(code)+'">停用</button>';
   }
 
   function filtered(){
@@ -435,7 +560,23 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
       (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製連結'},1500)},function(){prompt('複製這個連結：',t)});
       return;
     }
-    if(b&&b.dataset.delp){if(confirm('移除推廣人「'+pname(b.dataset.delp)+'」？（已報名的資料不會刪除）'))RegDB.removePromoter(b.dataset.delp).then(load);return}
+    if(b&&(b.dataset.acct||b.dataset.preset)){
+      var reset=!!b.dataset.preset,code=b.dataset.acct||b.dataset.preset;
+      $('pmForm').reset();$('pmMsg').textContent='';$('pmForm').dataset.code=code;$('pmForm').dataset.mode=reset?'reset':'link';
+      $('pmTitle').textContent=reset?'重設推廣者密碼':'開通推廣者帳號';$('pmWho').textContent=pname(code)+'（'+code+'）';
+      $('pmEmailL').hidden=reset;$('pmForm').elements.email.required=!reset;
+      $('pmDlg').showModal();return;
+    }
+    if(b&&b.dataset.unlink){
+      if(!confirm('停用推廣人「'+pname(b.dataset.unlink)+'」的登入帳號？\n停用後對方無法再登入後台；推廣連結與已累積的數據不受影響。'))return;
+      b.disabled=true;RegDB.unlinkPromoter(b.dataset.unlink).then(load,function(err){b.disabled=false;alert(err.message)});return;
+    }
+    if(b&&b.dataset.delp){
+      var dc=b.dataset.delp,dp=proms.find(function(x){return x.code===dc});
+      if(confirm('移除推廣人「'+pname(dc)+'」？（已報名的資料不會刪除'+(dp&&dp.email?'；登入帳號會一併停用':'')+'）'))
+        (dp&&dp.email?RegDB.unlinkPromoter(dc):Promise.resolve()).then(function(){return RegDB.removePromoter(dc)}).then(load,function(err){alert(err.message)});
+      return;
+    }
     var tr=e.target.closest('tr');if(!tr)return;
     $('fRef').value=tr.dataset.code;$('fQ').value='';renderList();tab('r');
   });
@@ -465,6 +606,110 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
     var lines=[head].concat(filtered().map(function(r){return [fmt(r.created_at),r.batch||'',r.name,r.email,r.phone,r.line,r.school,r.dept,(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'']}));
     var csv='﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='報名名單.csv';a.click();
+  });
+  function toCsv(lines){return '﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n')}
+  function download(name,text){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
+
+  // 推廣者帳號：開通／重設密碼
+  $('pmForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,m=$('pmMsg'),btn=f.querySelector('button'),code=f.dataset.code,reset=f.dataset.mode==='reset';
+    var em=f.elements.email.value.trim().toLowerCase(),pw=f.elements.pw.value;
+    m.className='msg';btn.disabled=true;
+    (reset?RegDB.resetPromoterPassword(code,pw):RegDB.linkPromoter(code,em,pw)).then(function(res){
+      m.classList.add('ok');
+      m.textContent=reset?'密碼已重設，請告知對方新密碼。':res&&res.existed?'已開通：'+em+'（此 Email 原本就有帳號，請用原密碼登入）':'已開通：'+em+'，請將登入網址、Email 與密碼告知對方。';
+      f.reset();load();
+    },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
+  });
+
+  // 推廣者：我介紹的報名者
+  function loadMine(){
+    RegDB.myReferrals().then(function(list){
+      $('mCnt').textContent=list.length;
+      $('mBody').innerHTML=list.length?list.map(function(r){return '<tr><td class="num">'+fmt(r.created_at)+'</td><td>'+esc(r.batch)+'</td><td>'+esc(r.name)+'</td></tr>'}).join(''):'<tr><td colspan="3" class="empty">目前還沒有透過你的連結報名的人</td></tr>';
+    });
+  }
+  $('myCopy').addEventListener('click',function(){
+    var b=this,t=$('myLink').textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製連結'},1500)},function(){prompt('複製這個連結：',t)});
+  });
+
+  // ── 數據分析 ──
+  var SINCE='2026-10-01',days=7,metric='views',stat=null;
+  var MET={views:'每日網頁瀏覽次數',visitors:'每日不重複訪客',clicks:'每日按鈕／連結點擊',regs:'每日完成報名'};
+  function ymd(d){var p=function(n){return String(n).padStart(2,'0')};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())}
+  function md(s){var a=s.split('-');return +a[1]+'/'+(+a[2])}
+  function rocDate(s){var a=s.split('-');return (a[0]-1911)+'/'+a[1]+'/'+a[2]}
+  function range(){var to=new Date(),from=new Date();if(days)from.setDate(to.getDate()-days+1);else from=new Date(SINCE+'T00:00:00');return {from:ymd(from),to:ymd(to)}}
+  function n(v){return Number(v||0).toLocaleString('zh-TW')}
+  function pct(a,b){return b?(Math.round(a/b*1000)/10)+'%':'—'}
+  function loadStats(){
+    var r=range(),ref=ROLE&&ROLE.admin?($('aRef').value==='*'?null:$('aRef').value):null;
+    RegDB.stats(r.from,r.to,ref).then(function(s){stat=s;renderStats()},function(){$('chart').innerHTML='<p class="empty">數據讀取失敗，請重新整理。</p>'});
+  }
+  function renderStats(){
+    var s=stat,t=s.totals;
+    $('sViews').textContent=n(t.views);$('sVisitors').textContent=n(t.visitors);$('sClicks').textContent=n(t.clicks);
+    $('sClickV').textContent=t.click_visitors?'來自 '+n(t.click_visitors)+' 位訪客':'';
+    $('sStarts').textContent=n(t.form_starts);$('sRegs').textContent=n(t.regs);$('sConv').textContent=pct(t.regs,t.visitors);
+    $('cTitle').textContent=MET[metric];
+    drawChart(s.daily);
+    $('dBodyT').innerHTML=s.daily.slice().reverse().map(function(d){return '<tr><td class="num">'+rocDate(d.d)+'</td><td class="r">'+d.views+'</td><td class="r">'+d.visitors+'</td><td class="r">'+d.clicks+'</td><td class="r">'+d.regs+'</td></tr>'}).join('');
+    hlist('lTargets',s.targets,'還沒有點擊紀錄');
+    hlist('lSources',s.sources,'還沒有瀏覽紀錄');
+    hlist('lDevices',s.devices.map(function(x){return {k:{mobile:'手機',tablet:'平板',desktop:'電腦'}[x.k]||x.k,n:x.n}}),'還沒有瀏覽紀錄');
+    var box=$('byRefBox');box.hidden=!s.by_ref;
+    if(s.by_ref){
+      $('byRef').innerHTML=s.by_ref.map(function(x){
+        return '<tr class="click" data-ref="'+esc(x.ref)+'"><td><b>'+esc(x.ref?pname(x.ref):'直接進站（無推廣人）')+'</b></td><td>'+(x.ref?'<span class="code">'+esc(x.ref)+'</span>':'<span class="muted">—</span>')+'</td>'+
+          '<td class="r">'+n(x.views)+'</td><td class="r">'+n(x.visitors)+'</td><td class="r">'+n(x.clicks)+'</td><td class="r">'+n(x.regs)+'</td><td class="r">'+pct(x.regs,x.visitors)+'</td></tr>';
+      }).join('')||'<tr><td colspan="7" class="empty">這段期間沒有數據</td></tr>';
+    }
+  }
+  function hlist(id,arr,empty){
+    var max=Math.max.apply(null,arr.map(function(x){return x.n}).concat([1])),sum=arr.reduce(function(a,x){return a+x.n},0);
+    $(id).innerHTML=arr.length?arr.slice(0,10).map(function(x){
+      return '<li><span class="t" title="'+esc(x.k)+'">'+esc(x.k)+'</span><span class="v">'+n(x.n)+' <span class="muted" style="font-weight:400;font-size:12px">'+pct(x.n,sum)+'</span></span><span class="b"><i style="width:'+(x.n/max*100)+'%"></i></span></li>';
+    }).join(''):'<li class="muted">'+empty+'</li>';
+  }
+  // 每日長條圖：單一指標、單一顏色，滑過顯示數值
+  function drawChart(daily){
+    var W=800,H=220,L=36,B=24,T=10,R=4,vals=daily.map(function(d){return d[metric]}),max=Math.max.apply(null,vals.concat([0]));
+    var step=max<=4?1:Math.pow(10,Math.floor(Math.log10(max/4)));[1,2,5,10].some(function(m){if(max/(step*m)<=4){step*=m;return true}});
+    var top=Math.max(step,Math.ceil(max/step)*step),ih=H-B-T,iw=W-L-R,bw=iw/daily.length,gap=Math.min(4,bw*.25);
+    var y=function(v){return T+ih-v/top*ih},svg='';
+    for(var g=0;g<=top;g+=step)svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'"/><text class="ax" x="'+(L-6)+'" y="'+(y(g)+4)+'" text-anchor="end">'+g+'</text>';
+    var every=Math.ceil(daily.length/10);
+    daily.forEach(function(d,i){
+      var w=Math.max(1,Math.min(36,bw-gap)),x=L+i*bw+(bw-w)/2,v=d[metric],yy=y(v),r=Math.min(4,w/2,(T+ih-yy));
+      svg+='<rect class="hit" data-i="'+i+'" x="'+(L+i*bw)+'" y="'+T+'" width="'+bw+'" height="'+ih+'"/>';
+      svg+=v?'<path class="bar" d="M'+x+','+(T+ih)+'V'+(yy+r)+'Q'+x+','+yy+' '+(x+r)+','+yy+'H'+(x+w-r)+'Q'+(x+w)+','+yy+' '+(x+w)+','+(yy+r)+'V'+(T+ih)+'Z"/>':'<path class="bar"/>';
+      if(i%every===0||i===daily.length-1&&daily.length<=10)svg+='<text class="ax" x="'+(x+w/2)+'" y="'+(H-6)+'" text-anchor="middle">'+md(d.d)+'</text>';
+    });
+    $('chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+MET[metric]+'長條圖">'+svg+'</svg><div class="tip" hidden></div>';
+    var tip=$('chart').querySelector('.tip'),el=$('chart');
+    el.onmousemove=function(e){
+      var h=e.target.closest('.hit');if(!h){tip.hidden=true;return}
+      var d=daily[h.dataset.i],box=el.getBoundingClientRect(),hb=h.getBoundingClientRect();
+      tip.innerHTML=rocDate(d.d)+'　<b>'+n(d[metric])+'</b>';tip.hidden=false;
+      tip.style.left=Math.min(Math.max(hb.left-box.left+hb.width/2,60),box.width-60)+'px';tip.style.top=(e.clientY-box.top)+'px';
+    };
+    el.onmouseleave=function(){tip.hidden=true};
+  }
+  $('aRange').addEventListener('click',function(e){
+    var b=e.target.closest('[data-days]');if(!b)return;days=+b.dataset.days;
+    this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});loadStats();
+  });
+  $('aMetric').addEventListener('click',function(e){
+    var b=e.target.closest('[data-m]');if(!b||!stat)return;metric=b.dataset.m;
+    this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});renderStats();
+  });
+  $('aRef').addEventListener('change',loadStats);
+  $('byRef').addEventListener('click',function(e){var tr=e.target.closest('[data-ref]');if(!tr)return;$('aRef').value=tr.dataset.ref;loadStats();$('panel-a').scrollIntoView({behavior:'smooth'})});
+  $('aCsv').addEventListener('click',function(){
+    if(!stat)return;
+    download('每日數據.csv',toCsv([['日期','瀏覽次數','不重複訪客','點擊次數','完成報名']].concat(stat.daily.map(function(d){return [rocDate(d.d),d.views,d.visitors,d.clicks,d.regs]}))));
   });
 })();
 </script>

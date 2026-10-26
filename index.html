@@ -1010,7 +1010,37 @@ footer .copy-r a{color:inherit;text-decoration:none}
   }
   if(!ref){try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Date.now()-s.t<DAYS*864e5)ref=s.ref}catch(e){}}
 
+  // 瀏覽與點擊統計：記錄進站一次、按下按鈕／連結、開始填表，後台「數據分析」可看
+  var vid='';
+  try{vid=localStorage.getItem('cust_vid')||'';if(!vid){vid=Date.now().toString(36)+Math.random().toString(36).slice(2,10);localStorage.setItem('cust_vid',vid)}}catch(e){}
+  var utm=location.search.match(/[?&]utm_source=([^&#]*)/),src='';
+  if(utm){try{src=decodeURIComponent(utm[1])}catch(e){src=utm[1]}}
+  else if(document.referrer){try{var rh=new URL(document.referrer).hostname;if(rh!==location.hostname)src=rh.replace(/^www\./,'')}catch(e){}}
+  var sw=Math.min(screen.width,screen.height),touch=matchMedia('(pointer:coarse)').matches;
+  var device=touch&&sw<600?'mobile':touch&&sw<=1100?'tablet':'desktop';
+  function track(type,target){if(window.RegDB)RegDB.track({type:type,vid:vid,ref:ref,target:target?String(target).slice(0,40):null,src:src.slice(0,60),device:device})}
+  var WHERE={top:'首屏',check:'資格檢測',classes:'開班',contact:'頁尾',you:'適合誰',gain:'你會得到',curriculum:'課程',faq:'FAQ',apply:'報名表'};
+  function clickName(el){
+    if(el.matches('button[type=submit]'))return '送出報名';
+    if(el.tagName==='SUMMARY')return 'FAQ展開・'+el.textContent.trim();
+    var h=el.getAttribute('href')||'',sec=el.closest('section[id],header[id]');
+    var where=el.closest('.nav')?'導覽列':el.closest('.mbar')?'手機底部列':sec?(WHERE[sec.id]||sec.id):'';
+    if(h==='#apply')return '報名按鈕・'+where;
+    if(el.closest('.nav .links'))return '選單・'+el.textContent.trim();
+    if(h==='#check')return '資格檢測按鈕・'+where;
+    if(/^tel:/.test(h))return '撥打電話';
+    if(/^mailto:/.test(h))return '寄 Email';
+    if(/admin\.html/.test(h))return '';
+    return (el.textContent.trim()||h).slice(0,24);
+  }
+  document.addEventListener('DOMContentLoaded',function(){track('view')});
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a[href],summary,#regForm button[type=submit]');if(!el)return;
+    var n=clickName(el);if(n)track('click',n);
+  });
+
   var f=document.getElementById('regForm');if(!f)return;
+  f.addEventListener('focusin',function once(){f.removeEventListener('focusin',once);track('form_start')});
   f.ref.value=ref;
 
   // 依後台設定標示已關閉（額滿）的班級
@@ -1084,6 +1114,6 @@ footer .copy-r a{color:inherit;text-decoration:none}
   });
 })();
 </script>
-<script src="assets/regdb.js?v=8"></script>
+<script src="assets/regdb.js?v=9"></script>
 </body>
 </html>

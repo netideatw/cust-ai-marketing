@@ -1,6 +1,7 @@
 /* 報名資料存取層（Supabase）
    - 報名頁：直接以 REST 新增一筆報名，訪客沒有讀取權限
-   - 後台：用 supabase-js 登入，只有 admins 名單內的帳號能讀寫
+   - 網頁瀏覽／點擊事件：訪客只能新增，報表只有後台帳號能看
+   - 後台：用 supabase-js 登入，admins 名單內的帳號能讀寫全部；推廣者只能看自己的成效
    anon key 是公開金鑰，資料安全由資料庫的 RLS 權限規則保護 */
 window.RegDB = (function () {
   var URL = 'https://zjtmshwfllmfwhcddkjx.supabase.co';
@@ -52,19 +53,30 @@ window.RegDB = (function () {
       });
     },
 
+    // 登入身分：{ email, admin, promoter:{code,name}|null }；沒有任何後台權限時回傳 null
+    role: function () {
+      var c = client();
+      return c.auth.getUser().then(function (u) {
+        var user = u.data && u.data.user;
+        if (!user) return null;
+        return c.rpc('my_role').then(ok).then(function (r) {
+          if (!r || (!r.admin && !r.promoter)) return null;
+          return { email: user.email, admin: !!r.admin, promoter: r.promoter || null };
+        });
+      });
+    },
     session: function () {
+      var self = this;
       return client().auth.getSession().then(function (res) {
-        var s = res.data && res.data.session;
-        if (!s) return '';
-        return client().rpc('am_i_admin').then(function (r) { return r.data === true ? s.user.email : '' });
+        return res.data && res.data.session ? self.role() : null;
       });
     },
     signIn: function (email, pw) {
-      var c = client();
-      return c.auth.signInWithPassword({ email: email, password: pw }).then(ok).then(function (d) {
-        return c.rpc('am_i_admin').then(function (r) {
-          if (r.data !== true) return c.auth.signOut().then(function () { throw new Error('not admin') });
-          return d.user.email;
+      var c = client(), self = this;
+      return c.auth.signInWithPassword({ email: email, password: pw }).then(ok).then(function () {
+        return self.role().then(function (r) {
+          if (!r) return c.auth.signOut().then(function () { throw new Error('no access') });
+          return r;
         });
       });
     },
@@ -74,7 +86,7 @@ window.RegDB = (function () {
       return client().from('registrations').select('*').order('created_at', { ascending: false }).then(ok);
     },
     remove: function (id) { return client().from('registrations').delete().eq('id', id).then(ok) },
-    promoters: function () { return client().from('promoters').select('code,name').order('created_at').then(ok) },
+    promoters: function () { return client().from('promoters').select('code,name,email').order('created_at').then(ok) },
     savePromoter: function (p) { return client().from('promoters').upsert({ code: p.code, name: p.name }).then(ok) },
     removePromoter: function (code) { return client().from('promoters').delete().eq('code', code).then(ok) },
 
@@ -98,11 +110,32 @@ window.RegDB = (function () {
       var c = client();
       return c.auth.updateUser({ password: pw }).then(function (r) {
         if (r.error) throw new Error(/should be different/i.test(r.error.message) ? '新密碼不能和舊密碼相同' : '更新失敗：' + r.error.message);
-        return c.rpc('am_i_admin').then(function (a) {
-          if (a.data !== true) return c.auth.signOut().then(function () { throw new Error('此帳號沒有後台權限') });
-          return r.data.user.email;
+        return RegDB.role().then(function (role) {
+          if (!role) return c.auth.signOut().then(function () { throw new Error('此帳號沒有後台權限') });
+          return role;
         });
       });
+    },
+    // 推廣者登入帳號：開通（綁定 Email＋初始密碼）／重設密碼／停用
+    linkPromoter: function (code, email, password) { return callAdmins({ action: 'promoter_link', code: code, email: email, password: password }) },
+    resetPromoterPassword: function (code, password) { return callAdmins({ action: 'promoter_reset', code: code, password: password }) },
+    unlinkPromoter: function (code) { return callAdmins({ action: 'promoter_unlink', code: code }) },
+    // 推廣者：自己介紹的報名者（姓名已遮蔽）
+    myReferrals: function () { return client().rpc('my_referrals').then(ok) },
+    // 數據報表（日期 YYYY-MM-DD；ref：null 全部、'' 直接進站、其他為推廣代碼；推廣者固定只看自己）
+    stats: function (from, to, ref) {
+      return client().rpc('site_stats', { p_from: from, p_to: to, p_ref: ref == null ? null : ref }).then(ok);
+    },
+    // 網頁瀏覽／點擊事件（不等結果；keepalive 讓離開頁面時也能送出）
+    track: function (ev) {
+      var row = { type: ev.type, vid: ev.vid || null, ref: ev.ref || null, target: ev.target || null, src: ev.src || null, device: ev.device || null };
+      try {
+        fetch(URL + '/rest/v1/site_events', {
+          method: 'POST', keepalive: true,
+          headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify(row)
+        }).catch(function () {});
+      } catch (e) {}
     },
     resetAdminPassword: function (email, password) { return callAdmins({ action: 'reset', email: email, password: password }) },
     // 先用目前密碼驗證身分，再更新為新密碼
