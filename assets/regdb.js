@@ -99,6 +99,10 @@ window.RegDB = (function () {
     applications: function () {
       return client().from('promoter_applications').select('*').order('created_at', { ascending: false }).then(ok);
     },
+    // 管理員直接新增推廣者（或替既有推廣人加上登入 Email），系統寄設定密碼信給對方
+    addPromoterAccount: function (code, name, email) {
+      return callAdmins({ type: 'promoter_add', code: code, name: name, email: email, page: location.origin + location.pathname }, 'notify');
+    },
     reviewApplication: function (id, decision, code, name) {
       return callAdmins({ type: 'promoter_review', id: id, decision: decision, code: code, name: name }, 'notify');
     },

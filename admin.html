@@ -90,6 +90,62 @@ textarea{font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--
 .apps h2{font-size:16px;margin-bottom:10px}
 .apps .note{color:var(--muted);font-size:13px;max-width:280px}
 .tabs .cnt.hot{background:var(--hot);color:#fff}
+.viewbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--hot-soft);border:1.5px solid var(--hot);border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:14px;color:var(--ink)}
+#pBody td:first-child{white-space:nowrap}
+button.pname{border:0;background:none;padding:0;font-size:15px;color:var(--accent);text-align:left;text-decoration:underline;text-underline-offset:3px}
+button.pname:hover{color:var(--hot)}
+/* 手機版：表格改卡片、頁籤可橫滑、間距縮小 */
+@media (max-width:640px){
+  body{font-size:14px}
+  .wrap{padding:16px 12px 48px}
+  header{gap:8px;margin-bottom:14px}
+  header h1{font-size:19px;flex-basis:100%}
+  .who{gap:8px;font-size:12px;width:100%}
+  .who #who{flex-basis:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .who button{padding:5px 12px}
+  .kpis{gap:8px;margin-bottom:18px}
+  .kpi{padding:12px 14px;border-radius:12px}
+  .kpi b,.kpis.sm .kpi b{font-size:24px}
+  .tabs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{padding:10px 12px;font-size:14px;white-space:nowrap;flex:none}
+  .card{padding:14px;border-radius:14px}
+  .bar{gap:8px}
+  .bar .l{width:100%}
+  .bar .l>*{flex:1 1 100%}
+  .seg{display:flex;width:100%}
+  .seg button{flex:1;padding:6px 4px;font-size:12px}
+  select,input[type=search]{width:100%}
+  .viewbar{padding:10px 12px;font-size:13px}
+  .viewbar button{width:100%}
+  .mylink{font-size:13px}
+  .mylink button{width:100%}
+  h2.sec{margin-top:24px;padding-top:18px}
+  .tbl{overflow:visible}
+  .tbl table,.tbl tbody,.tbl tr,.tbl td{display:block;width:auto}
+  .tbl thead{display:none}
+  .tbl tr{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:10px;background:var(--surface)}
+  .apps .tbl tr{background:var(--surface)}
+  .tbl td{display:grid;grid-template-columns:84px minmax(0,1fr);gap:8px;align-items:baseline;padding:5px 0;border:0;min-width:0;max-width:none;width:auto;text-align:left;word-break:break-word}
+  .tbl td::before{content:attr(data-label);font-size:12px;color:var(--muted);font-weight:700}
+  .tbl td[data-label=""]{display:block}
+  .tbl td[data-label=""]::before{display:none}
+  .tbl td:empty{display:none}
+  .tbl td.n,.tbl td.r{text-align:left;font-size:15px}
+  .tbl td.empty{text-align:center;padding:16px 0}
+  .tbl td.acts,.tbl td.acct{white-space:normal}
+  .tbl td.acts button,.tbl td.acct button{margin:4px 4px 0 0}
+  .tbl td .cv{min-width:0}
+  .tbl td[data-label=""] .cv{display:flex;flex-wrap:wrap;gap:6px}
+  .tbl tr.sel{border-color:var(--accent)}
+  tr.sel td{background:none}
+  .names{min-width:0}
+  .apps{padding:12px}
+  .apps .note{max-width:none}
+  dialog{padding:16px;width:calc(100vw - 24px)}
+  .login{padding:16px 12px;align-items:start}
+  .login .card{padding:22px 18px}
+}
 .who{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:14px}
 .tabs{display:flex;gap:4px;border-bottom:1.5px solid var(--line);margin-bottom:-1px}
 .tabs button{border:0;border-radius:10px 10px 0 0;background:none;color:var(--muted);font-size:15px;padding:12px 18px;border-bottom:3px solid transparent;margin-bottom:-1.5px}
@@ -143,7 +199,7 @@ dialog::backdrop{background:rgba(14,12,34,.5)}
 .chart .hit:hover+.bar,.chart .bar.on{fill:var(--hot)}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;border-radius:8px;padding:6px 10px;white-space:nowrap;transform:translate(-50%,-110%);z-index:2}
 .tip b{font-family:var(--f-num);font-size:15px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:28px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px;margin-top:28px}
 .grid2 h3{font-size:15px;color:var(--ink);margin:0 0 10px}
 .hl{display:grid;gap:8px;margin:0;padding:0;list-style:none;font-size:14px}
 .hl li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center}
@@ -222,6 +278,10 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div class="kpi"><span>實戰班（二）</span><b id="kB2">0</b></div>
   </div>
 
+  <div class="viewbar" id="viewBar" role="status" hidden>
+    <span>你正在以管理員身分檢視「<b id="vName"></b>」的推廣者後台，畫面與推廣者登入後看到的相同。</span>
+    <button type="button" class="pri" id="viewExit">← 返回管理員後台</button>
+  </div>
   <div class="tabs" role="tablist" aria-label="後台頁籤">
     <button type="button" role="tab" id="tab-r" aria-controls="panel-r" aria-selected="true">報名名單 <span class="cnt" id="rCnt">0</span></button>
     <button type="button" role="tab" id="tab-p" aria-controls="panel-p" aria-selected="false" tabindex="-1">推廣人成效 <span class="cnt hot" id="appCnt" hidden title="待審核申請">0</span></button>
@@ -242,12 +302,16 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       <thead><tr><th>推廣人</th><th>代碼</th><th style="text-align:right">報名人數</th><th>報名者</th><th>專屬推廣連結</th><th>推廣者登入帳號</th><th></th></tr></thead>
       <tbody id="pBody"></tbody>
     </table></div>
-    <p class="hint">點一列會切換到「報名名單」，只顯示該推廣人介紹的報名者。推廣者請到登入頁按「註冊推廣者帳號」自行註冊（可直接把 <span class="code" id="suLink"></span> 給對方），審核通過後即可登入，只看得到自己的瀏覽、點擊與報名成效（報名者姓名會遮蔽，看不到聯絡資料）。</p>
-    <form class="add" id="pForm">
+    <p class="hint">點推廣人名字可進入該推廣者的後台，看到與對方登入後相同的畫面；點該列其他地方會切換到「報名名單」，只顯示該推廣人介紹的報名者。推廣者請到登入頁按「註冊推廣者帳號」自行註冊（可直接把 <span class="code" id="suLink"></span> 給對方），審核通過後即可登入，只看得到自己的瀏覽、點擊與報名成效（報名者姓名會遮蔽，看不到聯絡資料）。</p>
+    <h2 class="sec">新增推廣者</h2>
+    <form class="add" id="pForm" style="margin-top:0;padding-top:0;border-top:0">
       <label>推廣人名稱<input name="name" placeholder="例：甲方" maxlength="30" required></label>
       <label>代碼（英數字）<input name="code" placeholder="例：A" maxlength="20" pattern="[A-Za-z0-9_\-]+" required></label>
-      <button class="pri" type="submit">新增推廣人</button>
+      <label>登入 Email（選填）<input name="email" type="email" maxlength="80" placeholder="填了就開通後台帳號" autocomplete="off"></label>
+      <button class="pri" type="submit">新增推廣者</button>
+      <p class="msg" id="pMsg" role="status"></p>
     </form>
+    <p class="hint">填 Email 會直接開通推廣者帳號（免審核），系統寄「設定密碼」信給對方，對方設好密碼就能登入；不填 Email 則只建立推廣連結，之後可在列表按「加入登入帳號」。</p>
   </section>
 
   <section class="card panel" id="panel-r" role="tabpanel" aria-labelledby="tab-r">
@@ -376,6 +440,17 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   </form>
 </dialog>
 
+<dialog id="acDlg" aria-labelledby="acTitle">
+  <div class="dh"><h2 id="acTitle">加入推廣者登入帳號</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <form id="acForm" class="pwf">
+    <p>推廣人：<b id="acWho"></b></p>
+    <label>推廣者的 Email<input name="email" type="email" maxlength="80" required autocomplete="off"></label>
+    <p class="hint" style="margin:0">系統會寄「設定密碼」信到這個 Email，對方設好密碼就能登入推廣者後台，免審核。</p>
+    <p class="msg" id="acMsg" role="status"></p>
+    <button class="pri big" type="submit">開通並寄信</button>
+  </form>
+</dialog>
+
 <dialog id="apDlg" aria-labelledby="apTitle">
   <div class="dh"><h2 id="apTitle">核准推廣者申請</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
   <form id="apForm" class="pwf">
@@ -389,7 +464,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=10"></script>
+<script src="assets/regdb.js?v=11"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -407,12 +482,31 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     ROLE=role;me=(role.email||'').toLowerCase();$('login').hidden=true;$('app').hidden=false;
     $('who').textContent=role.email+(role.promoter&&!role.admin?'（推廣者：'+role.promoter.name+'）':'');
     if(role.admin){load();tab('r');return}
-    TABS=['a','m','s'];
-    ['regKpis','tab-r','tab-p','adminSet','byRefBox','aRef'].forEach(function(k){$(k).hidden=true});
-    $('tab-m').hidden=false;$('ttl').textContent='推廣者後台｜'+role.promoter.name;document.title='推廣者後台｜AI行銷自動化與服務創新實戰班';
-    $('myLink').textContent=link(role.promoter.code);
+    promoterUI(true,role.promoter);TABS=['a','m','s'];
     loadMine();tab('a');
   }
+  // 切換成推廣者畫面（推廣者登入，或管理員檢視某位推廣者）
+  function promoterUI(on,p){
+    ['regKpis','tab-r','tab-p','adminSet','byRefBox','aRef'].forEach(function(k){$(k).hidden=on});
+    $('tab-m').hidden=!on;
+    $('ttl').textContent=on?'推廣者後台｜'+p.name:'報名後台';
+    document.title=(on?'推廣者後台':'報名後台')+'｜AI行銷自動化與服務創新實戰班';
+    if(on)$('myLink').textContent=link(p.code);
+  }
+  // 管理員檢視推廣者後台：用管理員權限讀取該推廣者的數據，畫面與推廣者看到的相同
+  var VIEW=null;
+  function viewAs(code){
+    VIEW={code:code,name:pname(code)};
+    promoterUI(true,VIEW);TABS=['a','m'];
+    $('tab-s').hidden=$('pwBtn').hidden=true;$('viewBar').hidden=false;$('vName').textContent=VIEW.name;
+    loadMine();tab('a');scrollTo(0,0);
+  }
+  function exitView(){
+    VIEW=null;promoterUI(false);TABS=['r','p','a','s'];
+    $('tab-s').hidden=$('pwBtn').hidden=false;$('viewBar').hidden=true;
+    tab('p');
+  }
+  $('viewExit').addEventListener('click',exitView);
   function show(id){['loginForm','forgotForm','recoverForm','signupForm','signupDone'].forEach(function(k){$(k).hidden=k!==id});var i=$(id).querySelector('input');if(i)i.focus()}
   var qs=new URLSearchParams(location.search);
   if(qs.has('signup')){
@@ -603,7 +697,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('pBody').innerHTML=rows.map(function(row){
       var reg=row.code&&proms.some(function(p){return p.code===row.code});
       return '<tr class="click'+(cur===row.code?' sel':'')+'" data-code="'+esc(row.code)+'">'+
-        '<td><b>'+esc(pname(row.code))+'</b></td>'+
+        '<td>'+(reg?'<button type="button" class="pname" data-viewas="'+esc(row.code)+'" title="檢視此推廣者的後台">'+esc(pname(row.code))+'</button>':'<b>'+esc(pname(row.code))+'</b>')+'</td>'+
         '<td>'+(row.code?'<span class="code">'+esc(row.code)+'</span>':'<span class="muted">—</span>')+'</td>'+
         '<td class="n">'+row.list.length+'</td>'+
         '<td class="names">'+(row.list.length?row.list.map(function(r){return esc(r.name)}).join('、'):'<span class="muted">尚無</span>')+'</td>'+
@@ -624,7 +718,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function acct(code,reg){
     if(!reg)return '';
     var p=proms.find(function(x){return x.code===code});
-    if(!p.email)return '<span class="muted">未註冊</span>';
+    if(!p.email)return '<span class="muted">未開通</span><br><button type="button" data-addacct="'+esc(code)+'">加入登入帳號</button>';
     return esc(p.email)+'<br><button type="button" data-preset="'+esc(code)+'">重設密碼</button> <button type="button" class="del" data-unlink="'+esc(code)+'">停用</button>';
   }
 
@@ -656,6 +750,11 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       var t=b.dataset.copy;
       (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製連結'},1500)},function(){prompt('複製這個連結：',t)});
       return;
+    }
+    if(b&&b.dataset.viewas){viewAs(b.dataset.viewas);return}
+    if(b&&b.dataset.addacct){
+      var ac=b.dataset.addacct;$('acForm').reset();$('acMsg').textContent='';$('acForm').dataset.code=ac;$('acWho').textContent=pname(ac)+'（'+ac+'）';
+      $('acDlg').showModal();return;
     }
     if(b&&b.dataset.preset){
       var code=b.dataset.preset;
@@ -692,9 +791,24 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   $('fQ').addEventListener('input',renderList);
   $('pForm').addEventListener('submit',function(e){
     e.preventDefault();
-    var f=e.target,name=f.elements.name.value.trim(),code=f.elements.code.value.trim();
+    var f=e.target,name=f.elements.name.value.trim(),code=f.elements.code.value.trim(),em=f.elements.email.value.trim().toLowerCase();
+    var m=$('pMsg'),btn=f.querySelector('button');m.className='msg';m.textContent='';
     if(!name||!/^[A-Za-z0-9_-]+$/.test(code))return;
-    RegDB.savePromoter({name:name,code:code}).then(function(){f.reset();load()});
+    if(proms.some(function(p){return p.code.toLowerCase()===code.toLowerCase()})){m.classList.add('bad');m.textContent='代碼「'+code+'」已有人使用，請換一個';return}
+    btn.disabled=true;
+    (em?RegDB.addPromoterAccount(code,name,em):RegDB.savePromoter({name:name,code:code})).then(function(res){
+      f.reset();load();m.classList.add('ok');
+      m.textContent=!em?'已新增推廣人「'+name+'」。':res&&res.existed?'已新增推廣者「'+name+'」，此 Email 原本就有帳號，已寄信通知對方用原密碼登入。':'已新增推廣者「'+name+'」，設定密碼信已寄到 '+em+'。';
+    },function(err){m.classList.add('bad');m.textContent=err.message||'新增失敗，請稍後再試'}).then(function(){btn.disabled=false});
+  });
+
+  // 既有推廣人加上登入帳號
+  $('acForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,m=$('acMsg'),btn=f.querySelector('button'),em=f.elements.email.value.trim().toLowerCase();m.className='msg';btn.disabled=true;
+    RegDB.addPromoterAccount(f.dataset.code,'',em).then(function(res){
+      m.classList.add('ok');m.textContent=res&&res.existed?'已加入，此 Email 原本就有帳號，已寄信通知對方用原密碼登入。':'已加入，設定密碼信已寄到 '+em+'。';f.reset();load();
+    },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
   $('csv').addEventListener('click',function(){
     var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','得知管道','留言','推廣人','推廣代碼'];
@@ -717,8 +831,11 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   $('suLink').textContent=SITE+'admin.html?signup';
 
   // 推廣者：我介紹的報名者
+  // 姓名遮蔽，與資料庫 my_referrals 規則相同
+  function mask(s){s=String(s||'');var a=Array.from(s);return a.length<=1?s:a.length===2?a[0]+'○':a[0]+'○'.repeat(a.length-2)+a[a.length-1]}
   function loadMine(){
-    RegDB.myReferrals().then(function(list){
+    (VIEW?Promise.resolve(regs.filter(function(r){return r.ref===VIEW.code}).map(function(r){return {created_at:r.created_at,batch:r.batch,name:mask(r.name)}}))
+      :RegDB.myReferrals()).then(function(list){
       $('mCnt').textContent=list.length;
       $('mBody').innerHTML=list.length?list.map(function(r){return '<tr><td class="num">'+fmt(r.created_at)+'</td><td>'+esc(r.batch)+'</td><td>'+esc(r.name)+'</td></tr>'}).join(''):'<tr><td colspan="3" class="empty">目前還沒有透過你的連結報名的人</td></tr>';
     });
@@ -738,7 +855,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function n(v){return Number(v||0).toLocaleString('zh-TW')}
   function pct(a,b){return b?(Math.round(a/b*1000)/10)+'%':'—'}
   function loadStats(){
-    var r=range(),ref=ROLE&&ROLE.admin?($('aRef').value==='*'?null:$('aRef').value):null;
+    var r=range(),ref=VIEW?VIEW.code:ROLE&&ROLE.admin?($('aRef').value==='*'?null:$('aRef').value):null;
     RegDB.stats(r.from,r.to,ref).then(function(s){stat=s;renderStats()},function(){$('chart').innerHTML='<p class="empty">數據讀取失敗，請重新整理。</p>'});
   }
   function renderStats(){
@@ -768,28 +885,45 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   }
   // 每日長條圖：單一指標、單一顏色，滑過顯示數值
   function drawChart(daily){
-    var W=800,H=220,L=36,B=24,T=10,R=4,vals=daily.map(function(d){return d[metric]}),max=Math.max.apply(null,vals.concat([0]));
+    // 依實際寬度繪製，手機上文字不會被縮小
+    var W=Math.max(280,Math.round($('chart').clientWidth)||800),H=W<500?180:220,L=36,B=24,T=10,R=4,vals=daily.map(function(d){return d[metric]}),max=Math.max.apply(null,vals.concat([0]));
     var step=max<=4?1:Math.pow(10,Math.floor(Math.log10(max/4)));[1,2,5,10].some(function(m){if(max/(step*m)<=4){step*=m;return true}});
     var top=Math.max(step,Math.ceil(max/step)*step),ih=H-B-T,iw=W-L-R,bw=iw/daily.length,gap=Math.min(4,bw*.25);
     var y=function(v){return T+ih-v/top*ih},svg='';
     for(var g=0;g<=top;g+=step)svg+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'"/><text class="ax" x="'+(L-6)+'" y="'+(y(g)+4)+'" text-anchor="end">'+g+'</text>';
-    var every=Math.ceil(daily.length/10);
+    var every=Math.ceil(daily.length/Math.max(3,Math.floor(iw/56)));
     daily.forEach(function(d,i){
       var w=Math.max(1,Math.min(36,bw-gap)),x=L+i*bw+(bw-w)/2,v=d[metric],yy=y(v),r=Math.min(4,w/2,(T+ih-yy));
       svg+='<rect class="hit" data-i="'+i+'" x="'+(L+i*bw)+'" y="'+T+'" width="'+bw+'" height="'+ih+'"/>';
       svg+=v?'<path class="bar" d="M'+x+','+(T+ih)+'V'+(yy+r)+'Q'+x+','+yy+' '+(x+r)+','+yy+'H'+(x+w-r)+'Q'+(x+w)+','+yy+' '+(x+w)+','+(yy+r)+'V'+(T+ih)+'Z"/>':'<path class="bar"/>';
-      if(i%every===0||i===daily.length-1&&daily.length<=10)svg+='<text class="ax" x="'+(x+w/2)+'" y="'+(H-6)+'" text-anchor="middle">'+md(d.d)+'</text>';
+      if(i%every===0)svg+='<text class="ax" x="'+(x+w/2)+'" y="'+(H-6)+'" text-anchor="middle">'+md(d.d)+'</text>';
     });
     $('chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+MET[metric]+'長條圖">'+svg+'</svg><div class="tip" hidden></div>';
     var tip=$('chart').querySelector('.tip'),el=$('chart');
-    el.onmousemove=function(e){
+    // 滑鼠移過或手指點按都顯示數值
+    el.onpointermove=el.onclick=function(e){
       var h=e.target.closest('.hit');if(!h){tip.hidden=true;return}
       var d=daily[h.dataset.i],box=el.getBoundingClientRect(),hb=h.getBoundingClientRect();
       tip.innerHTML=rocDate(d.d)+'　<b>'+n(d[metric])+'</b>';tip.hidden=false;
       tip.style.left=Math.min(Math.max(hb.left-box.left+hb.width/2,60),box.width-60)+'px';tip.style.top=(e.clientY-box.top)+'px';
     };
-    el.onmouseleave=function(){tip.hidden=true};
+    el.onpointerleave=function(){tip.hidden=true};
   }
+  // 手機版表格改成卡片：把欄位標題記在每格的 data-label，由 CSS 顯示在數值前
+  function labelTables(){
+    document.querySelectorAll('#app table, dialog table').forEach(function(t){
+      var hs=[].map.call(t.querySelectorAll('thead th'),function(th){return th.textContent.replace(/\s*\d+$/,'').trim()});
+      t.querySelectorAll('tbody tr').forEach(function(tr){[].forEach.call(tr.children,function(td,i){
+        if(td.hasAttribute('data-label'))return;
+        td.setAttribute('data-label',td.colSpan>1?'':hs[i]||'');
+        // 內容包成一塊，卡片版才會是「標題｜內容」兩欄
+        if(td.childNodes.length){var cv=document.createElement('div');cv.className='cv';while(td.firstChild)cv.appendChild(td.firstChild);td.appendChild(cv)}
+      })});
+    });
+  }
+  new MutationObserver(labelTables).observe($('app'),{childList:true,subtree:true});
+  var rsT,lastW=0;
+  addEventListener('resize',function(){clearTimeout(rsT);rsT=setTimeout(function(){var w=$('chart').clientWidth;if(stat&&w&&Math.abs(w-lastW)>20){lastW=w;drawChart(stat.daily)}},150)});
   $('aRange').addEventListener('click',function(e){
     var b=e.target.closest('[data-days]');if(!b)return;days=+b.dataset.days;
     this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});loadStats();
