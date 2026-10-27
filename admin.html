@@ -94,6 +94,16 @@ textarea{font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--
 #pBody td:first-child{white-space:nowrap}
 button.pname{border:0;background:none;padding:0;font-size:15px;color:var(--accent);text-align:left;text-decoration:underline;text-underline-offset:3px}
 button.pname:hover{color:var(--hot)}
+.ds{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.ds.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.ds.wait{background:var(--hot-soft);color:var(--hot)}
+.ds.late{background:color-mix(in srgb,var(--no) 12%,transparent);color:var(--no)}
+h3.dsec{font-size:16px;color:var(--ink);margin:20px 0 6px;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.dfiles{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:14px}
+.dfiles li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.dfiles li b{color:var(--ink);font-weight:700;min-width:150px}
+button.dl{font-weight:500;font-size:13px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.dact{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
 /* 手機版：表格改卡片、頁籤可橫滑、間距縮小 */
 @media (max-width:640px){
   body{font-size:14px}
@@ -276,6 +286,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div class="kpi"><span>直接報名（無推廣人）</span><b id="kDirect">0</b></div>
     <div class="kpi"><span>實戰班（一）</span><b id="kB1">0</b></div>
     <div class="kpi"><span>實戰班（二）</span><b id="kB2">0</b></div>
+    <div class="kpi"><span>兩班皆可</span><b id="kBoth">0</b></div>
   </div>
 
   <div class="viewbar" id="viewBar" role="status" hidden>
@@ -318,13 +329,14 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div class="bar">
       <div class="l">
         <input type="hidden" id="fRef" value="*"><button type="button" class="chip" id="fChip" hidden></button>
-        <select id="fB" aria-label="依班次篩選"><option value="*">全部班次</option><option>實戰班（一）</option><option>實戰班（二）</option></select>
+        <select id="fB" aria-label="依班次篩選"><option value="*">全部班次</option><option>實戰班（一）</option><option>實戰班（二）</option><option>兩班皆可</option></select>
+        <select id="fD" aria-label="依資料繳交狀態篩選"><option value="*">全部資料狀態</option><option value="done">資料已齊全</option><option value="wait">未齊全（期限內）</option><option value="late">逾期未齊全</option></select>
         <input id="fQ" type="search" placeholder="搜尋姓名、電話、Email" aria-label="搜尋">
       </div>
       <button id="csv">匯出 Excel（CSV）</button>
     </div>
     <div class="tbl"><table>
-      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>推廣人</th><th></th></tr></thead>
+      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>應檢附資料</th><th>推廣人</th><th></th></tr></thead>
       <tbody id="rBody"></tbody>
     </table></div>
   </section>
@@ -464,7 +476,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=11"></script>
+<script src="assets/regdb.js?v=13"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -579,7 +591,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     RegDB.batches().then(function(list){
       $('bList').innerHTML=list.map(function(b){
         var n=regs.filter(function(r){return r.batch===b.name}).length;
-        return '<div class="bt'+(b.open?'':' off')+'"><div><b>'+esc(b.name)+'</b><span class="st">'+(b.open?'報名中':'已關閉（額滿）')+'</span><small>目前報名 '+n+' 人・名額 33＋候補 5</small></div>'+
+        return '<div class="bt'+(b.open?'':' off')+'"><div><b>'+esc(b.name)+'</b><span class="st">'+(b.open?'報名中':b.name==='兩班皆可'?'已關閉':'已關閉（額滿）')+'</span><small>'+(b.name==='兩班皆可'?'報名表的「兩班皆可」選項・目前 '+n+' 人選擇':'目前報名 '+n+' 人・名額 33＋候補 5')+'</small></div>'+
           '<button type="button" class="'+(b.open?'del':'pri')+'" data-batch="'+esc(b.name)+'" data-open="'+(b.open?'0':'1')+'">'+(b.open?'關閉報名':'重新開放')+'</button></div>';
       }).join('');
     });
@@ -646,7 +658,37 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   });
 
   var apps=[];
-  function load(){Promise.all([RegDB.list(),RegDB.promoters(),RegDB.applications()]).then(function(r){regs=r[0];proms=r[1];apps=r[2];render();renderApps()},function(){alert('資料讀取失敗，請重新整理或重新登入。')})}
+  function load(){Promise.all([RegDB.list(),RegDB.promoters(),RegDB.applications(),RegDB.documents()]).then(function(r){regs=r[0];proms=r[1];apps=r[2];docs=r[3];render();renderApps()},function(){alert('資料讀取失敗，請重新整理或重新登入。')})}
+
+  // 應檢附資料（報名者用專屬連結上傳）
+  var docs=[];
+  var DOCT={apply:'培訓學員申請表',id_card:'身分證正反面影本',diploma:'最高學歷畢業證書影本',transcript:'最高學歷成績單影本',consent:'個人資料提供同意書',labor:'勞工保險異動紀錄（選填）'};
+  var DOC_REQ=['apply','id_card','diploma','transcript','consent'];
+  function docState(r){
+    var mine=docs.filter(function(d){return d.registration_id===r.id});
+    var miss=DOC_REQ.filter(function(k){return !mine.some(function(d){return d.doc_type===k})});
+    return {files:mine,missing:miss,complete:!miss.length,expired:r.upload_deadline&&new Date(r.upload_deadline)<Date.now()};
+  }
+  function docKey(r){var s=docState(r);return s.complete?'done':s.expired?'late':'wait'}
+  function docBadge(r){
+    var s=docState(r);
+    if(s.complete)return '<span class="ds ok">已齊全</span>';
+    var d=r.upload_deadline?Math.ceil((new Date(r.upload_deadline)-Date.now())/864e5):null;
+    return s.expired?'<span class="ds late">逾期・缺 '+s.missing.length+' 項</span>':'<span class="ds wait">缺 '+s.missing.length+' 項</span>'+(d!=null?'<br><span class="muted" style="font-size:12px">剩 '+d+' 天</span>':'');
+  }
+  function upLink(r){return SITE+'upload.html?id='+encodeURIComponent(r.id)+'&t='+encodeURIComponent(r.upload_token)}
+  function size(b){return b>=1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
+  function docSection(r){
+    var s=docState(r);
+    return '<h3 class="dsec">應檢附資料 '+docBadge(r)+'</h3>'+
+      '<p class="hint" style="margin:0 0 10px">上傳期限：'+(r.upload_deadline?fmt(r.upload_deadline):'—')+(s.expired?'（已過期）':'')+'</p>'+
+      '<ul class="dfiles">'+Object.keys(DOCT).map(function(k){
+        var fs=s.files.filter(function(d){return d.doc_type===k});
+        return '<li><b>'+DOCT[k]+'</b>'+(fs.length?fs.map(function(d){return '<button type="button" class="dl" data-dl="'+esc(d.file_path)+'" data-name="'+esc(d.file_name)+'">⬇ '+esc(d.file_name)+' <span class="muted">'+size(d.size)+'</span></button>'}).join(''):'<span class="muted">'+(k==='labor'?'未上傳':'尚未上傳')+'</span>')+'</li>';
+      }).join('')+'</ul>'+
+      '<div class="dact"><button type="button" data-uplink="'+esc(r.id)+'">複製上傳連結</button> <button type="button" data-extend="'+esc(r.id)+'">期限延長 5 天</button></div>'+
+      '<p class="msg" id="dMsg" role="status"></p>';
+  }
 
   // 推廣者註冊申請（待審核）
   function renderApps(){
@@ -686,6 +728,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     var withRef=regs.filter(function(r){return r.ref});
     $('kTotal').textContent=regs.length;$('kRef').textContent=withRef.length;$('kDirect').textContent=regs.length-withRef.length;
     $('kB1').textContent=regs.filter(function(r){return r.batch==='實戰班（一）'}).length;$('kB2').textContent=regs.filter(function(r){return r.batch==='實戰班（二）'}).length;
+    $('kBoth').textContent=regs.filter(function(r){return r.batch==='兩班皆可'}).length;
 
     // 推廣人彙總：已登記的 + 名單中出現但未登記的代碼 + 直接報名
     var codes=proms.map(function(p){return p.code});
@@ -723,10 +766,11 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   }
 
   function filtered(){
-    var c=$('fRef').value,bt=$('fB').value,q=$('fQ').value.trim().toLowerCase();
+    var c=$('fRef').value,bt=$('fB').value,ds=$('fD').value,q=$('fQ').value.trim().toLowerCase();
     return regs.filter(function(r){
       if(c!=='*'&&(r.ref||'')!==c)return false;
       if(bt!=='*'&&r.batch!==bt)return false;
+      if(ds!=='*'&&docKey(r)!==ds)return false;
       if(q&&[r.name,r.phone,r.email].join(' ').toLowerCase().indexOf(q)<0)return false;
       return true;
     });
@@ -737,8 +781,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('rBody').innerHTML=l.length?l.map(function(r){
       return '<tr><td class="num">'+fmt(r.created_at)+'</td><td class="nw">'+esc(r.batch||'—')+'</td><td><b>'+esc(r.name)+'</b></td><td class="num">'+esc(r.phone)+'</td><td>'+esc(r.line)+'</td><td>'+esc(r.email)+'</td>'+
         '<td>'+esc(r.school)+'<br><span class="muted">'+esc(r.dept)+'</span></td><td class="muted">'+esc((r.channels||[]).join('、'))+'</td>'+
-        '<td>'+esc(pname(r.ref))+'</td><td class="acts"><button type="button" data-view="'+esc(r.id)+'">詳細</button> <button type="button" class="del" data-del="'+esc(r.id)+'">刪除</button></td></tr>';
-    }).join(''):'<tr><td colspan="10" class="empty">目前沒有報名資料</td></tr>';
+        '<td>'+docBadge(r)+'</td><td>'+esc(pname(r.ref))+'</td><td class="acts"><button type="button" data-view="'+esc(r.id)+'">詳細</button> <button type="button" class="del" data-del="'+esc(r.id)+'">刪除</button></td></tr>';
+    }).join(''):'<tr><td colspan="11" class="empty">目前沒有報名資料</td></tr>';
     var c=$('fRef').value,chip=$('fChip');
     chip.hidden=c==='*';chip.textContent='只顯示：'+pname(c)+' ✕';chip.setAttribute('aria-label','清除推廣人篩選（目前：'+pname(c)+'）');
     document.querySelectorAll('#pBody tr').forEach(function(tr){tr.classList.toggle('sel',tr.dataset.code===c)});
@@ -776,18 +820,44 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   });
   function view(r){
     var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
-      ['最高學歷／學校',r.school],['畢業科系',r.dept],['得知管道',(r.channels||[]).join('、')],['留言',r.note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
-    $('dBody').innerHTML='<dl>'+rows.map(function(x){return '<dt>'+x[0]+'</dt><dd>'+esc(x[1])+'</dd>'}).join('')+'</dl>';
-    $('dlg').showModal();
+      ['最高學歷／學校',r.school],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||'無'],
+      ['參訓須知',r.consents&&r.consents.length?'已勾選 '+r.consents.length+' 項（'+r.consents.join('、')+'）':'—'],
+      ['得知管道',(r.channels||[]).join('、')],['留言',r.note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
+    $('dBody').innerHTML='<dl>'+rows.map(function(x){return '<dt>'+x[0]+'</dt><dd style="white-space:pre-line">'+esc(x[1])+'</dd>'}).join('')+'</dl>'+docSection(r);
+    if(!$('dlg').open)$('dlg').showModal();
   }
+  // 詳細視窗：下載檔案、複製上傳連結、延長期限
+  $('dBody').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.dl){
+      b.disabled=true;
+      RegDB.docUrl(b.dataset.dl,b.dataset.name).then(function(u){location.href=u},function(){alert('下載失敗，請重新整理後再試。')}).then(function(){b.disabled=false});
+      return;
+    }
+    var r=regs.find(function(x){return x.id===(b.dataset.uplink||b.dataset.extend)});if(!r)return;
+    if(b.dataset.uplink){
+      var t=upLink(r);
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製上傳連結'},1500)},function(){prompt('複製這個上傳連結：',t)});
+      return;
+    }
+    // 從「現在」或「原期限」較晚者再加 5 天
+    var base=Math.max(Date.now(),new Date(r.upload_deadline||0).getTime()),iso=new Date(base+5*864e5).toISOString();
+    if(!confirm('把「'+r.name+'」的上傳期限延長到 '+fmt(iso)+'？'))return;
+    b.disabled=true;
+    RegDB.extendDeadline(r.id,iso).then(function(row){r.upload_deadline=row.upload_deadline;view(r);renderList();$('dMsg').className='msg ok';$('dMsg').textContent='已延長，可複製上傳連結再傳給對方。'},
+      function(){b.disabled=false;alert('延長失敗，請稍後再試。')});
+  });
   $('rBody').addEventListener('click',function(e){
     var v=e.target.closest('[data-view]');
     if(v){view(regs.find(function(r){return r.id===v.dataset.view}));return}
     var b=e.target.closest('[data-del]');if(!b)return;
-    if(confirm('確定刪除這筆報名資料？刪除後無法復原。'))RegDB.remove(b.dataset.del).then(load);
+    if(!confirm('確定刪除這筆報名資料？已上傳的檔案也會一併刪除，刪除後無法復原。'))return;
+    var id=b.dataset.del,paths=docs.filter(function(d){return d.registration_id===id}).map(function(d){return d.file_path});
+    RegDB.removeDocs(paths).then(function(){return RegDB.remove(id)}).then(load,function(){alert('刪除失敗，請稍後再試。')});
   });
   $('fChip').addEventListener('click',function(){$('fRef').value='*';renderList()});
   $('fB').addEventListener('change',renderList);
+  $('fD').addEventListener('change',renderList);
   $('fQ').addEventListener('input',renderList);
   $('pForm').addEventListener('submit',function(e){
     e.preventDefault();
@@ -811,8 +881,9 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
   $('csv').addEventListener('click',function(){
-    var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','得知管道','留言','推廣人','推廣代碼'];
-    var lines=[head].concat(filtered().map(function(r){return [fmt(r.created_at),r.batch||'',r.name,r.email,r.phone,r.line,r.school,r.dept,(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'']}));
+    var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','參訓須知勾選','應檢附資料','上傳期限','得知管道','留言','推廣人','推廣代碼'];
+    var lines=[head].concat(filtered().map(function(r){var s=docState(r);return [fmt(r.created_at),r.batch||'',r.name,r.email,r.phone,r.line,r.school,r.dept,r.grad_date||'',r.military||'',r.work_exp||'',(r.consents||[]).join('、'),
+      s.complete?'已齊全':(s.expired?'逾期，':'')+'缺：'+s.missing.map(function(k){return DOCT[k]}).join('、'),r.upload_deadline?fmt(r.upload_deadline):'',(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'']}));
     var csv='﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='報名名單.csv';a.click();
   });

@@ -32,13 +32,45 @@ window.RegDB = (function () {
     add: function (rec) {
       var row = {
         batch: rec.batch, name: rec.name, email: rec.email, phone: rec.phone, line: rec.line,
-        school: rec.school, dept: rec.dept, channels: rec.channels, note: rec.note || '', ref: rec.ref || null
+        school: rec.school, dept: rec.dept, channels: rec.channels, note: rec.note || '', ref: rec.ref || null,
+        grad_date: rec.grad_date, work_exp: rec.work_exp || '', military: rec.military, consents: rec.consents || []
       };
+      // 先在瀏覽器產生 id 與上傳 token，送出後可直接帶報名者到上傳頁
+      if (rec.id) { row.id = rec.id; row.upload_token = rec.upload_token }
       return fetch(URL + '/rest/v1/registrations', {
         method: 'POST',
         headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(row)
       }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); });
+    },
+
+    // 報名資料上傳頁：以報名 id＋上傳 token 呼叫 reg-upload 函式
+    upload: function (body) {
+      return fetch(URL + '/functions/v1/reg-upload', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      }).then(function (r) {
+        return r.json().catch(function () { return {} }).then(function (j) {
+          if (!r.ok) throw new Error(j.error || '系統忙碌，請稍後再試');
+          return j;
+        });
+      });
+    },
+    // 把檔案直接傳到私人檔案空間（網址由 reg-upload 的 sign 動作產生，只能用一次）
+    uploadFile: function (path, token, file) {
+      return client().storage.from('reg-docs').uploadToSignedUrl(path, token, file, { contentType: file.type || 'application/octet-stream' })
+        .then(function (res) { if (res.error) throw new Error('上傳失敗，請檢查網路後再試'); });
+    },
+    // 管理員：報名者已上傳的檔案、下載連結、延長期限
+    documents: function () { return client().from('reg_documents').select('*').order('created_at').then(ok) },
+    docUrl: function (path, name) {
+      return client().storage.from('reg-docs').createSignedUrl(path, 600, { download: name || true }).then(ok).then(function (d) { return d.signedUrl });
+    },
+    removeDocs: function (paths) { return paths.length ? client().storage.from('reg-docs').remove(paths).then(ok) : Promise.resolve() },
+    extendDeadline: function (id, iso) {
+      return client().from('registrations').update({ upload_deadline: iso }).eq('id', id).select('id,upload_deadline').then(ok).then(function (rows) {
+        if (!rows || !rows.length) throw new Error('沒有權限');
+        return rows[0];
+      });
     },
 
     // 班級報名開關（訪客可讀，只有管理員可改）
