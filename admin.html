@@ -681,7 +681,9 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function docSection(r){
     var s=docState(r);
     return '<h3 class="dsec">應檢附資料 '+docBadge(r)+'</h3>'+
-      '<p class="hint" style="margin:0 0 10px">上傳期限：'+(r.upload_deadline?fmt(r.upload_deadline):'—')+(s.expired?'（已過期）':'')+'</p>'+
+      '<p class="hint" style="margin:0 0 10px">上傳期限：'+(r.upload_deadline?fmt(r.upload_deadline):'—')+(s.expired?'（已過期）':'')+
+        '<br>缺件提醒信：第 3 天 '+(r.remind1_at?'已寄（'+fmt(r.remind1_at)+'）':s.complete?'不需寄':'未寄')+
+        '・截止當天 '+(r.remind2_at&&r.remind2_deadline===r.upload_deadline?'已寄（'+fmt(r.remind2_at)+'）':s.complete?'不需寄':'未寄')+'</p>'+
       '<ul class="dfiles">'+Object.keys(DOCT).map(function(k){
         var fs=s.files.filter(function(d){return d.doc_type===k});
         return '<li><b>'+DOCT[k]+'</b>'+(fs.length?fs.map(function(d){return '<button type="button" class="dl" data-dl="'+esc(d.file_path)+'" data-name="'+esc(d.file_name)+'">⬇ '+esc(d.file_name)+' <span class="muted">'+size(d.size)+'</span></button>'}).join(''):'<span class="muted">'+(k==='labor'?'未上傳':'尚未上傳')+'</span>')+'</li>';
