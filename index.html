@@ -367,6 +367,25 @@ h3{font-size:18px;font-weight:700;line-height:1.45}
 .follow{margin-top:36px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
 .follow b{font-family:var(--f-num);color:var(--ink);background:var(--sunk);border-radius:8px;padding:3px 10px;font-size:14px}
 
+/* rules */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:grid;gap:12px;align-content:start;position:relative}
+.rcard.wide{grid-column:1/-1}
+.rcard .rno{font-weight:700;font-size:13px;color:var(--accent);letter-spacing:.06em}
+.rcard h3{font-size:19px;font-weight:900}
+.rlead{font-size:15px;color:var(--muted)}
+.dot{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.dot li{position:relative;padding-left:18px;font-size:15px;line-height:1.75;color:var(--fg)}
+.dot li::before{content:"";position:absolute;left:2px;top:.72em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.dot li b{color:var(--ink)}
+.dot.two{grid-template-columns:1fr 1fr;column-gap:32px}
+.rnote{margin-top:4px;background:var(--hot-soft);border-radius:12px;padding:14px 16px;display:grid;gap:6px}
+.rnote b{color:var(--ink);font-size:15px}
+.rnote p{font-size:14px;color:var(--fg);line-height:1.75}
+.rnote .dl{justify-self:start;font-weight:700;font-size:14px;color:var(--hot);text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:1px}
+.rnote .dl:hover{opacity:.8}
+@media (max-width:760px){.rules,.dot.two{grid-template-columns:1fr}.rcard{padding:22px}}
+
 /* faq */
 .faq{display:grid;gap:10px;max-width:880px}
 details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 22px}
@@ -530,6 +549,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
       <a href="#classes">開班</a>
       <a href="#curriculum">課程</a>
       <a href="#faculty">師資</a>
+      <a href="#rules">學員規範</a>
       <a href="#faq">FAQ</a>
     </div>
     <a class="btn hot" href="#apply">立即報名</a>
@@ -778,6 +798,91 @@ footer .copy-r a{color:inherit;text-decoration:none}
     </div>
     <div class="faculty" id="facGrid"></div>
     <div class="certs"><span class="lab">結訓認證輔導</span><span>經濟部 iPAS AI 應用規劃師</span><span>AIMC AI 行銷專業能力認證</span></div>
+  </div>
+</section>
+
+<section class="band" id="rules">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">報名前必讀</span>
+      <h2>學員規範、保險與繳交文件</h2>
+      <p class="lede">依「強化服務業人才韌性計畫」青年 AI 實戰養成班培訓補助申請須知與培訓學員申請表整理。實際規定若有更新，以主辦單位經濟部商業發展署與執行單位商業服務業 AI 人才辦公室公告為準。</p>
+    </div>
+
+    <div class="rules">
+      <article class="rcard rv">
+        <span class="rno num">01</span>
+        <h3>繳交報名資料</h3>
+        <ul class="dot">
+          <li>填列培訓學員申請表。</li>
+          <li>應檢附資料：身分證正反面影本、最高學歷畢業證書影本、最高學歷學校成績單影本、蒐集個人資料告知事項暨個人資料提供同意書。</li>
+          <li>如有工作經驗，請檢具勞工保險異動紀錄或相關切結文件。</li>
+        </ul>
+      </article>
+
+      <article class="rcard rv">
+        <span class="rno num">02</span>
+        <h3>訓字保與培訓安全</h3>
+        <ul class="dot">
+          <li>培訓期間由培訓單位為學員投保職業訓練期間保險（訓字保），保障期間涵蓋二個月培訓全程，包含次產業 AI 應用課程與企業專題實作。</li>
+          <li>保障範圍包含課程訓練、場域實作及往返途中之意外事故。</li>
+          <li>企業專題期間若發生適應不良或學習困難，培訓單位將主動輔導協助。</li>
+        </ul>
+      </article>
+
+      <article class="rcard wide rv">
+        <span class="rno num">03</span>
+        <h3>結訓、認證與獎勵金</h3>
+        <ul class="dot">
+          <li>須完成二階段培訓：第一階段「次產業 AI 應用課程」132 小時，達成出席要求並完成 AI 基礎與資安測驗、工具實作任務與小型成果展示；第二階段「企業專題實作」132 小時（兩階段合計累積達 264 小時），並完成企業專題成果報告與 AI 應用原型、參與成果發表，經企業業師與課程教師聯合評核通過，方認定完訓。</li>
+          <li><b>第一階段學習獎勵金 NT$20,000</b>：出席時數達該階段總時數 90% 以上，並完成測驗、成績達 80 分（含）以上。</li>
+          <li><b>第二階段學習獎勵金 NT$30,000</b>：實作出席時數達該階段總時數 90% 以上，交付專題成果報告並完成成果發表，經培訓單位及企業講師聯合評核通過。</li>
+          <li>應屆畢業生須取得畢業證書並達成上述條件後，方能領取學習獎勵金。</li>
+        </ul>
+        <div class="rnote">
+          <b>※ 中途退訓說明</b>
+          <p>學員須達成此 2 階段培訓並達成所列標準與評核，始為完訓。如中途退訓，學員須敘明申請退訓事由，並於培訓終止日前 7 日提交「培訓終止申請表」；經主辦單位認定屬不可歸責因素者，原則上無須繳回已請領之學習獎勵金，後續得再次申請本計畫；未經認定或非屬不可歸責因素者，則應繳回學習獎勵金且後續不得再次申請本計畫。</p>
+          <a class="dl" href="https://docs.google.com/document/d/1HNMpWp-wML3JyP5zs-dE_cSyx0mQEh0g/edit?usp=sharing&amp;ouid=112097850562088260010&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener">下載「培訓終止申請表」 →</a>
+        </div>
+      </article>
+
+      <article class="rcard rv">
+        <span class="rno num">04</span>
+        <h3>請假規定</h3>
+        <ul class="dot">
+          <li>上課時間依課程表排定（原則週一至週五），每日上、下午均須簽到退。</li>
+          <li>請假假別含事假、病假；晚到或早退均須提前請假。</li>
+          <li>未達出席時數門檻者，不符合學習獎勵金請領資格。</li>
+        </ul>
+      </article>
+
+      <article class="rcard rv">
+        <span class="rno num">05</span>
+        <h3>退訓規定</h3>
+        <p class="rlead">學員於訓練期間若發生以下情形，辦訓單位得為退訓處理，學員須繳回已領取之學習獎勵金：</p>
+        <ul class="dot">
+          <li>未到課時數超過課程總時數 10%。</li>
+          <li>個人報名及履歷資料填寫不實，情節重大者。</li>
+          <li>未經核准擅自退出、因適應不佳或無法配合課程規劃者。</li>
+          <li>除因不可歸責因素退訓外，其他因素退訓者後續不得再申請本計畫。</li>
+        </ul>
+      </article>
+
+      <article class="rcard wide rv">
+        <span class="rno num">06</span>
+        <h3>注意事項</h3>
+        <ul class="dot two">
+          <li>本計畫補助對象為滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，欲進入服務業服務者；身分可為應屆畢業生或待業者。</li>
+          <li>每名學員限參與本計畫 1 次（因不可歸責因素退訓者不在此限），且培訓補助期間不得同時接受其他政府相關人才培訓補助。</li>
+          <li>錄取通知後，培訓單位將依法為學員投保「訓字保」（勞工保險＋勞工職業災害保險），以保障學員於受訓期間的相關權益。請學員於完成訓練後，配合辦理保險相關退保作業。</li>
+          <li>為配合講師時間或臨時突發事件，培訓單位保留調整課程日期或更換講師之權利。</li>
+          <li>培訓單位保留修訂課程內容之權利，課程變更恕不另行通知，請以官方網站公告為準。</li>
+          <li>執行本計畫期間，不得採購、使用或導入中國大陸廠牌之資通訊產品或服務。</li>
+          <li>如遇不可抗力因素，培訓單位保留修訂課程日期及取消課程之權利。</li>
+          <li>學員領取之學習獎勵金依中華民國稅法規定辦理。</li>
+        </ul>
+      </article>
+    </div>
   </div>
 </section>
 
