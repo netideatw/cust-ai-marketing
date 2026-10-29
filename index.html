@@ -394,6 +394,9 @@ summary::-webkit-details-marker{display:none}
 summary::after{content:"+";font-family:var(--f-num);color:var(--accent);font-size:22px;line-height:1;flex:none}
 details[open] summary::after{content:"−"}
 details p{padding-bottom:18px;color:var(--muted);font-size:15px}
+details .faq-ul{margin:-8px 0 14px;padding-left:20px;display:grid;gap:8px;color:var(--muted);font-size:15px}
+details .faq-ul b{color:var(--ink)}
+details p+p{margin-top:-8px}
 
 /* final */
 .final{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
@@ -917,6 +920,8 @@ footer .copy-r a{color:inherit;text-decoration:none}
       <h2>報名前你可能想問</h2>
     </div>
     <div class="faq">
+      <details><summary>課程需要繳費嗎？</summary><p>不用，課程免費。本課程由經濟部商業發展署補助，只要符合報名資格並通過甄選，即可免費參加。</p></details>
+      <details><summary>完訓資格如何認定？</summary><p>須完成兩階段、合計 264 小時的培訓，並達到以下標準，才認定完訓：</p><ul class="faq-ul"><li><b>第一階段「次產業 AI 應用課程」132 小時：</b>出席時數達該階段 90% 以上，並完成 AI 基礎與資安測驗、工具實作任務與小型成果展示。</li><li><b>第二階段「企業專題實作」132 小時：</b>出席時數達該階段 90% 以上，完成企業專題成果報告與 AI 應用原型、參與成果發表，並經企業業師與課程教師聯合評核通過。</li></ul><p>各階段學習獎勵金的請領條件（如測驗須達 80 分以上），請見上方「<a href="#rules">學員規範</a>」。</p></details>
       <details><summary>我是五專／二專畢業，可以報名嗎？</summary><p>可以。只要具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，且年齡在 18 至 35 歲（含），即符合學歷與年齡條件。</p></details>
       <details><summary>我還沒拿到畢業證書（應屆畢業生），可以參加嗎？</summary><p>可以。應屆畢業生可先以在學證明報名，於培訓完成後補交畢業證書；請領學習獎勵金時須已取得畢業證書並符合各階段完訓條件。</p></details>
       <details><summary>我目前有在打工或兼職，可以報名嗎？</summary><p>培訓期間須具「待業」身分，不得為全職在職、自營作業者或公司負責人。課程為週一至週五 09:00–18:00 全日上課，兩階段出席率都須達 90%。兼職的身分認定請以主辦單位公告為準，建議報名前先來電詢問承辦窗口。</p></details>
