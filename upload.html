@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>報名資料上傳｜AI行銷自動化與服務創新實戰班</title>
+<style>
+:root{
+  --bg:#F6F5FB; --surface:#FFFFFF; --sunk:#EDEBF7;
+  --ink:#16123A; --fg:#2A2650; --muted:#625E83; --line:#DDDAEE;
+  --accent:#4B3BFF; --accent-soft:#E6E3FF; --on-accent:#FFFFFF;
+  --hot:#FF6B3D; --hot-soft:#FFE6DC; --ok:#0E9F6E; --no:#D9363E;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-num:"Space Grotesk","Noto Sans TC",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0C22; --surface:#17143A; --sunk:#120F2E;
+  --ink:#F2F0FF; --fg:#DCD9F5; --muted:#A39FC9; --line:#2C2860;
+  --accent:#8B80FF; --accent-soft:#25206084; --on-accent:#0E0C22;
+  --hot:#FF8A63; --hot-soft:#3A1E17; --ok:#3DD39B; --no:#FF6B72;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0E0C22; --surface:#17143A; --sunk:#120F2E;
+  --ink:#F2F0FF; --fg:#DCD9F5; --muted:#A39FC9; --line:#2C2860;
+  --accent:#8B80FF; --accent-soft:#25206084; --on-accent:#0E0C22;
+  --hot:#FF8A63; --hot-soft:#3A1E17; --ok:#3DD39B; --no:#FF6B72;
+  color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.65}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 64px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px;font-size:13px;color:var(--muted)}
+.top b{color:var(--ink);font-size:15px;line-height:1.35}
+.top a{color:var(--accent)}
+h1{font-size:24px;color:var(--ink);margin:0 0 6px;line-height:1.35}
+.lede{color:var(--muted);margin:0 0 18px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.banner{border-radius:14px;padding:14px 16px;margin-bottom:18px;display:grid;gap:4px}
+.banner b{color:var(--ink);font-size:16px}
+.banner.due{background:var(--hot-soft);border:1.5px solid var(--hot)}
+.banner.done{background:color-mix(in srgb,var(--ok) 12%,var(--surface));border:1.5px solid var(--ok)}
+.banner.end{background:color-mix(in srgb,var(--no) 8%,var(--surface));border:1.5px dashed var(--no)}
+.progress{height:8px;border-radius:4px;background:var(--sunk);overflow:hidden;margin-top:6px}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.hint{font-size:13px;color:var(--muted)}
+.list{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px}
+.doc.ok{border-color:color-mix(in srgb,var(--ok) 55%,var(--line))}
+.dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dh b{color:var(--ink);font-size:16px}
+.dh small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.dh small a{color:var(--accent);font-weight:700}
+.st{flex:none;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.st.need{background:var(--hot-soft);color:var(--hot)}
+.st.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.st.opt{background:var(--sunk);color:var(--muted)}
+.files{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.files li{display:flex;align-items:center;gap:10px;background:var(--sunk);border-radius:10px;padding:8px 10px;font-size:14px}
+.files li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.files li small{color:var(--muted);font-family:var(--f-num);white-space:nowrap}
+.files li.up{background:var(--accent-soft)}
+button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;white-space:nowrap}
+.pick{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--accent);color:var(--on-accent);border:0;padding:10px 18px;font-size:14px;justify-self:start}
+.pick:hover{filter:brightness(1.08)}
+.pick input{display:none}
+.del{background:none;border:1.5px solid var(--line);color:var(--no);font-size:12px;padding:3px 10px}
+.del:hover{border-color:var(--no)}
+:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.err{color:var(--no);font-size:13px;margin:0;white-space:pre-line}
+.err:empty{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center}
+.foot{margin-top:28px;font-size:13px;color:var(--muted);line-height:1.9}
+.foot a{color:var(--accent)}
+@media (max-width:520px){h1{font-size:20px}.doc{padding:14px}.pick{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>AI行銷自動化與<br>服務創新實戰班</b><a href="./">課程網頁</a></div>
+
+  <div id="loading" class="card">讀取中…</div>
+
+  <div id="bad" class="card" hidden>
+    <h1>上傳連結無效</h1>
+    <p class="lede" id="badMsg">請確認是否完整複製報名成功信中的網址。</p>
+  </div>
+
+  <div id="main" hidden>
+    <h1><span id="who"></span> 您好，請上傳報名資料</h1>
+    <p class="lede">報名班別：<span id="batch"></span></p>
+
+    <div class="banner" id="banner">
+      <b id="bTitle"></b>
+      <span id="bText" class="hint"></span>
+      <div class="progress" aria-hidden="true"><i id="bar" style="width:0"></i></div>
+    </div>
+
+    <p class="hint" style="margin:0 0 14px">可上傳 PDF、JPG、PNG、HEIC 或 Word 檔，每個檔案 10MB 以內；用手機可以直接拍照上傳。可分次上傳，傳錯可刪除重傳。</p>
+    <ul class="list" id="list"></ul>
+
+    <div class="foot">
+      有工作經驗、但勞保加保於職業工會、農會或漁會者：請在申請表的切結事項親筆簽名。<br>
+      如有任何問題，歡迎洽中華科技大學 就服組：林小姐 (02) 2782-1862 轉 202、鄭小姐 轉 155，
+      <a href="mailto:ci1847@gm.cust.edu.tw">ci1847@gm.cust.edu.tw</a>、<a href="mailto:huichuan@gm.cust.edu.tw">huichuan@gm.cust.edu.tw</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="assets/regdb.js?v=13"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var qs=new URLSearchParams(location.search),ID=qs.get('id'),T=qs.get('t');
+  var DOCS=[
+    {k:'apply',n:'培訓學員申請表',d:'填寫後親筆簽名，再掃描或拍照。',dl:[['下載 Word 檔','assets/apply-form.docx','培訓學員申請表.docx'],['Google 文件','https://docs.google.com/document/d/13A2HUMK96Dju0EVPpYTAFk_MixmDxw50/edit']]},
+    {k:'id_card',n:'身分證正反面影本',d:'正面、反面都要，可分兩個檔案上傳。'},
+    {k:'diploma',n:'最高學歷畢業證書影本',d:'應屆畢業生可先上傳在學證明，培訓完成後 6 個月內補交畢業證書影本。'},
+    {k:'transcript',n:'最高學歷學校成績單影本',d:''},
+    {k:'consent',n:'蒐集個人資料告知事項暨個人資料提供同意書',d:'填寫日期並親筆簽名或蓋章。',dl:[['下載 Word 檔','assets/personal-data-consent.docx','培訓學員蒐集個人資料告知事項暨個人資料提供同意書.docx'],['Google 文件','https://docs.google.com/document/d/190yYhbrJzegnpUmVRbxTZqecghTatAkZ/edit?usp=sharing&ouid=107156929840842688192&rtpof=true&sd=true']]},
+    {k:'labor',n:'勞工保險異動紀錄',d:'有工作經驗者才需要。可至勞保局 e 化服務系統下載：',opt:true,dl:[['勞保局 e 化服務系統','https://edesk.bli.gov.tw/me/#/home']]}
+  ];
+  var REQ=DOCS.filter(function(d){return !d.opt}).length;
+  var S=null,busy={},errs={};
+  function size(b){return b>=1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
+  function fmt(iso){var d=new Date(iso),p=function(n){return String(n).padStart(2,'0')};return (d.getFullYear()-1911)+'/'+p(d.getMonth()+1)+'/'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
+  function left(iso){
+    var ms=new Date(iso)-Date.now();if(ms<=0)return '';
+    var h=Math.floor(ms/36e5),d=Math.floor(h/24);
+    return d?'剩 '+d+' 天 '+(h%24)+' 小時':'剩 '+h+' 小時 '+Math.floor(ms%36e5/6e4)+' 分';
+  }
+  function bad(msg){$('loading').hidden=true;$('main').hidden=true;$('bad').hidden=false;if(msg)$('badMsg').textContent=msg}
+
+  function render(){
+    var done=REQ-S.missing.length;
+    $('who').textContent=S.name;$('batch').textContent=S.batch==='兩班皆可'?'兩班皆可（願配合主辦單位安排）':S.batch;
+    var b=$('banner');
+    if(S.complete||!S.missing.length){
+      b.className='banner done';$('bTitle').textContent='必備資料已齊全，感謝您！';
+      $('bText').textContent='我們會進入書面審查，面試日期另行通知。'+(S.expired?'':'期限（'+fmt(S.deadline)+'）前仍可補傳或更換檔案。');
+    }else if(S.expired){
+      b.className='banner end';$('bTitle').textContent='已超過上傳期限（'+fmt(S.deadline)+'）';
+      $('bText').textContent='目前已交 '+done+'／'+REQ+' 項，無法再上傳。如需協助請聯絡就業服務組。';
+    }else{
+      b.className='banner due';$('bTitle').textContent='請於 '+fmt(S.deadline)+' 前上傳（'+left(S.deadline)+'）';
+      $('bText').textContent='必備資料已交 '+done+'／'+REQ+' 項，還缺：'+S.missing.map(function(k){return DOCS.find(function(d){return d.k===k}).n}).join('、');
+    }
+    $('bar').style.width=(done/REQ*100)+'%';
+
+    $('list').innerHTML=DOCS.map(function(d){
+      var files=S.docs.filter(function(x){return x.doc_type===d.k}),has=files.length>0;
+      var st=has?'<span class="st ok">已上傳</span>':d.opt?'<span class="st opt">選填</span>':'<span class="st need">尚未上傳</span>';
+      var links=(d.dl||[]).map(function(l){return '<a href="'+esc(l[1])+'"'+(l[2]?' download="'+esc(l[2])+'"':' target="_blank" rel="noopener"')+'>'+esc(l[0])+'</a>'}).join('　');
+      return '<li class="doc'+(has?' ok':'')+'" data-k="'+d.k+'"><div class="dh"><div><b>'+esc(d.n)+'</b><small>'+esc(d.d)+(links?' '+links:'')+'</small></div>'+st+'</div>'+
+        '<ul class="files">'+files.map(function(x){return '<li><span title="'+esc(x.file_name)+'">'+esc(x.file_name)+'</span><small>'+size(x.size)+'</small>'+(S.expired?'':'<button type="button" class="del" data-del="'+esc(x.id)+'" aria-label="刪除 '+esc(x.file_name)+'">刪除</button>')+'</li>'}).join('')+
+        (busy[d.k]||[]).map(function(n){return '<li class="up"><span>'+esc(n)+'</span><small>上傳中…</small></li>'}).join('')+'</ul>'+
+        (S.expired?'':'<label class="pick">＋ 選擇檔案上傳<input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,.doc,.docx,image/*,application/pdf" data-k="'+d.k+'"></label>')+
+        '<p class="err" role="alert">'+esc((errs[d.k]||[]).join('\n'))+'</p></li>';
+    }).join('');
+  }
+  function apply(res){S.docs=res.docs;S.missing=res.missing;S.complete=res.complete;render()}
+
+  function upload(k,file){
+    function fail(msg){(errs[k]=errs[k]||[]).push(file.name+'：'+msg);render()}
+    if(file.size>10485760){fail('超過 10MB，請壓縮或改用較小的檔案。');return Promise.resolve()}
+    (busy[k]=busy[k]||[]).push(file.name);render();
+    return RegDB.upload({action:'sign',id:ID,t:T,doc_type:k,file_name:file.name,size:file.size})
+      .then(function(s){return RegDB.uploadFile(s.path,s.token,file).then(function(){return RegDB.upload({action:'confirm',id:ID,t:T,path:s.path,file_name:file.name})})})
+      .then(function(res){busy[k].splice(busy[k].indexOf(file.name),1);apply(res)},
+        function(e){busy[k].splice(busy[k].indexOf(file.name),1);fail(e.message)});
+  }
+  $('list').addEventListener('change',function(e){
+    var inp=e.target.closest('input[type=file]');if(!inp)return;
+    var k=inp.dataset.k,files=[].slice.call(inp.files);inp.value='';errs[k]=[];
+    files.reduce(function(p,f){return p.then(function(){return upload(k,f)})},Promise.resolve());
+  });
+  $('list').addEventListener('click',function(e){
+    var b=e.target.closest('[data-del]');if(!b)return;
+    if(!confirm('確定刪除這個檔案？'))return;
+    b.disabled=true;
+    RegDB.upload({action:'delete',id:ID,t:T,doc_id:b.dataset.del}).then(apply,function(e){b.disabled=false;alert(e.message)});
+  });
+
+  if(!ID||!T){bad();return}
+  RegDB.upload({action:'info',id:ID,t:T}).then(function(res){
+    S=res;$('loading').hidden=true;$('main').hidden=false;render();
+    setInterval(function(){if(S&&!S.expired&&new Date(S.deadline)<Date.now()){S.expired=true}if(S)render()},60000);
+  },function(e){bad(e.message)});
+})();
+</script>
+</body>
+</html>

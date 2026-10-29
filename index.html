@@ -412,6 +412,34 @@ footer .copy-r{color:var(--ink)}
 footer .copy-r a{color:inherit;text-decoration:none}
 
 /* apply form */
+/* 報名流程：繳交資料＋甄選流程 */
+.flow{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}
+.flow h3{font-size:20px;margin-bottom:6px}
+.flow .sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+.send{background:var(--hot-soft);border-radius:12px;padding:14px 16px;font-size:14px;margin-bottom:18px;line-height:1.8}
+.send b{color:var(--ink)}
+.send a{color:var(--accent);font-weight:700;word-break:break-all}
+.docs{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:d}
+.docs li{counter-increment:d;display:grid;grid-template-columns:30px 1fr;gap:4px 12px;align-items:start;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg)}
+.docs li::before{content:counter(d);grid-row:span 3;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-weight:700;font-size:14px;background:var(--accent-soft);color:var(--accent)}
+.docs b{color:var(--ink);font-size:15px}
+.docs small{color:var(--muted);font-size:13px}
+.dl{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.dl a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;padding:6px 14px;border:1.5px solid var(--accent);color:var(--accent)}
+.dl a.p{background:var(--accent);color:var(--on-accent)}
+.dl a:hover{box-shadow:0 0 0 3px var(--accent-soft)}
+.extra{margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}
+.extra b{color:var(--ink);font-size:15px}
+.extra ul{margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--fg);display:grid;gap:6px}
+.extra a{color:var(--accent);word-break:break-all}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:0 0 26px 54px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-weight:700;font-size:17px;background:var(--accent);color:var(--on-accent)}
+.steps li:not(:last-child)::after{content:"";position:absolute;left:18px;top:42px;bottom:4px;width:2px;background:var(--line)}
+.steps b{display:block;font-size:17px;color:var(--ink);margin:6px 0 4px}
+.steps p{font-size:14px;color:var(--muted)}
+.steps li.end::before{content:"✓";background:var(--ok)}
+@media (max-width:860px){.flow{grid-template-columns:1fr}}
 .apply{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:start}
 .apply .head{margin-bottom:0}
 .apply .head .yn{margin-top:4px}
@@ -468,6 +496,11 @@ footer .copy-r a{color:inherit;text-decoration:none}
 .chips input:checked+span::before{content:"✓ ";color:var(--accent);font-weight:900}
 .chips input:focus-visible+span{outline:3px solid var(--hot);outline-offset:2px}
 .fld.other{margin-top:12px;max-width:420px}
+.fld label .sub{font-size:13px;font-weight:500;color:var(--muted);margin-left:4px}
+.fld .chips{margin-top:4px}
+.agrees{display:grid;gap:12px}
+.agrees .chk label{color:var(--fg)}
+.pick label.both{flex-basis:100%}
 .pdpa{background:var(--sunk);border-radius:12px;padding:16px;display:grid;gap:8px}
 .pdpa b{color:var(--ink);font-size:15px}
 .pdpa p{font-size:13px;color:var(--muted);line-height:1.7}
@@ -698,7 +731,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
       <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/><path d="m9 9 2 2 4-4"/></svg></span><span class="big">作品集</span><p>圖文、短影音、Canva、LINE 客服、廣告、GA4 儀表板、Podcast、自動化流程，導師每月檢視。</p></div>
       <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></svg></span><span class="big">證照輔導</span><p>經濟部 iPAS AI 應用規劃師、AIMC AI 行銷專業能力認證輔導與模擬測驗。</p></div>
       <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7l9 5 9-5-9-5z"/><path d="m3 17 9 5 9-5M3 12l9 5 9-5"/></svg></span><span class="big">企業專題</span><p>4–6 人一組承接真實企業題目，由校方與企業聯合評核，可直接寫進履歷。</p></div>
-      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="big num">3<small>個月追蹤</small></span><p>結訓後另有三個月的就業追蹤與二次媒合機制。</p></div>
+      <div class="gain rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="big num">3<small>個月追蹤</small></span><p>結訓後另有三個月的就業追蹤。</p></div>
     </div>
     <div class="reward rv" aria-label="學習獎勵金計算">
       <div><span class="ph">第一階段・次產業 AI 應用</span><span class="amt num">20,000<small> 元</small></span><ul><li>出席達 132 小時的 90% 以上</li><li>課程測驗 80 分以上</li></ul></div>
@@ -899,17 +932,63 @@ footer .copy-r a{color:inherit;text-decoration:none}
       <details><summary>沒有程式設計或 AI 背景可以參加嗎？</summary><p>可以。徵選不以程式設計或既有 AI 背景為必要條件，只要會基本的電腦、瀏覽器、文書與試算表操作即可。開訓一週內會做數位能力盤點，再依結果安排補強。</p></details>
       <details><summary>一定要全程參加嗎？</summary><p>是的。每梯共 33 個上課日、每日 8 小時，兩階段出席率都要達 90% 以上才算完訓，也才能請領學習獎勵金。</p></details>
       <details><summary>報名後就直接錄取嗎？</summary><p>不是。本班採審核制，通過書面資格初審後，將依企業職缺適配度、學習意願與溝通能力進行徵選，並公告錄取與候補名單。</p></details>
-      <details><summary>結訓後一定有工作嗎？</summary><p>課程提供企業說明會、履歷健檢、模擬面試與媒合面談；實際錄用仍由企業依面談結果決定。結訓後另有三個月的就業追蹤與二次媒合機制。</p></details>
+      <details><summary>結訓後一定有工作嗎？</summary><p>課程提供企業說明會、履歷健檢、模擬面試與媒合面談；實際錄用仍由企業依面談結果決定。結訓後另有三個月的就業追蹤。</p></details>
     </div>
   </div>
 </section>
 
-<section class="band" id="apply">
+<section class="band" id="steps">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">報名流程</span>
+      <h2>線上報名後，5 天內上傳報名資料，就能進入甄選</h2>
+      <p class="lede">先在下方填寫線上報名表，送出後會收到報名成功信，信中附有<b>專屬上傳連結</b>。請在<b>收到信後 5 天內</b>上傳應檢附資料，<b>資料交齊才會進入書面審查</b>。</p>
+    </div>
+    <div class="flow">
+      <div class="card rv">
+        <h3>繳交報名資料</h3>
+        <p class="sub">影本請掃描或拍照，PDF、JPG、PNG、Word 都可以，文字要清楚可辨識。</p>
+        <div class="send">
+          <b>繳交方式：</b>線上上傳。送出報名表後，畫面與報名成功信都會提供您的專屬上傳連結，用手機也能直接拍照上傳。<br>
+          <b>繳交期限：</b>收到報名成功信後 5 天內，逾期將無法上傳。
+        </div>
+        <ol class="docs">
+          <li><b>培訓學員申請表</b><small>下載填寫後親筆簽名，再掃描或拍照。</small>
+            <span class="dl"><a class="p" href="assets/apply-form.docx" download="培訓學員申請表.docx">下載 Word 檔</a><a href="https://docs.google.com/document/d/13A2HUMK96Dju0EVPpYTAFk_MixmDxw50/edit" target="_blank" rel="noopener">開啟 Google 文件</a></span></li>
+          <li><b>身分證正反面影本</b><small>正面、反面都要。</small></li>
+          <li><b>最高學歷畢業證書影本</b><small>應屆畢業生可先附在學證明，培訓完成後 6 個月內補交畢業證書影本。</small></li>
+          <li><b>最高學歷學校成績單影本</b></li>
+          <li><b>蒐集個人資料告知事項暨個人資料提供同意書</b><small>下載後填寫日期並親筆簽名或蓋章。</small>
+            <span class="dl"><a class="p" href="assets/personal-data-consent.docx" download="培訓學員蒐集個人資料告知事項暨個人資料提供同意書.docx">下載 Word 檔</a><a href="https://docs.google.com/document/d/190yYhbrJzegnpUmVRbxTZqecghTatAkZ/edit?usp=sharing&amp;ouid=107156929840842688192&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener">開啟 Google 文件</a></span></li>
+        </ol>
+        <div class="extra">
+          <b>有工作經驗的人，請另外附上：</b>
+          <ul>
+            <li>勞工保險異動紀錄：可到勞保局 e 化服務系統下載（<a href="https://edesk.bli.gov.tw/me/#/home" target="_blank" rel="noopener">https://edesk.bli.gov.tw/me/#/home</a>）。</li>
+            <li>勞保若加保在職業工會、農會或漁會：請在申請表的切結事項親筆簽名。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card rv">
+        <h3>甄選流程</h3>
+        <p class="sub">本班採審核制，依序進行以下三關。</p>
+        <ol class="steps">
+          <li><b>資格審查</b><p>確認年齡、學歷、身分與就業意願等基本條件，以及能否配合培訓時程、出席規定與企業專題實作。</p></li>
+          <li><b>書面資料審查</b><p>審查申請動機、學經歷、服務業就業意願、AI 工具使用經驗、數位能力與職涯目標，具相關經驗者優先。</p></li>
+          <li><b>面談評估</b><p>由計畫團隊、課程教師或合作企業代表共同評估學習態度、職涯方向、溝通與團隊合作能力、抗壓性及投入意願。</p></li>
+          <li class="end"><b>公告錄取</b><p>公告錄取與候補名單。面試日期另行通知。</p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="apply">
   <div class="wrap apply">
     <div class="head rv">
       <span class="kicker">線上報名</span>
       <h2>填寫報名表，進入徵選</h2>
-      <p class="lede">報名後由專人聯繫，說明報名流程及相關事宜。</p>
+      <p class="lede">送出報名表後，請在 5 天內上傳<a href="#steps">應檢附資料</a>，報名才算完成。</p>
       <ul class="yn yes">
         <li>報名截止：實戰班（一）115/11/30、實戰班（二）116/02/22，17:00 止</li>
         <li>每梯限 33 人，額滿提前截止</li>
@@ -919,10 +998,11 @@ footer .copy-r a{color:inherit;text-decoration:none}
     <div class="card reg rv" id="regCard">
       <form id="regForm" novalidate>
         <fieldset>
-          <legend>報名班次 <i>*</i></legend>
+          <legend>您有意報名的班別 <i>*</i></legend>
           <div class="pick">
             <label><input type="radio" name="batch" value="實戰班（一）"><span><b>實戰班（一）</b>115/12/07 – 116/01/22<small class="q">名額 33 位＋候補 5 位（額滿為止）</small><small>報名至 115/11/30 17:00</small></span></label>
             <label><input type="radio" name="batch" value="實戰班（二）"><span><b>實戰班（二）</b>116/03/02 – 116/04/19<small class="q">名額 33 位＋候補 5 位（額滿為止）</small><small>報名至 116/02/22 17:00</small></span></label>
+            <label class="both"><input type="radio" name="batch" value="兩班皆可"><span><b>兩班皆可</b>願配合主辦單位安排<small class="q"></small><small>由主辦單位依名額安排梯次</small></span></label>
           </div>
           <small class="e" data-err="batch"></small>
         </fieldset>
@@ -944,6 +1024,21 @@ footer .copy-r a{color:inherit;text-decoration:none}
             <div class="fld full chk"><label><input type="checkbox" name="eligible"> 是，我是滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，應屆畢業生（日、夜進修班）或正在待業中的青年。 <i>*</i></label><small data-err="eligible"></small></div>
             <div class="fld"><label for="f-school">您的最高學歷，請註明學校名稱 <i>*</i></label><input id="f-school" name="school" placeholder="例：中華科技大學 大學部" maxlength="60"><small data-err="school"></small></div>
             <div class="fld"><label for="f-dept">您的畢業科系 <i>*</i></label><input id="f-dept" name="dept" maxlength="40"><small data-err="dept"></small></div>
+            <div class="fld"><label for="f-grad">最高學歷畢業或預計畢業日期 <i>*</i></label><input id="f-grad" name="grad_date" placeholder="例：115 年 6 月" maxlength="20"><small data-err="grad_date"></small></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>工作經驗與兵役</legend>
+          <div class="fld"><label for="f-work">工作經驗簡述 <span class="sub">選填</span></label><textarea id="f-work" name="work_exp" rows="3" maxlength="500" placeholder="請列出服務單位名稱、職稱、服務期間，例：OO股份有限公司／行銷專員／113/07–114/06（若無工作經驗者無需填寫）"></textarea></div>
+          <div class="fld" style="margin-top:18px"><span class="lb">兵役狀況 <i>*</i></span>
+            <div class="chips" role="radiogroup" aria-label="兵役狀況">
+              <label><input type="radio" name="military" value="已服役"><span>已服役</span></label>
+              <label><input type="radio" name="military" value="尚未服役"><span>尚未服役</span></label>
+              <label><input type="radio" name="military" value="免役"><span>免役</span></label>
+              <label><input type="radio" name="military" value="不適用"><span>不適用（依法未具我國兵役義務者）</span></label>
+            </div>
+            <small data-err="military"></small>
           </div>
         </fieldset>
 
@@ -969,6 +1064,17 @@ footer .copy-r a{color:inherit;text-decoration:none}
         <fieldset>
           <legend>留言</legend>
           <div class="fld"><label for="f-note">如有任何疑問，歡迎在這裡留言</label><textarea id="f-note" name="note" rows="3" maxlength="500" placeholder="選填"></textarea></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>參訓須知 <i>*</i> <span class="sub">請逐項勾選</span></legend>
+          <div class="agrees">
+            <div class="fld chk"><label><input type="checkbox" name="consent" value="完訓條件"> 我了解本班分兩階段、共 264 小時，須完成各階段出席、測驗、工具實作與企業專題成果，方可認定為完訓。</label></div>
+            <div class="fld chk"><label><input type="checkbox" name="consent" value="出席規定"> 我了解未全程參與、遲到早退或中途退訓者，主辦單位得依規定辦理，且不得要求核發研習證明或請領學習獎勵金。</label></div>
+            <div class="fld chk"><label><input type="checkbox" name="consent" value="不重複補助"> 我了解培訓補助期間（含報名階段）不得同時接受其他政府相關人才培訓補助。</label></div>
+            <div class="fld chk"><label><input type="checkbox" name="consent" value="拍照錄影"> 我同意主辦單位於課程期間進行拍照、錄影，並蒐集本人學習歷程與專題成果，供計畫成果紀錄、審查與就業媒合之用。</label></div>
+          </div>
+          <small class="e" data-err="consent"></small>
         </fieldset>
 
         <div class="pdpa">
@@ -1115,21 +1221,52 @@ footer .copy-r a{color:inherit;text-decoration:none}
   }
   if(!ref){try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Date.now()-s.t<DAYS*864e5)ref=s.ref}catch(e){}}
 
+  // 瀏覽與點擊統計：記錄進站一次、按下按鈕／連結、開始填表，後台「數據分析」可看
+  var vid='';
+  try{vid=localStorage.getItem('cust_vid')||'';if(!vid){vid=Date.now().toString(36)+Math.random().toString(36).slice(2,10);localStorage.setItem('cust_vid',vid)}}catch(e){}
+  var utm=location.search.match(/[?&]utm_source=([^&#]*)/),src='';
+  if(utm){try{src=decodeURIComponent(utm[1])}catch(e){src=utm[1]}}
+  else if(document.referrer){try{var rh=new URL(document.referrer).hostname;if(rh!==location.hostname)src=rh.replace(/^www\./,'')}catch(e){}}
+  var sw=Math.min(screen.width,screen.height),touch=matchMedia('(pointer:coarse)').matches;
+  var device=touch&&sw<600?'mobile':touch&&sw<=1100?'tablet':'desktop';
+  function track(type,target){if(window.RegDB)RegDB.track({type:type,vid:vid,ref:ref,target:target?String(target).slice(0,40):null,src:src.slice(0,60),device:device})}
+  var WHERE={top:'首屏',check:'資格檢測',classes:'開班',contact:'頁尾',you:'適合誰',gain:'你會得到',curriculum:'課程',faq:'FAQ',apply:'報名表'};
+  function clickName(el){
+    if(el.matches('button[type=submit]'))return '送出報名';
+    if(el.tagName==='SUMMARY')return 'FAQ展開・'+el.textContent.trim();
+    var h=el.getAttribute('href')||'',sec=el.closest('section[id],header[id]');
+    var where=el.closest('.nav')?'導覽列':el.closest('.mbar')?'手機底部列':sec?(WHERE[sec.id]||sec.id):'';
+    if(h==='#apply')return '報名按鈕・'+where;
+    if(el.closest('.nav .links'))return '選單・'+el.textContent.trim();
+    if(h==='#check')return '資格檢測按鈕・'+where;
+    if(/^tel:/.test(h))return '撥打電話';
+    if(/^mailto:/.test(h))return '寄 Email';
+    if(/admin\.html/.test(h))return '';
+    return (el.textContent.trim()||h).slice(0,24);
+  }
+  document.addEventListener('DOMContentLoaded',function(){track('view')});
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a[href],summary,#regForm button[type=submit]');if(!el)return;
+    var n=clickName(el);if(n)track('click',n);
+  });
+
   var f=document.getElementById('regForm');if(!f)return;
+  f.addEventListener('focusin',function once(){f.removeEventListener('focusin',once);track('form_start')});
   f.ref.value=ref;
 
   // 依後台設定標示已關閉（額滿）的班級
   document.addEventListener('DOMContentLoaded',function(){
     RegDB.batches().then(function(list){
-      var openCount=0;
-      list.forEach(function(b){
-        var inp=f.querySelector('[name=batch][value="'+b.name+'"]');if(!inp)return;
-        if(b.open){openCount++;return}
+      // 「兩班皆可」不算實際梯次；兩個梯次都關閉時整張表單改為額滿
+      var real=list.filter(function(b){return b.name!=='兩班皆可'}),open=real.filter(function(b){return b.open});
+      function close(name,msg){
+        var inp=f.querySelector('[name=batch][value="'+name+'"]');if(!inp)return;
         inp.disabled=true;inp.checked=false;
-        var lab=inp.closest('label');lab.classList.add('closed');
-        lab.querySelector('small.q').textContent='已額滿，報名已截止';
-      });
-      if(list.length&&!openCount){
+        var lab=inp.closest('label');lab.classList.add('closed');lab.querySelector('small.q').textContent=msg;
+      }
+      list.forEach(function(b){if(!b.open)close(b.name,b.name==='兩班皆可'?'此選項已關閉，請直接選擇梯次':'已額滿，報名已截止')});
+      if(open.length===1){var bs=f.querySelector('.both small:not(.q)');if(bs)bs.textContent='目前僅'+open[0].name+'開放報名，將安排至該梯次'}
+      if(real.length&&!open.length){
         document.getElementById('regCard').innerHTML='<div class="done"><h3>本期報名已全數額滿</h3><p>感謝您的關注！如有疑問，歡迎來電 2782-1862 轉202 /155。</p></div>';
       }
     },function(){});
@@ -1154,7 +1291,8 @@ footer .copy-r a{color:inherit;text-decoration:none}
     e.preventDefault();
     var phone=val('phone').replace(/[\s()-]/g,'');
     var channels=[].map.call(f.querySelectorAll('[name=channels]:checked'),function(c){return c.value});
-    var batch=f.querySelector('[name=batch]:checked');
+    var batch=f.querySelector('[name=batch]:checked'),military=f.querySelector('[name=military]:checked');
+    var consents=[].map.call(f.querySelectorAll('[name=consent]:checked'),function(c){return c.value});
     var checks=[
       err('batch',batch?'':'請選擇報名班次'),
       err('name',val('name')?'':'請填寫姓名'),
@@ -1164,8 +1302,11 @@ footer .copy-r a{color:inherit;text-decoration:none}
       err('eligible',f.elements.eligible.checked?'':'請確認符合報名資格'),
       err('school',val('school')?'':'請填寫最高學歷與學校名稱'),
       err('dept',val('dept')?'':'請填寫畢業科系'),
+      err('grad_date',val('grad_date')?'':'請填寫畢業或預計畢業日期'),
+      err('military',military?'':'請選擇兵役狀況'),
       err('channels',channels.length?'':'請至少選擇一個管道'),
       err('channel_other',channels.indexOf('其他')<0||val('channel_other')?'':'請說明其他管道'),
+      err('consent',consents.length===f.querySelectorAll('[name=consent]').length?'':'請逐項勾選參訓須知'),
       err('agree',f.elements.agree.checked?'':'請勾選同意個人資料蒐集聲明')
     ];
     if(!checks.every(Boolean)){
@@ -1177,9 +1318,13 @@ footer .copy-r a{color:inherit;text-decoration:none}
     var btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='送出中…';
     var rec={batch:batch.value,name:val('name'),email:val('email'),phone:phone,line:val('line'),school:val('school'),dept:val('dept'),
       channels:channels.map(function(c){return c==='其他'?'其他：'+val('channel_other'):c}),
+      grad_date:val('grad_date'),work_exp:val('work_exp'),military:military.value,consents:consents,
       note:val('note'),ref:f.ref.value};
+    // 先產生報名編號與上傳 token，送出後直接提供上傳連結
+    if(window.crypto&&crypto.randomUUID){rec.id=crypto.randomUUID();rec.upload_token=crypto.randomUUID()}
     RegDB.add(rec).then(function(){
-      document.getElementById('regCard').innerHTML='<div class="done"><span class="ok-ic" aria-hidden="true">✓</span><h3>感謝您報名本培訓班！</h3><p>我們已收到您的報名資料，後續將由專人與您聯繫，說明報名流程及相關事宜。<br>如有任何疑問，歡迎隨時留言或與我們聯繫，期待您的加入！</p><p class="mail-tip"><b>📧 報名確認信已寄到您填寫的 Email</b>若幾分鐘內沒有收到，請到信箱的「垃圾郵件」或「促銷內容」資料夾找找看，並將寄件者設為「非垃圾郵件」，以免錯過後續的面試通知。</p></div>';
+      var up=rec.id?'upload.html?id='+rec.id+'&t='+rec.upload_token:'';
+      document.getElementById('regCard').innerHTML='<div class="done"><span class="ok-ic" aria-hidden="true">✓</span><h3>感謝您報名本培訓班！</h3><p>我們已收到您的線上報名表。<b>下一步：請在 5 天內上傳應檢附資料</b>，資料交齊才會進入書面審查。</p>'+(up?'<p><a class="btn hot" href="'+up+'">現在就上傳報名資料 →</a></p>':'')+'<p class="mail-tip"><b>📧 報名成功信已寄到您填寫的 Email</b>信中附有您的專屬上傳連結，之後可隨時從信中回到上傳頁。若幾分鐘內沒有收到，請到信箱的「垃圾郵件」或「促銷內容」資料夾找找看，並將寄件者設為「非垃圾郵件」，以免錯過後續的面試通知。</p></div>';
       document.getElementById('apply').scrollIntoView({behavior:'smooth'});
       if(typeof gtag==='function')gtag('event','sign_up',{method:'site_form'});
     },function(){
@@ -1189,6 +1334,6 @@ footer .copy-r a{color:inherit;text-decoration:none}
   });
 })();
 </script>
-<script src="assets/regdb.js?v=8"></script>
+<script src="assets/regdb.js?v=13"></script>
 </body>
 </html>
