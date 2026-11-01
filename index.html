@@ -1153,7 +1153,8 @@ footer .copy-r a{color:inherit;text-decoration:none}
     return '<article class="fac rv'+(f[1]?' in':'')+'"><div class="nm"><span class="av">'+f[0].charAt(0)+'</span><div><b>'+f[0]+'</b><div class="tag">'+(f[1]?'校內教師':'企業業師')+'</div></div></div>'
       +'<span class="role">'+f[2]+'</span>'
       +'<ul class="exp">'+f[3].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'
-      +'<div class="sk">'+f[4].map(function(x){return '<span>'+x+'</span>'}).join('')+'</div></article>';
+      +'<div class="sk">'+f[4].map(function(x){return '<span>'+x+'</span>'}).join('')+'</div>'
+      +'</article>';
   }).join('');
 
   // eligibility checker
