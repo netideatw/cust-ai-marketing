@@ -41,7 +41,19 @@ window.RegDB = (function () {
         method: 'POST',
         headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(row)
-      }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); });
+      }).then(function (r) {
+        if (r.ok) return;
+        return r.text().then(function (t) { throw new Error(/DUPLICATE_REGISTRATION/.test(t) ? 'DUPLICATE' : 'HTTP ' + r.status) });
+      });
+    },
+
+    // 送出前檢查 Email／電話是否已報名過，回傳 { email: bool, phone: bool }
+    checkRegistered: function (email, phone) {
+      return fetch(URL + '/rest/v1/rpc/check_registered', {
+        method: 'POST',
+        headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_email: email, p_phone: phone })
+      }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() });
     },
 
     // 報名資料上傳頁：以報名 id＋上傳 token 呼叫 reg-upload 函式

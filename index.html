@@ -465,6 +465,9 @@ footer .copy-r a{color:inherit;text-decoration:none}
 .done .ok-ic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:900;background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
 .done h3{font-size:22px}
 .done p{color:var(--muted);max-width:30em}
+.dup{background:color-mix(in srgb,var(--no) 10%,var(--surface));border:1.5px solid var(--no);border-radius:12px;padding:14px 16px;margin-top:18px;display:grid;gap:6px;font-size:14px;line-height:1.75}
+.dup b{color:var(--no);font-size:16px}
+.dup p{color:var(--fg)}
 .done .mail-tip{font-size:14px;text-align:left;background:var(--hot-soft);color:var(--fg);border-radius:12px;padding:12px 16px;margin-top:6px}
 .done .mail-tip b{display:block;color:var(--ink);margin-bottom:2px}
 @media (min-width:1001px){.apply .head{position:sticky;top:86px}}
@@ -1312,6 +1315,24 @@ footer .copy-r a{color:inherit;text-decoration:none}
     }
 
     var btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='送出中…';
+    // 相同 Email 或電話已報名過：提醒不需重複填寫
+    function showDup(d){
+      btn.disabled=false;btn.textContent='送出報名';
+      if(d.email)err('email','這個 Email 已經報名過了');
+      if(d.phone)err('phone','這支電話已經報名過了');
+      var box=document.getElementById('dupMsg');
+      if(!box){box=document.createElement('div');box.id='dupMsg';box.className='dup';box.setAttribute('role','alert');btn.parentNode.insertBefore(box,btn)}
+      box.innerHTML='<b>您已經報名過了，不需要重複填寫</b>'
+        +'<p>系統查到相同的'+(d.email&&d.phone?' Email 與電話 ':d.email?' Email ':d.phone?'電話':' Email 或電話 ')+'已有報名紀錄。報名成功信中附有您的專屬上傳連結，請直接從信中上傳報名資料（找不到信請看垃圾郵件匣）。</p>'
+        +'<p>如需更改班次、修改報名資料，或確認不是您本人報名，請聯絡：林小姐 (02) 2782-1862 轉 202、鄭小姐 轉 155。</p>';
+      box.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+    var old=document.getElementById('dupMsg');if(old)old.remove();
+    RegDB.checkRegistered(val('email'),phone).then(function(d){return d},function(){return {}}).then(function(d){
+      if(d&&(d.email||d.phone)){showDup(d);return}
+      submit();
+    });
+    function submit(){
     var rec={batch:batch.value,name:val('name'),email:val('email'),phone:phone,line:val('line'),school:val('school'),dept:val('dept'),
       channels:channels.map(function(c){return c==='其他'?'其他：'+val('channel_other'):c}),
       grad_date:val('grad_date'),work_exp:val('work_exp'),military:military.value,consents:consents,
@@ -1323,13 +1344,15 @@ footer .copy-r a{color:inherit;text-decoration:none}
       document.getElementById('regCard').innerHTML='<div class="done"><span class="ok-ic" aria-hidden="true">✓</span><h3>感謝您報名本培訓班！</h3><p>我們已收到您的線上報名表。<b>下一步：請在 5 天內上傳應檢附資料</b>，資料交齊才會進入書面審查。</p>'+(up?'<p><a class="btn hot" href="'+up+'">現在就上傳報名資料 →</a></p>':'')+'<p class="mail-tip"><b>📧 報名成功信已寄到您填寫的 Email</b>信中附有您的專屬上傳連結，之後可隨時從信中回到上傳頁。若幾分鐘內沒有收到，請到信箱的「垃圾郵件」或「促銷內容」資料夾找找看，並將寄件者設為「非垃圾郵件」，以免錯過後續的面試通知。</p></div>';
       document.getElementById('apply').scrollIntoView({behavior:'smooth'});
       if(typeof gtag==='function')gtag('event','sign_up',{method:'site_form'});
-    },function(){
+    },function(e){
+      if(e&&e.message==='DUPLICATE'){showDup({});return}
       btn.disabled=false;btn.textContent='送出報名';
       alert('送出失敗：所選班級可能剛額滿關閉，請重新整理頁面確認；或來電 2782-1862 轉202 /155 報名。');
     });
+    }
   });
 })();
 </script>
-<script src="assets/regdb.js?v=13"></script>
+<script src="assets/regdb.js?v=14"></script>
 </body>
 </html>
