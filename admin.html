@@ -355,19 +355,20 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       <div class="kpi"><span>網頁瀏覽次數</span><b id="sViews">0</b></div>
       <div class="kpi"><span>不重複訪客</span><b id="sVisitors">0</b></div>
       <div class="kpi"><span>按鈕／連結點擊</span><b id="sClicks">0</b><small id="sClickV"></small></div>
-      <div class="kpi"><span>開始填寫報名表</span><b id="sStarts">0</b><small>人</small></div>
-      <div class="kpi"><span>完成報名</span><b id="sRegs">0</b></div>
-      <div class="kpi"><span>報名轉換率</span><b id="sConv">—</b><small>完成報名 ÷ 不重複訪客</small></div>
+      <div class="kpi"><span>點擊立即報名按鈕</span><b id="sStarts">0</b><small>人（重複點擊只算一次）</small></div>
+      <div class="kpi"><span>已報名名單</span><b id="sRegs">0</b><small>報名表已成功送出</small></div>
+      <div class="kpi"><span>資料都交齊</span><b id="sDocs">0</b><small>5 項必繳資料都已上傳</small></div>
+      <div class="kpi"><span>報名轉換率</span><b id="sConv">—</b><small>資料都交齊 ÷ 不重複訪客</small></div>
     </div>
     <div class="bar">
       <h2 id="cTitle">每日網頁瀏覽次數</h2>
       <div class="seg" id="aMetric" role="group" aria-label="圖表指標">
-        <button type="button" data-m="views" aria-pressed="true">瀏覽</button><button type="button" data-m="visitors" aria-pressed="false">訪客</button><button type="button" data-m="clicks" aria-pressed="false">點擊</button><button type="button" data-m="regs" aria-pressed="false">報名</button>
+        <button type="button" data-m="views" aria-pressed="true">瀏覽</button><button type="button" data-m="visitors" aria-pressed="false">訪客</button><button type="button" data-m="clicks" aria-pressed="false">點擊</button><button type="button" data-m="regs" aria-pressed="false">已報名</button><button type="button" data-m="docs_done" aria-pressed="false">交齊</button>
       </div>
     </div>
     <div class="chart" id="chart"></div>
     <details class="tv"><summary>查看每日明細表</summary><div class="tbl"><table>
-      <thead><tr><th>日期</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">報名</th></tr></thead>
+      <thead><tr><th>日期</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">已報名</th><th class="r">交齊</th></tr></thead>
       <tbody id="dBodyT"></tbody>
     </table></div></details>
     <div class="grid2">
@@ -378,7 +379,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div id="byRefBox">
       <h2 class="sec">各推廣人成效比較</h2>
       <div class="tbl"><table>
-        <thead><tr><th>推廣人</th><th>代碼</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">報名</th><th class="r">轉換率</th></tr></thead>
+        <thead><tr><th>推廣人</th><th>代碼</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">已報名</th><th class="r">交齊</th><th class="r">轉換率</th></tr></thead>
         <tbody id="byRef"></tbody>
       </table></div>
       <p class="hint">點一列可只看該推廣人的數據。</p>
@@ -920,7 +921,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 
   // ── 數據分析 ──
   var SINCE='2026-10-01',days=7,metric='views',stat=null;
-  var MET={views:'每日網頁瀏覽次數',visitors:'每日不重複訪客',clicks:'每日按鈕／連結點擊',regs:'每日完成報名'};
+  var MET={views:'每日網頁瀏覽次數',visitors:'每日不重複訪客',clicks:'每日按鈕／連結點擊',regs:'每日已報名（報名表送出）',docs_done:'每日資料都交齊'};
   function ymd(d){var p=function(n){return String(n).padStart(2,'0')};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())}
   function md(s){var a=s.split('-');return +a[1]+'/'+(+a[2])}
   function rocDate(s){var a=s.split('-');return (a[0]-1911)+'/'+a[1]+'/'+a[2]}
@@ -935,10 +936,10 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     var s=stat,t=s.totals;
     $('sViews').textContent=n(t.views);$('sVisitors').textContent=n(t.visitors);$('sClicks').textContent=n(t.clicks);
     $('sClickV').textContent=t.click_visitors?'來自 '+n(t.click_visitors)+' 位訪客':'';
-    $('sStarts').textContent=n(t.form_starts);$('sRegs').textContent=n(t.regs);$('sConv').textContent=pct(t.regs,t.visitors);
+    $('sStarts').textContent=n(t.apply_clicks);$('sRegs').textContent=n(t.regs);$('sDocs').textContent=n(t.docs_done);$('sConv').textContent=pct(t.docs_done,t.visitors);
     $('cTitle').textContent=MET[metric];
     drawChart(s.daily);
-    $('dBodyT').innerHTML=s.daily.slice().reverse().map(function(d){return '<tr><td class="num">'+rocDate(d.d)+'</td><td class="r">'+d.views+'</td><td class="r">'+d.visitors+'</td><td class="r">'+d.clicks+'</td><td class="r">'+d.regs+'</td></tr>'}).join('');
+    $('dBodyT').innerHTML=s.daily.slice().reverse().map(function(d){return '<tr><td class="num">'+rocDate(d.d)+'</td><td class="r">'+d.views+'</td><td class="r">'+d.visitors+'</td><td class="r">'+d.clicks+'</td><td class="r">'+d.regs+'</td><td class="r">'+d.docs_done+'</td></tr>'}).join('');
     hlist('lTargets',s.targets,'還沒有點擊紀錄');
     hlist('lSources',s.sources,'還沒有瀏覽紀錄');
     hlist('lDevices',s.devices.map(function(x){return {k:{mobile:'手機',tablet:'平板',desktop:'電腦'}[x.k]||x.k,n:x.n}}),'還沒有瀏覽紀錄');
@@ -946,8 +947,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     if(s.by_ref){
       $('byRef').innerHTML=s.by_ref.map(function(x){
         return '<tr class="click" data-ref="'+esc(x.ref)+'"><td><b>'+esc(x.ref?pname(x.ref):'直接進站（無推廣人）')+'</b></td><td>'+(x.ref?'<span class="code">'+esc(x.ref)+'</span>':'<span class="muted">—</span>')+'</td>'+
-          '<td class="r">'+n(x.views)+'</td><td class="r">'+n(x.visitors)+'</td><td class="r">'+n(x.clicks)+'</td><td class="r">'+n(x.regs)+'</td><td class="r">'+pct(x.regs,x.visitors)+'</td></tr>';
-      }).join('')||'<tr><td colspan="7" class="empty">這段期間沒有數據</td></tr>';
+          '<td class="r">'+n(x.views)+'</td><td class="r">'+n(x.visitors)+'</td><td class="r">'+n(x.clicks)+'</td><td class="r">'+n(x.regs)+'</td><td class="r">'+n(x.docs_done)+'</td><td class="r">'+pct(x.docs_done,x.visitors)+'</td></tr>';
+      }).join('')||'<tr><td colspan="8" class="empty">這段期間沒有數據</td></tr>';
     }
   }
   function hlist(id,arr,empty){
@@ -1009,7 +1010,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   $('byRef').addEventListener('click',function(e){var tr=e.target.closest('[data-ref]');if(!tr)return;$('aRef').value=tr.dataset.ref;loadStats();$('panel-a').scrollIntoView({behavior:'smooth'})});
   $('aCsv').addEventListener('click',function(){
     if(!stat)return;
-    download('每日數據.csv',toCsv([['日期','瀏覽次數','不重複訪客','點擊次數','完成報名']].concat(stat.daily.map(function(d){return [rocDate(d.d),d.views,d.visitors,d.clicks,d.regs]}))));
+    download('每日數據.csv',toCsv([['日期','瀏覽次數','不重複訪客','點擊次數','已報名','資料都交齊']].concat(stat.daily.map(function(d){return [rocDate(d.d),d.views,d.visitors,d.clicks,d.regs,d.docs_done]}))));
   });
 })();
 </script>
