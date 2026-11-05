@@ -85,6 +85,14 @@ window.RegDB = (function () {
       });
     },
 
+    // 管理員：每筆報名的後台備註（與報名者自己填的留言分開）
+    setAdminNote: function (id, text) {
+      return client().from('registrations').update({ admin_note: text }).eq('id', id).select('id,admin_note').then(ok).then(function (rows) {
+        if (!rows || !rows.length) throw new Error('沒有權限');
+        return rows[0];
+      });
+    },
+
     // 班級報名開關（訪客可讀，只有管理員可改）
     batches: function () {
       return fetch(URL + '/rest/v1/batches?select=name,open&order=sort', { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } })

@@ -69,6 +69,9 @@ input,select{font:inherit;font-size:15px;padding:8px 12px;border:1.5px solid var
 .empty{text-align:center;color:var(--muted);padding:28px 0}
 .hint{font-size:13px;color:var(--muted);margin-top:8px}
 td.acts,td.nw{white-space:nowrap}
+.memo{display:block;box-sizing:border-box;width:170px;min-height:44px;padding:6px 8px;font:inherit;font-size:13px;line-height:1.5;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:8px;resize:vertical}
+.memoMsg{display:block;min-height:16px;margin-top:2px;font-size:12px;color:var(--muted)}
+.memoMsg.bad{color:#c0392b}
 .login{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
 .login .card{width:min(400px,100%);display:grid;gap:14px;margin:0;padding:28px}
 .login h1{font-size:22px}
@@ -146,6 +149,7 @@ button.dl{font-weight:500;font-size:13px;max-width:100%;overflow:hidden;text-ove
   .tbl td.acts,.tbl td.acct{white-space:normal}
   .tbl td.acts button,.tbl td.acct button{margin:4px 4px 0 0}
   .tbl td .cv{min-width:0}
+  .tbl td .memo{width:100%}
   .tbl td[data-label=""] .cv{display:flex;flex-wrap:wrap;gap:6px}
   .tbl tr.sel{border-color:var(--accent)}
   tr.sel td{background:none}
@@ -336,7 +340,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       <button id="csv">匯出 Excel（CSV）</button>
     </div>
     <div class="tbl"><table>
-      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>應檢附資料</th><th>推廣人</th><th></th></tr></thead>
+      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>應檢附資料</th><th>推廣人</th><th>備註</th><th></th></tr></thead>
       <tbody id="rBody"></tbody>
     </table></div>
   </section>
@@ -477,7 +481,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=14"></script>
+<script src="assets/regdb.js?v=15"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -784,8 +788,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('rBody').innerHTML=l.length?l.map(function(r){
       return '<tr><td class="num">'+fmt(r.created_at)+'</td><td class="nw">'+esc(r.batch||'—')+'</td><td><b>'+esc(r.name)+'</b></td><td class="num">'+esc(r.phone)+'</td><td>'+esc(r.line)+'</td><td>'+esc(r.email)+'</td>'+
         '<td>'+esc(r.school)+'<br><span class="muted">'+esc(r.dept)+'</span></td><td class="muted">'+esc((r.channels||[]).join('、'))+'</td>'+
-        '<td>'+docBadge(r)+'</td><td>'+esc(pname(r.ref))+'</td><td class="acts"><button type="button" data-view="'+esc(r.id)+'">詳細</button> <button type="button" class="del" data-del="'+esc(r.id)+'">刪除</button></td></tr>';
-    }).join(''):'<tr><td colspan="11" class="empty">目前沒有報名資料</td></tr>';
+        '<td>'+docBadge(r)+'</td><td>'+esc(pname(r.ref))+'</td><td><textarea class="memo" rows="2" maxlength="500" data-memo="'+esc(r.id)+'" aria-label="'+esc(r.name)+' 的備註" placeholder="輸入備註">'+esc(r.admin_note)+'</textarea><span class="memoMsg" aria-live="polite"></span></td><td class="acts"><button type="button" data-view="'+esc(r.id)+'">詳細</button> <button type="button" class="del" data-del="'+esc(r.id)+'">刪除</button></td></tr>';
+    }).join(''):'<tr><td colspan="12" class="empty">目前沒有報名資料</td></tr>';
     var c=$('fRef').value,chip=$('fChip');
     chip.hidden=c==='*';chip.textContent='只顯示：'+pname(c)+' ✕';chip.setAttribute('aria-label','清除推廣人篩選（目前：'+pname(c)+'）');
     document.querySelectorAll('#pBody tr').forEach(function(tr){tr.classList.toggle('sel',tr.dataset.code===c)});
@@ -825,7 +829,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
       ['最高學歷／學校',r.school],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||'無'],
       ['參訓須知',r.consents&&r.consents.length?'已勾選 '+r.consents.length+' 項（'+r.consents.join('、')+'）':'—'],
-      ['得知管道',(r.channels||[]).join('、')],['留言',r.note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
+      ['得知管道',(r.channels||[]).join('、')],['留言',r.note||'—'],['備註',r.admin_note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
     $('dBody').innerHTML='<dl>'+rows.map(function(x){return '<dt>'+x[0]+'</dt><dd style="white-space:pre-line">'+esc(x[1])+'</dd>'}).join('')+'</dl>'+docSection(r);
     if(!$('dlg').open)$('dlg').showModal();
   }
@@ -858,6 +862,16 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     var id=b.dataset.del,paths=docs.filter(function(d){return d.registration_id===id}).map(function(d){return d.file_path});
     RegDB.removeDocs(paths).then(function(){return RegDB.remove(id)}).then(load,function(){alert('刪除失敗，請稍後再試。')});
   });
+  // 備註：離開輸入框時自動儲存
+  $('rBody').addEventListener('change',function(e){
+    var ta=e.target.closest('[data-memo]');if(!ta)return;
+    var r=regs.find(function(x){return x.id===ta.dataset.memo});if(!r)return;
+    var m=ta.parentNode.querySelector('.memoMsg'),text=ta.value.trim();
+    m.className='memoMsg';m.textContent='儲存中…';
+    RegDB.setAdminNote(r.id,text).then(function(row){
+      r.admin_note=row.admin_note;m.textContent='已儲存';setTimeout(function(){if(m.textContent==='已儲存')m.textContent=''},2000);
+    },function(){m.className='memoMsg bad';m.textContent='儲存失敗，請再試一次'});
+  });
   $('fChip').addEventListener('click',function(){$('fRef').value='*';renderList()});
   $('fB').addEventListener('change',renderList);
   $('fD').addEventListener('change',renderList);
@@ -884,9 +898,9 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
   $('csv').addEventListener('click',function(){
-    var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','參訓須知勾選','應檢附資料','上傳期限','得知管道','留言','推廣人','推廣代碼'];
+    var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','參訓須知勾選','應檢附資料','上傳期限','得知管道','留言','推廣人','推廣代碼','備註'];
     var lines=[head].concat(filtered().map(function(r){var s=docState(r);return [fmt(r.created_at),r.batch||'',r.name,r.email,r.phone,r.line,r.school,r.dept,r.grad_date||'',r.military||'',r.work_exp||'',(r.consents||[]).join('、'),
-      s.complete?'已齊全':(s.expired?'逾期，':'')+'缺：'+s.missing.map(function(k){return DOCT[k]}).join('、'),r.upload_deadline?fmt(r.upload_deadline):'',(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'']}));
+      s.complete?'已齊全':(s.expired?'逾期，':'')+'缺：'+s.missing.map(function(k){return DOCT[k]}).join('、'),r.upload_deadline?fmt(r.upload_deadline):'',(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'',r.admin_note||'']}));
     var csv='﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='報名名單.csv';a.click();
   });
