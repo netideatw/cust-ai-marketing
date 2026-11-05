@@ -290,7 +290,6 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div class="kpi"><span>直接報名（無推廣人）</span><b id="kDirect">0</b></div>
     <div class="kpi"><span>實戰班（一）</span><b id="kB1">0</b></div>
     <div class="kpi"><span>實戰班（二）</span><b id="kB2">0</b></div>
-    <div class="kpi"><span>兩班皆可</span><b id="kBoth">0</b></div>
   </div>
 
   <div class="viewbar" id="viewBar" role="status" hidden>
@@ -333,7 +332,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div class="bar">
       <div class="l">
         <input type="hidden" id="fRef" value="*"><button type="button" class="chip" id="fChip" hidden></button>
-        <select id="fB" aria-label="依班次篩選"><option value="*">全部班次</option><option>實戰班（一）</option><option>實戰班（二）</option><option>兩班皆可</option></select>
+        <select id="fB" aria-label="依班次篩選"><option value="*">全部班次</option><option>實戰班（一）</option><option>實戰班（二）</option></select>
         <select id="fD" aria-label="依資料繳交狀態篩選"><option value="*">全部資料狀態</option><option value="done">資料已齊全</option><option value="wait">未齊全（期限內）</option><option value="late">逾期未齊全</option></select>
         <input id="fQ" type="search" placeholder="搜尋姓名、電話、Email" aria-label="搜尋">
       </div>
@@ -596,7 +595,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     RegDB.batches().then(function(list){
       $('bList').innerHTML=list.map(function(b){
         var n=regs.filter(function(r){return r.batch===b.name}).length;
-        return '<div class="bt'+(b.open?'':' off')+'"><div><b>'+esc(b.name)+'</b><span class="st">'+(b.open?'報名中':b.name==='兩班皆可'?'已關閉':'已關閉（額滿）')+'</span><small>'+(b.name==='兩班皆可'?'報名表的「兩班皆可」選項・目前 '+n+' 人選擇':'目前報名 '+n+' 人・名額 33＋候補 5')+'</small></div>'+
+        return '<div class="bt'+(b.open?'':' off')+'"><div><b>'+esc(b.name)+'</b><span class="st">'+(b.open?'報名中':'已關閉（額滿）')+'</span><small>目前報名 '+n+' 人・名額 33＋候補 3</small></div>'+
           '<button type="button" class="'+(b.open?'del':'pri')+'" data-batch="'+esc(b.name)+'" data-open="'+(b.open?'0':'1')+'">'+(b.open?'關閉報名':'重新開放')+'</button></div>';
       }).join('');
     });
@@ -735,7 +734,6 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     var withRef=regs.filter(function(r){return r.ref});
     $('kTotal').textContent=regs.length;$('kRef').textContent=withRef.length;$('kDirect').textContent=regs.length-withRef.length;
     $('kB1').textContent=regs.filter(function(r){return r.batch==='實戰班（一）'}).length;$('kB2').textContent=regs.filter(function(r){return r.batch==='實戰班（二）'}).length;
-    $('kBoth').textContent=regs.filter(function(r){return r.batch==='兩班皆可'}).length;
 
     // 推廣人彙總：已登記的 + 名單中出現但未登記的代碼 + 直接報名
     var codes=proms.map(function(p){return p.code});
@@ -826,10 +824,12 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('fRef').value=tr.dataset.code;$('fQ').value='';renderList();tab('r');
   });
   function view(r){
-    var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
+    var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['出生日期',r.birth_date||'—'],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
       ['最高學歷／學校',r.school],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||'無'],
-      ['參訓須知',r.consents&&r.consents.length?'已勾選 '+r.consents.length+' 項（'+r.consents.join('、')+'）':'—'],
-      ['得知管道',(r.channels||[]).join('、')],['留言',r.note||'—'],['備註',r.admin_note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
+      ['得知管道',(r.channels||[]).join('、')],['備註',r.admin_note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
+    // 舊報名才有的留言與參訓須知，有資料才顯示
+    if(r.consents&&r.consents.length)rows.push(['參訓須知','已勾選 '+r.consents.length+' 項（'+r.consents.join('、')+'）']);
+    if(r.note)rows.push(['留言',r.note]);
     $('dBody').innerHTML='<dl>'+rows.map(function(x){return '<dt>'+x[0]+'</dt><dd style="white-space:pre-line">'+esc(x[1])+'</dd>'}).join('')+'</dl>'+docSection(r);
     if(!$('dlg').open)$('dlg').showModal();
   }
@@ -898,8 +898,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
   $('csv').addEventListener('click',function(){
-    var head=['報名時間','報名班次','姓名','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','參訓須知勾選','應檢附資料','上傳期限','得知管道','留言','推廣人','推廣代碼','備註'];
-    var lines=[head].concat(filtered().map(function(r){var s=docState(r);return [fmt(r.created_at),r.batch||'',r.name,r.email,r.phone,r.line,r.school,r.dept,r.grad_date||'',r.military||'',r.work_exp||'',(r.consents||[]).join('、'),
+    var head=['報名時間','報名班次','姓名','出生日期','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','參訓須知勾選','應檢附資料','上傳期限','得知管道','留言','推廣人','推廣代碼','備註'];
+    var lines=[head].concat(filtered().map(function(r){var s=docState(r);return [fmt(r.created_at),r.batch||'',r.name,r.birth_date||'',r.email,r.phone,r.line,r.school,r.dept,r.grad_date||'',r.military||'',r.work_exp||'',(r.consents||[]).join('、'),
       s.complete?'已齊全':(s.expired?'逾期，':'')+'缺：'+s.missing.map(function(k){return DOCT[k]}).join('、'),r.upload_deadline?fmt(r.upload_deadline):'',(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'',r.admin_note||'']}));
     var csv='﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='報名名單.csv';a.click();

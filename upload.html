@@ -109,7 +109,7 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=14"></script>
+<script src="assets/regdb.js?v=15"></script>
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)};
@@ -136,7 +136,7 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
 
   function render(){
     var done=REQ-S.missing.length;
-    $('who').textContent=S.name;$('batch').textContent=S.batch==='兩班皆可'?'兩班皆可（願配合主辦單位安排）':S.batch;
+    $('who').textContent=S.name;$('batch').textContent=S.batch;
     var b=$('banner');
     if(S.complete||!S.missing.length){
       b.className='banner done';$('bTitle').textContent='必備資料已齊全，感謝您！';

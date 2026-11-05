@@ -33,7 +33,7 @@ window.RegDB = (function () {
       var row = {
         batch: rec.batch, name: rec.name, email: rec.email, phone: rec.phone, line: rec.line,
         school: rec.school, dept: rec.dept, channels: rec.channels, note: rec.note || '', ref: rec.ref || null,
-        grad_date: rec.grad_date, work_exp: rec.work_exp || '', military: rec.military, consents: rec.consents || []
+        birth_date: rec.birth_date || null, grad_date: rec.grad_date, work_exp: rec.work_exp || '', military: rec.military, consents: rec.consents || []
       };
       // 先在瀏覽器產生 id 與上傳 token，送出後可直接帶報名者到上傳頁
       if (rec.id) { row.id = rec.id; row.upload_token = rec.upload_token }
