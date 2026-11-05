@@ -40,6 +40,20 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '533825958363287');
 fbq('track', 'PageView');
 </script>
+<!-- Dcard Pixel -->
+<script async src="https://assets.dcard.tw/scripts/web-ad-tracking-sdk/latest.js"></script>
+<script>
+  window.dadk =
+    window.dadk ||
+    function dadk() {
+      window.dadk.queue.push(Array.from(arguments));
+    };
+  window.dadk.queue = window.dadk.queue || [];
+
+  window.dadk('init', 'qFzZ6-fP2v4HHz3v9JTiq');
+  window.dadk('track', 'PageView');
+</script>
+<!-- End Dcard Pixel -->
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>中華科技大學 AI行銷自動化與服務創新實戰班｜青年AI實戰養成班</title>
 <meta name="description" content="中華科技大學 AI行銷自動化與服務創新實戰班：18–35 歲、副學士以上學歷的應屆畢業生與待業青年專屬，264 小時培訓、最高 5 萬元學習獎勵金、企業真實題目專題與就業媒合。">
@@ -1358,6 +1372,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
       document.getElementById('apply').scrollIntoView({behavior:'smooth'});
       if(typeof gtag==='function')gtag('event','sign_up',{method:'site_form'});
       if(typeof fbq==='function')fbq('track','CompleteRegistration');
+      if(typeof window.dadk==='function')window.dadk('track','CompleteRegistration');
     },function(e){
       if(e&&e.message==='DUPLICATE'){showDup({});return}
       btn.disabled=false;btn.textContent='送出報名';
