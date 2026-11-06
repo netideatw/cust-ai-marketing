@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>報名資料上傳｜AI行銷自動化與服務創新實戰班</title>
+<title>報名資料補件｜AI行銷自動化與服務創新實戰班</title>
 <style>
 :root{
   --bg:#F6F5FB; --surface:#FFFFFF; --sunk:#EDEBF7;
@@ -73,6 +73,21 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center}
 .foot{margin-top:28px;font-size:13px;color:var(--muted);line-height:1.9}
 .foot a{color:var(--accent)}
+h2.sec{font-size:18px;color:var(--ink);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+.fl{display:grid;gap:6px}
+.lb{font-weight:700;color:var(--ink);font-size:15px}
+.lb i{color:var(--no);font-style:normal}
+.lb small{color:var(--muted);font-weight:400;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
+.chips label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+textarea{font:inherit;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;resize:vertical}
+textarea:focus{border-color:var(--accent);outline:none}
+#pf[data-done] .pick{background:var(--ok)}
+.later{margin-top:16px;background:var(--sunk);border-style:dashed}
+.later b{color:var(--ink)}
+.later ul{margin:0;padding-left:20px;font-size:14px;line-height:1.9}
+.later a{color:var(--accent);font-weight:700}
 @media (max-width:520px){h1{font-size:20px}.doc{padding:14px}.pick{width:100%}}
 </style>
 </head>
@@ -83,12 +98,12 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
   <div id="loading" class="card">讀取中…</div>
 
   <div id="bad" class="card" hidden>
-    <h1>上傳連結無效</h1>
-    <p class="lede" id="badMsg">請確認是否完整複製報名成功信中的網址。</p>
+    <h1>補件連結無法使用</h1>
+    <p class="lede" id="badMsg">請確認是否完整複製「通過基本審查」信中的網址。</p>
   </div>
 
   <div id="main" hidden>
-    <h1><span id="who"></span> 您好，請上傳報名資料</h1>
+    <h1><span id="who"></span> 您好，請補齊報名資料</h1>
     <p class="lede">報名班別：<span id="batch"></span></p>
 
     <div class="banner" id="banner">
@@ -97,11 +112,42 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
       <div class="progress" aria-hidden="true"><i id="bar" style="width:0"></i></div>
     </div>
 
+    <!-- 基本資料先隱藏：改為面試時現場補填（要恢復時把 PROFILE_ON 改成 true 並移除 hidden） -->
+    <div id="pfBox" hidden>
+    <h2 class="sec">一、基本資料 <span class="st need" id="pfSt">尚未填寫</span></h2>
+    <form class="doc" id="pf" novalidate>
+      <div class="fl"><span class="lb">兵役狀況 <i>*</i></span>
+        <div class="chips" role="radiogroup" aria-label="兵役狀況">
+          <label><input type="radio" name="military" value="已服役"> 已服役</label>
+          <label><input type="radio" name="military" value="尚未服役"> 尚未服役</label>
+          <label><input type="radio" name="military" value="免役"> 免役</label>
+          <label><input type="radio" name="military" value="不適用"> 不適用（依法未具我國兵役義務者）</label>
+        </div>
+      </div>
+      <label class="fl"><span class="lb">工作經驗簡述 <small>選填</small></span><textarea name="work_exp" rows="3" maxlength="500" placeholder="服務單位／職稱／服務期間，例：OO股份有限公司／行銷專員／113/07–114/06（無工作經驗免填）"></textarea></label>
+      <label class="fl"><span class="lb">申請動機 <i>*</i> <small>10～800 字</small></span><textarea name="motivation" rows="4" maxlength="800" placeholder="為什麼想參加本培訓班？希望學到什麼、結訓後想從事什麼工作？"></textarea></label>
+      <label class="fl"><span class="lb">AI 工具使用經驗 <i>*</i> <small>沒有經驗請填「無」</small></span><textarea name="ai_exp" rows="3" maxlength="800" placeholder="例：用過 ChatGPT 寫文案、用 Canva AI 做社群圖、用 Gemini 整理資料…"></textarea></label>
+      <p class="err" id="pfErr" role="alert"></p>
+      <button type="submit" class="pick" id="pfBtn">儲存基本資料</button>
+    </form>
+    </div>
+
+    <h2 class="sec">上傳應檢附文件</h2>
     <p class="hint" style="margin:0 0 14px">可上傳 PDF、JPG、PNG、HEIC 或 Word 檔，每個檔案 10MB 以內；用手機可以直接拍照上傳。可分次上傳，傳錯可刪除重傳。</p>
     <ul class="list" id="list"></ul>
 
+    <div class="doc later">
+      <b>📋 以下資料請於面試當天補交，現在不用上傳</b>
+      <ul>
+        <li>培訓學員申請表（填寫後親筆簽名）：<a href="assets/apply-form.docx" download="培訓學員申請表.docx">下載 Word 檔</a>　<a href="https://docs.google.com/document/d/13A2HUMK96Dju0EVPpYTAFk_MixmDxw50/edit" target="_blank" rel="noopener">Google 文件</a></li>
+        <li>最高學歷學校成績單影本</li>
+        <li>蒐集個人資料告知事項暨個人資料提供同意書（填寫日期並親簽或蓋章）：<a href="assets/personal-data-consent.docx" download="培訓學員蒐集個人資料告知事項暨個人資料提供同意書.docx">下載 Word 檔</a>　<a href="https://docs.google.com/document/d/190yYhbrJzegnpUmVRbxTZqecghTatAkZ/edit?usp=sharing&amp;ouid=107156929840842688192&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener">Google 文件</a></li>
+        <li>基本資料（兵役狀況、工作經驗、申請動機、AI 工具使用經驗）將於面試時現場填寫</li>
+      </ul>
+    </div>
+
     <div class="foot">
-      有工作經驗、但勞保加保於職業工會、農會或漁會者：請在申請表的切結事項親筆簽名。<br>
+      有工作經驗、但勞保加保於職業工會、農會或漁會者：請在面試時繳交的申請表切結事項親筆簽名。<br>
       如有任何問題，歡迎洽中華科技大學 就服組：林小姐 (02) 2782-1862 轉 202、鄭小姐 轉 155，
       <a href="mailto:ci1847@gm.cust.edu.tw">ci1847@gm.cust.edu.tw</a>、<a href="mailto:huichuan@gm.cust.edu.tw">huichuan@gm.cust.edu.tw</a>
     </div>
@@ -109,7 +155,7 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=15"></script>
+<script src="assets/regdb.js?v=16"></script>
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)};
@@ -123,7 +169,38 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
     {k:'consent',n:'蒐集個人資料告知事項暨個人資料提供同意書',d:'填寫日期並親筆簽名或蓋章。',dl:[['下載 Word 檔','assets/personal-data-consent.docx','培訓學員蒐集個人資料告知事項暨個人資料提供同意書.docx'],['Google 文件','https://docs.google.com/document/d/190yYhbrJzegnpUmVRbxTZqecghTatAkZ/edit?usp=sharing&ouid=107156929840842688192&rtpof=true&sd=true']]},
     {k:'labor',n:'勞工保險異動紀錄',d:'有工作經驗者才需要。可至勞保局 e 化服務系統下載：',opt:true,dl:[['勞保局 e 化服務系統','https://edesk.bli.gov.tw/me/#/home']]}
   ];
-  var REQ=DOCS.filter(function(d){return !d.opt}).length;
+  // 先隱藏：基本資料與這 3 項文件改為面試時補交（後台仍保留欄位）；要恢復時改這兩行即可
+  var PROFILE_ON=false,LATER=['apply','transcript','consent'];
+  var ALL_DOCS=DOCS;DOCS=DOCS.filter(function(d){return LATER.indexOf(d.k)<0});
+  var REQ=DOCS.filter(function(d){return !d.opt}).length+(PROFILE_ON?1:0);
+  var NAME={profile:'基本資料（申請動機等）'};ALL_DOCS.forEach(function(d){NAME[d.k]=d.n});
+  // 只計算畫面上要繳的項目
+  function shown(list){return (list||[]).filter(function(k){return k==='profile'?PROFILE_ON:LATER.indexOf(k)<0})}
+  var pf=$('pf');
+  function fillProfile(){
+    var p=S.profile||{},saved=!!p.saved_at;
+    if(!pf.dataset.filled){
+      pf.dataset.filled=1;
+      [].forEach.call(pf.elements.military,function(x){x.checked=x.value===p.military});
+      pf.elements.work_exp.value=p.work_exp||'';pf.elements.motivation.value=p.motivation||'';pf.elements.ai_exp.value=p.ai_exp||'';
+    }
+    $('pfSt').className='st '+(saved?'ok':'need');$('pfSt').textContent=saved?'已填寫':'尚未填寫';
+    if(saved)pf.setAttribute('data-done','');else pf.removeAttribute('data-done');
+    $('pfBtn').textContent=saved?'✓ 已儲存，可修改後再儲存':'儲存基本資料';
+    [].forEach.call(pf.elements,function(x){x.disabled=!!S.expired});
+  }
+  pf.addEventListener('input',function(){if(S&&S.profile&&S.profile.saved_at)$('pfBtn').textContent='儲存修改'});
+  pf.addEventListener('submit',function(e){
+    e.preventDefault();
+    var m=pf.querySelector('[name=military]:checked'),mot=pf.elements.motivation.value.trim(),ai=pf.elements.ai_exp.value.trim(),er=[];
+    if(!m)er.push('請選擇兵役狀況');
+    if(mot.length<10)er.push('申請動機請至少填寫 10 個字');
+    if(!ai)er.push('請填寫 AI 工具使用經驗（沒有經驗請填「無」）');
+    $('pfErr').textContent=er.join('\n');if(er.length)return;
+    var btn=$('pfBtn');btn.disabled=true;btn.textContent='儲存中…';
+    RegDB.upload({action:'profile',id:ID,t:T,profile:{military:m.value,work_exp:pf.elements.work_exp.value.trim(),motivation:mot,ai_exp:ai}})
+      .then(function(res){btn.disabled=false;apply(res)},function(err){btn.disabled=false;$('pfErr').textContent=err.message;fillProfile()});
+  });
   var S=null,busy={},errs={};
   function size(b){return b>=1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
   function fmt(iso){var d=new Date(iso),p=function(n){return String(n).padStart(2,'0')};return (d.getFullYear()-1911)+'/'+p(d.getMonth()+1)+'/'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
@@ -139,16 +216,16 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
     $('who').textContent=S.name;$('batch').textContent=S.batch;
     var b=$('banner');
     if(S.complete||!S.missing.length){
-      b.className='banner done';$('bTitle').textContent='必備資料已齊全，感謝您！';
-      $('bText').textContent='我們會進入書面審查，面試日期另行通知。'+(S.expired?'':'期限（'+fmt(S.deadline)+'）前仍可補傳或更換檔案。');
+      b.className='banner done';$('bTitle').textContent='資料已全部補齊，感謝您！';
+      $('bText').textContent='接下來我們會以電話通知您面試時間，請留意來電。'+(S.expired?'':'期限（'+fmt(S.deadline)+'）前仍可修改資料或更換檔案。');
     }else if(S.expired){
-      b.className='banner end';$('bTitle').textContent='已超過上傳期限（'+fmt(S.deadline)+'）';
-      $('bText').textContent='目前已交 '+done+'／'+REQ+' 項，無法再上傳。如需協助請聯絡就業服務組。';
+      b.className='banner end';$('bTitle').textContent='已超過補件期限（'+fmt(S.deadline)+'）';
+      $('bText').textContent='目前已完成 '+done+'／'+REQ+' 項，無法再補件。如需協助請聯絡就業服務組。';
     }else{
-      b.className='banner due';$('bTitle').textContent='請於 '+fmt(S.deadline)+' 前上傳（'+left(S.deadline)+'）';
-      $('bText').textContent='必備資料已交 '+done+'／'+REQ+' 項，還缺：'+S.missing.map(function(k){return DOCS.find(function(d){return d.k===k}).n}).join('、');
+      b.className='banner due';$('bTitle').textContent='請於 '+fmt(S.deadline)+' 前補齊（'+left(S.deadline)+'）';
+      $('bText').textContent='已完成 '+done+'／'+REQ+' 項，還缺：'+S.missing.map(function(k){return NAME[k]||k}).join('、');
     }
-    $('bar').style.width=(done/REQ*100)+'%';
+    $('bar').style.width=(done/REQ*100)+'%';if(PROFILE_ON)fillProfile();
 
     $('list').innerHTML=DOCS.map(function(d){
       var files=S.docs.filter(function(x){return x.doc_type===d.k}),has=files.length>0;
@@ -161,7 +238,7 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
         '<p class="err" role="alert">'+esc((errs[d.k]||[]).join('\n'))+'</p></li>';
     }).join('');
   }
-  function apply(res){S.docs=res.docs;S.missing=res.missing;S.complete=res.complete;render()}
+  function apply(res){S.docs=res.docs;S.missing=shown(res.missing);S.complete=res.complete;if(res.profile)S.profile=res.profile;render()}
 
   function upload(k,file){
     function fail(msg){(errs[k]=errs[k]||[]).push(file.name+'：'+msg);render()}
@@ -186,7 +263,7 @@ button,.btn{font:inherit;font-weight:700;border-radius:999px;cursor:pointer;whit
 
   if(!ID||!T){bad();return}
   RegDB.upload({action:'info',id:ID,t:T}).then(function(res){
-    S=res;$('loading').hidden=true;$('main').hidden=false;render();
+    S=res;S.missing=shown(res.missing);if(PROFILE_ON)$('pfBox').hidden=false;$('loading').hidden=true;$('main').hidden=false;render();
     setInterval(function(){if(S&&!S.expired&&new Date(S.deadline)<Date.now()){S.expired=true}if(S)render()},60000);
   },function(e){bad(e.message)});
 })();

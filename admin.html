@@ -333,13 +333,13 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       <div class="l">
         <input type="hidden" id="fRef" value="*"><button type="button" class="chip" id="fChip" hidden></button>
         <select id="fB" aria-label="依班次篩選"><option value="*">全部班次</option><option>實戰班（一）</option><option>實戰班（二）</option></select>
-        <select id="fD" aria-label="依資料繳交狀態篩選"><option value="*">全部資料狀態</option><option value="done">資料已齊全</option><option value="wait">未齊全（期限內）</option><option value="late">逾期未齊全</option></select>
+        <select id="fD" aria-label="依資料繳交狀態篩選"><option value="*">全部資料狀態</option><option value="done">資料已補齊</option><option value="wait">審查中／未補齊（期限內）</option><option value="late">逾期未補齊</option></select>
         <input id="fQ" type="search" placeholder="搜尋姓名、電話、Email" aria-label="搜尋">
       </div>
       <button id="csv">匯出 Excel（CSV）</button>
     </div>
     <div class="tbl"><table>
-      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>應檢附資料</th><th>推廣人</th><th>備註</th><th></th></tr></thead>
+      <thead><tr><th>報名時間</th><th>班次</th><th>姓名</th><th>電話</th><th>LINE ID</th><th>Email</th><th>學歷科系</th><th>得知管道</th><th>甄選進度</th><th>推廣人</th><th>備註</th><th></th></tr></thead>
       <tbody id="rBody"></tbody>
     </table></div>
   </section>
@@ -360,7 +360,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       <div class="kpi"><span>按鈕／連結點擊</span><b id="sClicks">0</b><small id="sClickV"></small></div>
       <div class="kpi"><span>點擊立即報名按鈕</span><b id="sStarts">0</b><small>人（重複點擊只算一次）</small></div>
       <div class="kpi"><span>已報名名單</span><b id="sRegs">0</b><small>報名表已成功送出</small></div>
-      <div class="kpi"><span>資料都交齊</span><b id="sDocs">0</b><small>5 項必繳資料都已上傳</small></div>
+      <div class="kpi"><span>資料都交齊</span><b id="sDocs">0</b><small>身分證與畢業證書都已上傳</small></div>
       <div class="kpi"><span>報名轉換率</span><b id="sConv">—</b><small>資料都交齊 ÷ 不重複訪客</small></div>
     </div>
     <div class="bar">
@@ -374,6 +374,13 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       <thead><tr><th>日期</th><th class="r">瀏覽</th><th class="r">訪客</th><th class="r">點擊</th><th class="r">已報名</th><th class="r">交齊</th></tr></thead>
       <tbody id="dBodyT"></tbody>
     </table></div></details>
+    <h2 class="sec">「送出報名」按鈕</h2>
+    <p class="hint" style="margin:-4px 0 12px">報名表最下方「送出報名」按鈕被按下的情形。按了卻沒有成功送出，通常是欄位沒填完整、格式錯誤或已報名過。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>日期</th><th class="r">按下次數</th><th class="r">按的人數</th><th class="r">成功送出報名</th><th class="r">成功率</th></tr></thead>
+      <tbody id="sbBody"></tbody>
+    </table></div>
+    <p class="hint">成功率＝成功送出報名 ÷ 按的人數（同一人重複按只算一人）。</p>
     <div class="grid2">
       <div><h3>點擊最多的按鈕／連結</h3><ul class="hl" id="lTargets"></ul></div>
       <div><h3>訪客從哪裡來</h3><ul class="hl" id="lSources"></ul></div>
@@ -479,8 +486,26 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   </form>
 </dialog>
 
+<dialog id="ntDlg" aria-labelledby="ntTitle">
+  <div class="dh"><h2 id="ntTitle">寄送通知</h2><form method="dialog"><button aria-label="關閉">關閉</button></form></div>
+  <form id="ntForm" class="pwf">
+    <p>報名者：<b id="ntWho"></b></p>
+    <div id="ntResult" class="seg" role="radiogroup" aria-label="通知結果">
+      <label><input type="radio" name="result" value="錄取" checked> 錄取</label>
+      <label><input type="radio" name="result" value="候補"> 候補</label>
+    </div>
+    <label id="ntDateL">面試日期<input name="date" maxlength="40" placeholder="例：115/11/20（四）"></label>
+    <label><span id="ntTimeT">面試時間</span><input name="time" maxlength="60" placeholder="例：下午 2:00"></label>
+    <label><span id="ntPlaceT">面試地點</span><input name="place" maxlength="120" placeholder="例：中華科技大學 台北校區 OO 教室"></label>
+    <label>注意事項（選填）<textarea name="note" rows="3" maxlength="500"></textarea></label>
+    <p class="hint" style="margin:0" id="ntHint"></p>
+    <p class="msg" id="ntMsg" role="status"></p>
+    <button class="pri big" type="submit" id="ntBtn">寄出通知</button>
+  </form>
+</dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=15"></script>
+<script src="assets/regdb.js?v=16"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -667,16 +692,20 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   // 應檢附資料（報名者用專屬連結上傳）
   var docs=[];
   var DOCT={apply:'培訓學員申請表',id_card:'身分證正反面影本',diploma:'最高學歷畢業證書影本',transcript:'最高學歷成績單影本',consent:'個人資料提供同意書',labor:'勞工保險異動紀錄（選填）'};
-  var DOC_REQ=['apply','id_card','diploma','transcript','consent'];
+  // 目前線上只需上傳身分證與畢業證書；申請表、成績單、同意書與基本資料改為面試時補填（欄位保留）
+  var DOC_REQ=['id_card','diploma'],PROFILE_REQ=false,LATER=['apply','transcript','consent'];
+  DOCT.profile='補件基本資料';
   function docState(r){
     var mine=docs.filter(function(d){return d.registration_id===r.id});
-    var miss=DOC_REQ.filter(function(k){return !mine.some(function(d){return d.doc_type===k})});
+    var miss=(r.profile_at||!PROFILE_REQ?[]:['profile']).concat(DOC_REQ.filter(function(k){return !mine.some(function(d){return d.doc_type===k})}));
+    if(!r.pass_at)return {files:mine,missing:miss,complete:false,expired:false,waiting:true};
     return {files:mine,missing:miss,complete:!miss.length,expired:r.upload_deadline&&new Date(r.upload_deadline)<Date.now()};
   }
   function docKey(r){var s=docState(r);return s.complete?'done':s.expired?'late':'wait'}
   function docBadge(r){
     var s=docState(r);
-    if(s.complete)return '<span class="ds ok">已齊全</span>';
+    if(s.waiting)return '<span class="ds wait">基本審查中</span><br><span class="muted" style="font-size:12px">一天內寄補件網址</span>';
+    if(s.complete)return '<span class="ds ok">已補齊</span>'+(r.admit_sent_at?'<br><span class="ds ok">已寄'+esc(r.admit_result||'錄取')+'通知</span>':r.interview_sent_at?'<br><span class="ds ok">已寄面試通知</span>':'');
     var d=r.upload_deadline?Math.ceil((new Date(r.upload_deadline)-Date.now())/864e5):null;
     return s.expired?'<span class="ds late">逾期・缺 '+s.missing.length+' 項</span>':'<span class="ds wait">缺 '+s.missing.length+' 項</span>'+(d!=null?'<br><span class="muted" style="font-size:12px">剩 '+d+' 天</span>':'');
   }
@@ -684,15 +713,24 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function size(b){return b>=1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
   function docSection(r){
     var s=docState(r);
-    return '<h3 class="dsec">應檢附資料 '+docBadge(r)+'</h3>'+
-      '<p class="hint" style="margin:0 0 10px">上傳期限：'+(r.upload_deadline?fmt(r.upload_deadline):'—')+(s.expired?'（已過期）':'')+
-        '<br>缺件提醒信：第 3 天 '+(r.remind1_at?'已寄（'+fmt(r.remind1_at)+'）':s.complete?'不需寄':'未寄')+
-        '・截止當天 '+(r.remind2_at&&r.remind2_deadline===r.upload_deadline?'已寄（'+fmt(r.remind2_at)+'）':s.complete?'不需寄':'未寄')+'</p>'+
-      '<ul class="dfiles">'+Object.keys(DOCT).map(function(k){
-        var fs=s.files.filter(function(d){return d.doc_type===k});
-        return '<li><b>'+DOCT[k]+'</b>'+(fs.length?fs.map(function(d){return '<button type="button" class="dl" data-dl="'+esc(d.file_path)+'" data-name="'+esc(d.file_name)+'">⬇ '+esc(d.file_name)+' <span class="muted">'+size(d.size)+'</span></button>'}).join(''):'<span class="muted">'+(k==='labor'?'未上傳':'尚未上傳')+'</span>')+'</li>';
-      }).join('')+'</ul>'+
-      '<div class="dact"><button type="button" data-uplink="'+esc(r.id)+'">複製上傳連結</button> <button type="button" data-extend="'+esc(r.id)+'">期限延長 5 天</button></div>'+
+    function fileLi(k){
+      var fs=s.files.filter(function(d){return d.doc_type===k});
+      return '<li><b>'+DOCT[k]+'</b>'+(fs.length?fs.map(function(d){return '<button type="button" class="dl" data-dl="'+esc(d.file_path)+'" data-name="'+esc(d.file_name)+'">⬇ '+esc(d.file_name)+' <span class="muted">'+size(d.size)+'</span></button>'}).join(''):'<span class="muted">'+(k==='labor'?'未上傳':LATER.indexOf(k)>=0?'面試時繳交':'尚未上傳')+'</span>')+'</li>';
+    }
+    return '<h3 class="dsec">補件資料 '+docBadge(r)+'</h3>'+
+      '<p class="hint" style="margin:0 0 10px">通過基本審查信：'+(r.pass_at?'已寄（'+fmt(r.pass_at)+'）':'報名後一天內自動寄出')+
+        '<br>補件期限：'+(r.pass_at&&r.upload_deadline?fmt(r.upload_deadline):'—')+(s.expired?'（已過期）':'')+
+        '<br>未補齊提醒信：第 3 天 '+(r.remind1_at?'已寄（'+fmt(r.remind1_at)+'）':s.complete?'不需寄':'未寄')+
+        '・第 5 天 '+(r.remind2_at&&r.remind2_deadline===r.upload_deadline?'已寄（'+fmt(r.remind2_at)+'）':s.complete?'不需寄':'未寄')+'</p>'+
+      '<ul class="dfiles">'+Object.keys(DOCT).filter(function(k){return k!=='profile'&&LATER.indexOf(k)<0}).map(fileLi).join('')+'</ul>'+
+      '<div class="dact"><button type="button" data-uplink="'+esc(r.id)+'"'+(r.pass_at?'':' disabled')+'>複製補件連結</button> <button type="button" data-extend="'+esc(r.id)+'"'+(r.pass_at?'':' disabled')+'>期限延長 5 天</button></div>'+
+      '<h3 class="dsec">面試時補填 <span class="ds wait">提醒報名者面試當天補交</span></h3>'+
+      '<ul class="dfiles"><li><b>基本資料（兵役、工作經驗、申請動機、AI 經驗）</b>'+(r.profile_at?'<span>已填寫（'+fmt(r.profile_at)+'）</span>':'<span class="muted">面試時現場填寫</span>')+'</li>'+LATER.map(fileLi).join('')+'</ul>'+
+      '<h3 class="dsec">面試與錄取通知</h3>'+
+      '<p class="hint" style="margin:0 0 10px">資料補齊後請先電話通知面試，再寄出面試通知信；開課前 3 天寄錄取（或候補）通知。'+
+        '<br>面試通知：'+(r.interview_sent_at?'已寄（'+fmt(r.interview_sent_at)+'）'+esc(r.interview_info||''):'未寄')+
+        '<br>錄取通知：'+(r.admit_sent_at?'已寄'+esc(r.admit_result||'')+'通知（'+fmt(r.admit_sent_at)+'）':'未寄')+'</p>'+
+      '<div class="dact"><button type="button" class="pri" data-interview="'+esc(r.id)+'">'+(r.interview_sent_at?'重寄':'寄送')+'面試通知</button> <button type="button" class="pri" data-admit="'+esc(r.id)+'">'+(r.admit_sent_at?'重寄':'寄送')+'錄取／候補通知</button></div>'+
       '<p class="msg" id="dMsg" role="status"></p>';
   }
 
@@ -825,7 +863,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   });
   function view(r){
     var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['出生日期',r.birth_date||'—'],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
-      ['最高學歷／學校',r.school],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||'無'],
+      ['最高學歷／學校',r.school],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||(r.profile_at?'無':'—')],
+      ['申請動機',r.motivation||'—'],['AI 使用經驗',r.ai_exp||'—'],
       ['得知管道',(r.channels||[]).join('、')],['備註',r.admin_note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
     // 舊報名才有的留言與參訓須知，有資料才顯示
     if(r.consents&&r.consents.length)rows.push(['參訓須知','已勾選 '+r.consents.length+' 項（'+r.consents.join('、')+'）']);
@@ -841,10 +880,11 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
       RegDB.docUrl(b.dataset.dl,b.dataset.name).then(function(u){location.href=u},function(){alert('下載失敗，請重新整理後再試。')}).then(function(){b.disabled=false});
       return;
     }
-    var r=regs.find(function(x){return x.id===(b.dataset.uplink||b.dataset.extend)});if(!r)return;
+    var r=regs.find(function(x){return x.id===(b.dataset.uplink||b.dataset.extend||b.dataset.interview||b.dataset.admit)});if(!r)return;
+    if(b.dataset.interview||b.dataset.admit){openNotice(r,b.dataset.interview?'interview':'admit');return}
     if(b.dataset.uplink){
       var t=upLink(r);
-      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製上傳連結'},1500)},function(){prompt('複製這個上傳連結：',t)});
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製補件連結'},1500)},function(){prompt('複製這個補件連結：',t)});
       return;
     }
     // 從「現在」或「原期限」較晚者再加 5 天
@@ -854,6 +894,32 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     RegDB.extendDeadline(r.id,iso).then(function(row){r.upload_deadline=row.upload_deadline;view(r);renderList();$('dMsg').className='msg ok';$('dMsg').textContent='已延長，可複製上傳連結再傳給對方。'},
       function(){b.disabled=false;alert('延長失敗，請稍後再試。')});
   });
+  // 面試通知／錄取通知（管理員手動寄送）
+  function openNotice(r,kind){
+    var f=$('ntForm'),iv=kind==='interview';f.reset();f.dataset.id=r.id;f.dataset.kind=kind;
+    $('ntMsg').textContent='';$('ntMsg').className='msg';$('ntBtn').disabled=false;
+    $('ntTitle').textContent=iv?'寄送面試通知':'寄送錄取／候補通知';
+    $('ntWho').textContent=r.name+'（'+(r.batch||'')+'，'+r.email+'）';
+    $('ntResult').hidden=iv;$('ntDateL').hidden=!iv;
+    $('ntTimeT').textContent=iv?'面試時間':'報到時間（選填）';$('ntPlaceT').textContent=iv?'面試地點':'上課地點（選填）';
+    f.elements.date.required=iv;f.elements.time.required=iv;f.elements.place.required=iv;
+    f.elements.time.placeholder=iv?'例：下午 2:00':'例：115/12/07（一）上午 8:30';
+    $('ntHint').textContent=iv?'請先以電話通知面試，再寄出這封信留存紀錄。信中會自動提醒報名者面試當天攜帶申請表、成績單、個資同意書，並現場填寫基本資料。':'錄取信會附上該梯次上課期間，並提醒須全程參加；候補信會說明遞補方式。';
+    $('ntDlg').showModal();
+  }
+  $('ntForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target,el=f.elements,m=$('ntMsg'),btn=$('ntBtn'),r=regs.find(function(x){return x.id===f.dataset.id});if(!r)return;
+    var iv=f.dataset.kind==='interview',data={date:el.date.value.trim(),time:el.time.value.trim(),place:el.place.value.trim(),note:el.note.value.trim(),result:(f.querySelector('[name=result]:checked')||{}).value};
+    if(!confirm('確定寄出'+(iv?'面試通知':data.result+'通知')+'給「'+r.name+'」？'))return;
+    m.className='msg';m.textContent='寄送中…';btn.disabled=true;
+    (iv?RegDB.sendInterview(r.id,data):RegDB.sendAdmit(r.id,data)).then(function(res){
+      Object.keys(res).forEach(function(k){if(k!=='ok')r[k]=res[k]});
+      m.classList.add('ok');m.textContent='已寄出。';renderList();view(r);
+      setTimeout(function(){$('ntDlg').close()},900);
+    },function(err){m.classList.add('bad');m.textContent=err.message;btn.disabled=false});
+  });
+
   $('rBody').addEventListener('click',function(e){
     var v=e.target.closest('[data-view]');
     if(v){view(regs.find(function(r){return r.id===v.dataset.view}));return}
@@ -898,9 +964,9 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     },function(err){m.classList.add('bad');m.textContent=err.message}).then(function(){btn.disabled=false});
   });
   $('csv').addEventListener('click',function(){
-    var head=['報名時間','報名班次','姓名','出生日期','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','參訓須知勾選','應檢附資料','上傳期限','得知管道','留言','推廣人','推廣代碼','備註'];
-    var lines=[head].concat(filtered().map(function(r){var s=docState(r);return [fmt(r.created_at),r.batch||'',r.name,r.birth_date||'',r.email,r.phone,r.line,r.school,r.dept,r.grad_date||'',r.military||'',r.work_exp||'',(r.consents||[]).join('、'),
-      s.complete?'已齊全':(s.expired?'逾期，':'')+'缺：'+s.missing.map(function(k){return DOCT[k]}).join('、'),r.upload_deadline?fmt(r.upload_deadline):'',(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'',r.admin_note||'']}));
+    var head=['報名時間','報名班次','姓名','出生日期','Email','聯絡電話','LINE ID','最高學歷／學校','畢業科系','畢業（預計）日期','兵役狀況','工作經驗','申請動機','AI 使用經驗','可配合時程','補件資料','補件期限','面試通知','錄取通知','得知管道','留言','推廣人','推廣代碼','備註'];
+    var lines=[head].concat(filtered().map(function(r){var s=docState(r);return [fmt(r.created_at),r.batch||'',r.name,r.birth_date||'',r.email,r.phone,r.line,r.school,r.dept,r.grad_date||'',r.military||'',r.work_exp||'',r.motivation||'',r.ai_exp||'',(r.consents||[]).join('、'),
+      s.waiting?'基本審查中':s.complete?'已補齊':(s.expired?'逾期，':'')+'缺：'+s.missing.map(function(k){return DOCT[k]}).join('、'),r.pass_at&&r.upload_deadline?fmt(r.upload_deadline):'',r.interview_sent_at?fmt(r.interview_sent_at)+' '+(r.interview_info||''):'',r.admit_sent_at?(r.admit_result||'')+' '+fmt(r.admit_sent_at):'',(r.channels||[]).join('、'),r.note,pname(r.ref),r.ref||'',r.admin_note||'']}));
     var csv='﻿'+lines.map(function(row){return row.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='報名名單.csv';a.click();
   });
@@ -954,6 +1020,11 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('cTitle').textContent=MET[metric];
     drawChart(s.daily);
     $('dBodyT').innerHTML=s.daily.slice().reverse().map(function(d){return '<tr><td class="num">'+rocDate(d.d)+'</td><td class="r">'+d.views+'</td><td class="r">'+d.visitors+'</td><td class="r">'+d.clicks+'</td><td class="r">'+d.regs+'</td><td class="r">'+d.docs_done+'</td></tr>'}).join('');
+    // 送出報名按鈕：合計＋有資料的日期
+    var sbRow=function(label,c,v,r,b){return '<tr'+(b?' style="font-weight:700"':'')+'><td class="num">'+label+'</td><td class="r">'+n(c)+'</td><td class="r">'+n(v)+'</td><td class="r">'+n(r)+'</td><td class="r">'+pct(r,v)+'</td></tr>'};
+    var sbDays=s.daily.filter(function(d){return d.submit_clicks||d.regs}).reverse();
+    $('sbBody').innerHTML=sbRow('合計',t.submit_clicks,t.submit_visitors,t.regs,1)+
+      (sbDays.length?sbDays.map(function(d){return sbRow(rocDate(d.d),d.submit_clicks,d.submit_visitors,d.regs)}).join(''):'<tr><td colspan="5" class="empty">這段期間沒有人按送出報名</td></tr>');
     hlist('lTargets',s.targets,'還沒有點擊紀錄');
     hlist('lSources',s.sources,'還沒有瀏覽紀錄');
     hlist('lDevices',s.devices.map(function(x){return {k:{mobile:'手機',tablet:'平板',desktop:'電腦'}[x.k]||x.k,n:x.n}}),'還沒有瀏覽紀錄');
@@ -1024,7 +1095,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   $('byRef').addEventListener('click',function(e){var tr=e.target.closest('[data-ref]');if(!tr)return;$('aRef').value=tr.dataset.ref;loadStats();$('panel-a').scrollIntoView({behavior:'smooth'})});
   $('aCsv').addEventListener('click',function(){
     if(!stat)return;
-    download('每日數據.csv',toCsv([['日期','瀏覽次數','不重複訪客','點擊次數','已報名','資料都交齊']].concat(stat.daily.map(function(d){return [rocDate(d.d),d.views,d.visitors,d.clicks,d.regs,d.docs_done]}))));
+    download('每日數據.csv',toCsv([['日期','瀏覽次數','不重複訪客','點擊次數','按下送出報名次數','按送出報名人數','已報名','資料都交齊']].concat(stat.daily.map(function(d){return [rocDate(d.d),d.views,d.visitors,d.clicks,d.submit_clicks||0,d.submit_visitors||0,d.regs,d.docs_done]}))));
   });
 })();
 </script>

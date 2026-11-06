@@ -33,7 +33,7 @@ window.RegDB = (function () {
       var row = {
         batch: rec.batch, name: rec.name, email: rec.email, phone: rec.phone, line: rec.line,
         school: rec.school, dept: rec.dept, channels: rec.channels, note: rec.note || '', ref: rec.ref || null,
-        birth_date: rec.birth_date || null, grad_date: rec.grad_date, work_exp: rec.work_exp || '', military: rec.military, consents: rec.consents || []
+        birth_date: rec.birth_date || null, grad_date: rec.grad_date, consents: rec.consents || []
       };
       // 先在瀏覽器產生 id 與上傳 token，送出後可直接帶報名者到上傳頁
       if (rec.id) { row.id = rec.id; row.upload_token = rec.upload_token }
@@ -154,6 +154,13 @@ window.RegDB = (function () {
     // 管理員直接新增推廣者（或替既有推廣人加上登入 Email），系統寄設定密碼信給對方
     addPromoterAccount: function (code, name, email) {
       return callAdmins({ type: 'promoter_add', code: code, name: name, email: email, page: location.origin + location.pathname }, 'notify');
+    },
+    // 管理員：寄面試通知（日期、時間、地點、注意事項）、錄取／候補通知
+    sendInterview: function (id, f) {
+      return callAdmins({ type: 'interview', id: id, date: f.date, time: f.time, place: f.place, note: f.note }, 'notify');
+    },
+    sendAdmit: function (id, f) {
+      return callAdmins({ type: 'admit', id: id, result: f.result, time: f.time, place: f.place, note: f.note }, 'notify');
     },
     reviewApplication: function (id, decision, code, name) {
       return callAdmins({ type: 'promoter_review', id: id, decision: decision, code: code, name: name }, 'notify');
