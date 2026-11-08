@@ -689,7 +689,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
     </div>
 
     <div class="conds">
-      <div class="cond rv"><span class="ck">年齡</span><b>18 至 35 歲（含）</b><p>本國籍。</p></div>
+      <div class="cond rv"><span class="ck">年齡</span><b>18 至 35 歲（含）</b><p>本國籍。開訓當天須未滿 36 歲：第一梯 1990/12/8（含）以後出生，第二梯 1991/3/3（含）以後出生。</p></div>
       <div class="cond rv"><span class="ck">學歷</span><b>副學士以上</b><p>含二專、五專。</p></div>
       <div class="cond rv"><span class="ck">身分</span><b>待業者或應屆畢業生</b><p>培訓期間不得在職或自營。</p></div>
       <div class="cond rv"><span class="ck">先備能力</span><b>基本電腦操作</b><p>不需程式基礎。</p></div>
@@ -932,7 +932,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
         <span class="rno num">05</span>
         <h3>注意事項</h3>
         <ul class="dot two">
-          <li>本計畫補助對象為滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，欲進入服務業服務者；身分可為應屆畢業生或待業者。</li>
+          <li>本計畫補助對象為滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，欲進入服務業服務者；身分可為應屆畢業生或待業者。年齡上限以各梯次開訓日計算，開訓當天須未滿 36 歲：實戰班（一）2026/12/7 開訓，須為 1990/12/8（含）以後出生；實戰班（二）2027/3/2 開訓，須為 1991/3/3（含）以後出生。</li>
           <li>每名學員限參與本計畫 1 次（因不可歸責因素退訓者不在此限），且培訓補助期間不得同時接受其他政府相關人才培訓補助。</li>
           <li>錄取通知後，培訓單位將依法為學員投保「訓字保」（勞工保險＋勞工職業災害保險），以保障學員於受訓期間的相關權益。請學員於完成訓練後，配合辦理保險相關退保作業。</li>
           <li>為配合講師時間或臨時突發事件，培訓單位保留調整課程日期或更換講師之權利。</li>
@@ -957,6 +957,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
     <div class="faq">
       <details><summary>課程需要繳費嗎？</summary><p>不用。由經濟部商業發展署補助，通過甄選即可免費參加。</p></details>
       <details><summary>完訓資格如何認定？</summary><p>兩階段各 132 小時、出席都達 90% 以上，完成測驗、實作與企業專題發表，並通過聯合評核。完整條件見「<a href="#rules">學員規範</a>」。</p></details>
+      <details><summary>年齡上限怎麼算？</summary><p>以各梯次開訓日計算，開訓當天必須還沒滿 36 歲。實戰班（一）2026/12/7 開訓，須為 1990/12/8（含）以後出生；實戰班（二）2027/3/2 開訓，須為 1991/3/3（含）以後出生。</p></details>
       <details><summary>我是五專／二專畢業，可以報名嗎？</summary><p>可以。副學士（含二專、五專）以上都符合。</p></details>
       <details><summary>我還沒拿到畢業證書（應屆畢業生），可以參加嗎？</summary><p>可以。先附在學證明，培訓完成後補交；請領獎勵金時須已取得畢業證書。</p></details>
     </div>
@@ -1276,22 +1277,28 @@ footer .copy-r a{color:inherit;text-decoration:none}
   }
   function val(n){return (f.elements[n].value||'').trim()}
 
-  // 報名資格上限 35 歲（含）：依今天日期計算實足年齡，滿 36 歲就不能報名
-  var MAX_AGE=35,AGE_MSG='您已超過 35 歲，不符合報名資格，無法報名。';
-  function overAge(s){
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(s)||+s.slice(0,4)<1900)return false; // 年份還沒輸入完時不判斷
-    var p=s.split('-'),t=new Date(),age=t.getFullYear()-(+p[0]);
-    if(t.getMonth()+1<+p[1]||(t.getMonth()+1===+p[1]&&t.getDate()<+p[2]))age--;
-    return age>MAX_AGE;
+  // 年齡上限以各梯次開訓日計算：開訓當天必須還沒滿 36 歲，cut 為「當天剛好滿 36 歲」的出生日
+  var AGE_LIMIT={
+    '實戰班（一）':{cut:'1990-12-07',start:'2026/12/7'},
+    '實戰班（二）':{cut:'1991-03-02',start:'2027/3/2'}
+  };
+  var ageShown='';
+  function ageMsg(s){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(s)||+s.slice(0,4)<1900)return ''; // 年份還沒輸入完時不判斷
+    var c=f.querySelector('[name=batch]:checked'),a=c&&AGE_LIMIT[c.value];
+    if(a)return s<=a.cut?'以'+c.value+'開訓日 '+a.start+' 計算，您已滿 36 歲，不符合報名資格，無法報名。':'';
+    // 還沒選班次：兩梯都超過才先提醒，其餘等選了班次再判斷
+    return s<=AGE_LIMIT['實戰班（一）'].cut?'以開訓日計算，您已滿 36 歲，不符合報名資格，無法報名。':'';
   }
-  // 輸入出生日期時立即提醒
+  // 輸入出生日期或更換班次時立即提醒
   function checkAge(){
-    var box=f.querySelector('[data-err="birth_date"]');
-    if(overAge(val('birth_date')))err('birth_date',AGE_MSG);
-    else if(box&&box.textContent===AGE_MSG)err('birth_date','');
+    var box=f.querySelector('[data-err="birth_date"]'),m=ageMsg(val('birth_date'));
+    if(m){err('birth_date',m);ageShown=m}
+    else if(box&&ageShown&&box.textContent===ageShown)err('birth_date','');
   }
   f.elements.birth_date.addEventListener('input',checkAge);
   f.elements.birth_date.addEventListener('change',checkAge);
+  f.addEventListener('change',function(e){if(e.target.name==='batch')checkAge()});
 
   f.addEventListener('submit',function(e){
     e.preventDefault();
@@ -1303,7 +1310,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
     var checks=[
       err('batch',batch?'':'請選擇報名班次'),
       err('name',val('name')?'':'請填寫姓名'),
-      err('birth_date',!birthOk?'請填寫正確的出生日期（西元年月日）':overAge(birth)?AGE_MSG:''),
+      err('birth_date',!birthOk?'請填寫正確的出生日期（西元年月日）':ageMsg(birth)),
       err('email',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))?'':'Email 格式不正確'),
       err('phone',/^0\d{8,9}$/.test(phone)?'':'請填寫正確的電話號碼，手機為 09 開頭 10 碼'),
       err('line',val('line')?'':'請填寫 LINE ID'),
