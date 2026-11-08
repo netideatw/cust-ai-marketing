@@ -1276,6 +1276,23 @@ footer .copy-r a{color:inherit;text-decoration:none}
   }
   function val(n){return (f.elements[n].value||'').trim()}
 
+  // 報名資格上限 35 歲（含）：依今天日期計算實足年齡，滿 36 歲就不能報名
+  var MAX_AGE=35,AGE_MSG='您已超過 35 歲，不符合報名資格，無法報名。';
+  function overAge(s){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(s)||+s.slice(0,4)<1900)return false; // 年份還沒輸入完時不判斷
+    var p=s.split('-'),t=new Date(),age=t.getFullYear()-(+p[0]);
+    if(t.getMonth()+1<+p[1]||(t.getMonth()+1===+p[1]&&t.getDate()<+p[2]))age--;
+    return age>MAX_AGE;
+  }
+  // 輸入出生日期時立即提醒
+  function checkAge(){
+    var box=f.querySelector('[data-err="birth_date"]');
+    if(overAge(val('birth_date')))err('birth_date',AGE_MSG);
+    else if(box&&box.textContent===AGE_MSG)err('birth_date','');
+  }
+  f.elements.birth_date.addEventListener('input',checkAge);
+  f.elements.birth_date.addEventListener('change',checkAge);
+
   f.addEventListener('submit',function(e){
     e.preventDefault();
     var phone=val('phone').replace(/[\s()-]/g,'');
@@ -1286,7 +1303,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
     var checks=[
       err('batch',batch?'':'請選擇報名班次'),
       err('name',val('name')?'':'請填寫姓名'),
-      err('birth_date',birthOk?'':'請填寫正確的出生日期（西元年月日）'),
+      err('birth_date',!birthOk?'請填寫正確的出生日期（西元年月日）':overAge(birth)?AGE_MSG:''),
       err('email',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))?'':'Email 格式不正確'),
       err('phone',/^0\d{8,9}$/.test(phone)?'':'請填寫正確的電話號碼，手機為 09 開頭 10 碼'),
       err('line',val('line')?'':'請填寫 LINE ID'),
