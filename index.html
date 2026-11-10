@@ -1355,7 +1355,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
       document.getElementById('regCard').innerHTML='<div class="done"><span class="ok-ic" aria-hidden="true">✓</span><h3>感謝您報名本培訓班！</h3><p>系統已收到您的線上報名資料。<b>下一步：我們會在一天內以 Email 通知基本審查結果</b>，通過後信中附有專屬補件網址，請再上網補齊申請動機、學經歷、AI 經驗與應檢附資料。</p><p class="mail-tip"><b>📧 「已收到報名資料」確認信已寄到您填寫的 Email</b>若幾分鐘內沒有收到，請到信箱的「垃圾郵件」或「促銷內容」資料夾找找看，並將寄件者設為「非垃圾郵件」，以免錯過基本審查結果與面試通知。</p></div>';
       document.getElementById('apply').scrollIntoView({behavior:'smooth'});
       if(typeof gtag==='function'){gtag('event','sign_up',{method:'site_form'});gtag('event','conversion',{'send_to':'AW-18563037406/0XTCCLvSobQdEN7xxZNF','value':1.0,'currency':'TWD'})}
-      if(typeof fbq==='function')fbq('track','CompleteRegistration');
+      if(typeof fbq==='function'&&!window.__regFbqSent){window.__regFbqSent=true;fbq('track','CompleteRegistration',{},{eventID:'reg_'+Date.now()+'_'+Math.random().toString(36).slice(2,10)})}
       if(typeof window.dadk==='function')window.dadk('track','CompleteRegistration');
     },function(e){
       if(e&&e.message==='DUPLICATE'){showDup({});return}
