@@ -170,7 +170,16 @@ window.RegDB = (function () {
     list: function () {
       return client().from('registrations').select('*').order('created_at', { ascending: false }).then(ok);
     },
+    // 刪除會由資料庫自動移到垃圾桶（registrations_trash），可還原或永久刪除
     remove: function (id) { return client().from('registrations').delete().eq('id', id).then(ok) },
+    trash: function () { return client().from('registrations_trash').select('*').order('deleted_at', { ascending: false }).then(ok) },
+    restore: function (id) {
+      return client().rpc('restore_registration', { p_id: id }).then(function (res) {
+        if (!res.error) return;
+        throw new Error(/DUPLICATE_REGISTRATION/.test(res.error.message) ? '這位報名者已用相同 Email 或電話重新報名，無法還原。' : '還原失敗，請稍後再試。');
+      });
+    },
+    purge: function (id) { return client().from('registrations_trash').delete().eq('id', id).then(ok) },
     promoters: function () { return client().from('promoters').select('code,name,email').order('created_at').then(ok) },
     savePromoter: function (p) { return client().from('promoters').upsert({ code: p.code, name: p.name }).then(ok) },
     removePromoter: function (code) { return client().from('promoters').delete().eq('code', code).then(ok) },
