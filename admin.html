@@ -288,8 +288,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     <div class="kpi"><span>報名總人數</span><b id="kTotal">0</b></div>
     <div class="kpi"><span>透過推廣連結</span><b id="kRef">0</b></div>
     <div class="kpi"><span>直接報名（無推廣人）</span><b id="kDirect">0</b></div>
-    <div class="kpi"><span>實戰班（一）</span><b id="kB1">0</b></div>
-    <div class="kpi"><span>實戰班（二）</span><b id="kB2">0</b></div>
+    <div class="kpi"><span>實戰班（一）</span><b id="kB1">0</b><small>資料已繳交 <span id="kB1d">0</span> 人</small></div>
+    <div class="kpi"><span>實戰班（二）</span><b id="kB2">0</b><small>資料已繳交 <span id="kB2d">0</span> 人</small></div>
   </div>
 
   <div class="viewbar" id="viewBar" role="status" hidden>
@@ -785,7 +785,11 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   function render(){
     var withRef=regs.filter(function(r){return r.ref});
     $('kTotal').textContent=regs.length;$('kRef').textContent=withRef.length;$('kDirect').textContent=regs.length-withRef.length;
-    $('kB1').textContent=regs.filter(function(r){return r.batch==='實戰班（一）'}).length;$('kB2').textContent=regs.filter(function(r){return r.batch==='實戰班（二）'}).length;
+    // 各班報名人數＋資料已繳交人數（必繳文件都已上傳，與名單「已補齊」相同）
+    [['kB1','實戰班（一）'],['kB2','實戰班（二）']].forEach(function(b){
+      var l=regs.filter(function(r){return r.batch===b[1]});
+      $(b[0]).textContent=l.length;$(b[0]+'d').textContent=l.filter(function(r){return docState(r).complete}).length;
+    });
 
     // 推廣人彙總：已登記的 + 名單中出現但未登記的代碼 + 直接報名
     var codes=proms.map(function(p){return p.code});
