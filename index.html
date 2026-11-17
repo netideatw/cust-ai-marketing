@@ -1343,10 +1343,8 @@ footer .copy-r a{color:inherit;text-decoration:none}
       box.scrollIntoView({behavior:'smooth',block:'center'});
     }
     var old=document.getElementById('dupMsg');if(old)old.remove();
-    RegDB.checkRegistered(val('email'),phone).then(function(d){return d},function(){return {}}).then(function(d){
-      if(d&&(d.email||d.phone)){showDup(d);return}
-      submit();
-    });
+    // 重複報名由資料庫在新增時阻擋（DUPLICATE），不再提供「查詢某 Email／電話是否報名過」的公開 API，避免被拿來查人
+    submit();
     function submit(){
     var rec={batch:batch.value,name:val('name'),email:val('email'),phone:phone,line:val('line'),school:val('school'),dept:val('dept'),
       channels:channels.map(function(c){return c==='其他'?'其他：'+val('channel_other'):c}),
@@ -1366,6 +1364,6 @@ footer .copy-r a{color:inherit;text-decoration:none}
   });
 })();
 </script>
-<script src="assets/regdb.js?v=17"></script>
+<script src="assets/regdb.js?v=18"></script>
 </body>
 </html>
