@@ -959,6 +959,8 @@ footer .copy-r a{color:inherit;text-decoration:none}
       <details><summary>完訓資格如何認定？</summary><p>兩階段各 132 小時、出席都達 90% 以上，完成測驗、實作與企業專題發表，並通過聯合評核。完整條件見「<a href="#rules">學員規範</a>」。</p></details>
       <details><summary>年齡上限怎麼算？</summary><p>以各梯次開訓日計算，開訓當天必須還沒滿 36 歲。實戰班（一）2026/12/7 開訓，須為 1990/12/8（含）以後出生；實戰班（二）2027/3/2 開訓，須為 1991/3/3（含）以後出生。</p></details>
       <details><summary>我是五專／二專畢業，可以報名嗎？</summary><p>可以。副學士（含二專、五專）以上都符合。</p></details>
+      <details><summary>我是高中、高職畢業，可以報名嗎？</summary><p>最高學歷只有高中、高職或以下無法報名，本計畫限大專校院副學士（含二專、五專）以上學歷。</p></details>
+      <details><summary>學歷是高中畢業，目前是大學應屆畢業生，可以報名嗎？</summary><p>可以報名，但須提供應屆畢業證書。報名表的「最高學歷」請填寫目前就讀的大學校名。</p></details>
       <details><summary>我還沒拿到畢業證書（應屆畢業生），可以參加嗎？</summary><p>可以。先附在學證明，培訓完成後補交；請領獎勵金時須已取得畢業證書。</p></details>
     </div>
     <details class="fold rv faq-more"><summary>查看其他 5 個問題</summary>
@@ -1064,7 +1066,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
         <fieldset>
           <legend>學歷與資格</legend>
           <div class="f-grid">
-            <div class="fld full chk"><label><input type="checkbox" name="eligible"> 是，我是滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷，應屆畢業生（日、夜進修班）或正在待業中的青年。 <i>*</i></label><small data-err="eligible"></small></div>
+            <div class="fld full chk"><label><input type="radio" name="eligible" value="yes"> 是，我是滿 18 至 35 歲（含）之青年，並具備我國教育部認定之大專校院副學士（含二專、五專）以上學歷畢，大學應屆畢業生（日、夜進修班）或正在待業中的青年。 <i>*</i></label><label style="margin-top:8px"><input type="radio" name="eligible" value="no"> 否，我不符合上述資格（例如最高學歷為高中、高職或以下，且不是大學應屆畢業生）。</label><small data-err="eligible"></small></div>
             <div class="fld"><label for="f-school">您的最高學歷，請註明學校名稱 <i>*</i></label><input id="f-school" name="school" placeholder="例：中華科技大學 大學部" maxlength="60"><small data-err="school"></small></div>
             <div class="fld"><label for="f-dept">您的畢業科系 <i>*</i></label><input id="f-dept" name="dept" maxlength="40"><small data-err="dept"></small></div>
             <div class="fld"><label for="f-grad">最高學歷畢業或預計畢業日期 <i>*</i></label><input id="f-grad" name="grad_date" placeholder="例：115 年 6 月" maxlength="20"><small data-err="grad_date"></small></div>
@@ -1296,6 +1298,20 @@ footer .copy-r a{color:inherit;text-decoration:none}
     if(m){err('birth_date',m);ageShown=m}
     else if(box&&ageShown&&box.textContent===ageShown)err('birth_date','');
   }
+  // 學歷資格：選「否」或最高學歷填高中職以下時立即提醒，並阻擋送出（資料庫也有同樣檢查）
+  var EDU_LOW=/高中|高職|國中|國小|中學|高商|高工|高農|職業學校/;
+  var ELIG_NO='本班限大專校院副學士（含二專、五專）以上學歷、滿 18 至 35 歲的應屆畢業生或待業青年，您不符合報名資格，無法報名。';
+  var EDU_MSG='最高學歷為高中、高職或以下不符合報名資格（須為副學士，含二專、五專以上）。若您是大學應屆畢業生，或已就讀、畢業於二專、五專、大學，請填寫該校名稱。';
+  function eligMsg(){var c=f.querySelector('[name=eligible]:checked');return !c?'請確認是否符合報名資格':c.value==='no'?ELIG_NO:''}
+  function eduMsg(){return EDU_LOW.test(val('school'))?EDU_MSG:''}
+  var eduShown='';
+  function checkEdu(){
+    var box=f.querySelector('[data-err="school"]'),m=eduMsg();
+    if(m){err('school',m);eduShown=m}
+    else if(box&&eduShown&&box.textContent===eduShown)err('school','');
+  }
+  f.elements.school.addEventListener('input',checkEdu);
+  f.addEventListener('change',function(e){if(e.target.name==='eligible'){var m=eligMsg();err('eligible',m==='請確認是否符合報名資格'?'':m)}});
   f.elements.birth_date.addEventListener('input',checkAge);
   f.elements.birth_date.addEventListener('change',checkAge);
   f.addEventListener('change',function(e){if(e.target.name==='batch')checkAge()});
@@ -1314,8 +1330,8 @@ footer .copy-r a{color:inherit;text-decoration:none}
       err('email',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))?'':'Email 格式不正確'),
       err('phone',/^0\d{8,9}$/.test(phone)?'':'請填寫正確的電話號碼，手機為 09 開頭 10 碼'),
       err('line',val('line')?'':'請填寫 LINE ID'),
-      err('eligible',f.elements.eligible.checked?'':'請確認符合報名資格'),
-      err('school',val('school')?'':'請填寫最高學歷與學校名稱'),
+      err('eligible',eligMsg()),
+      err('school',!val('school')?'請填寫最高學歷與學校名稱':eduMsg()),
       err('dept',val('dept')?'':'請填寫畢業科系'),
       err('grad_date',val('grad_date')?'':'請填寫畢業或預計畢業日期'),
       err('schedule',f.elements.schedule.checked?'':'請確認可配合培訓時程'),
@@ -1357,6 +1373,7 @@ footer .copy-r a{color:inherit;text-decoration:none}
       if(typeof window.dadk==='function')window.dadk('track','CompleteRegistration');
     },function(e){
       if(e&&e.message==='DUPLICATE'){showDup({});return}
+      if(e&&e.message==='EDU'){btn.disabled=false;btn.textContent='送出報名';err('school',EDU_MSG);f.querySelector('[name=school]').scrollIntoView({behavior:'smooth',block:'center'});return}
       btn.disabled=false;btn.textContent='送出報名';
       alert('送出失敗：所選班級可能剛額滿關閉，請重新整理頁面確認；或來電 2782-1862 轉202 /155 報名。');
     });
@@ -1364,6 +1381,6 @@ footer .copy-r a{color:inherit;text-decoration:none}
   });
 })();
 </script>
-<script src="assets/regdb.js?v=18"></script>
+<script src="assets/regdb.js?v=19"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 // 報名後續自動通知：由資料庫排程每 10 分鐘呼叫一次（POST {"run":true}）。
-//  1. 通過基本審查：報名滿 3 小時，寄「通過基本審查＋專屬補件網址」，補件期限 5 天（網站對外說「一天內」通知）
+//  1. 通過基本審查：報名滿 30 分鐘，寄「通過基本審查＋專屬補件網址」，補件期限 5 天（網站對外說「一天內」通知）
+//     夜間不寄：台灣時間 22:00 以後報名，隔天早上 09:00 寄；00:00–09:00 報名，當天 09:00 寄（報名滿 30 分鐘才寄）
 //  2. 補件提醒：寄出通過信後第 3 天、第 5 天，資料仍未補齊各寄一次提醒
 //     （管理員延長期限後，會在新期限截止當天早上再寄一次提醒）
 // 每封信都先在資料庫登記再寄出，重複呼叫不會重複寄信；已補齊、已過期的不寄。
@@ -17,7 +18,7 @@ const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SE
 const SITE = "https://netideatw.github.io/cust-ai-marketing/";
 const CUTOFF = "2026-10-28T00:00:00+08:00";
 const H = 36e5, D = 24 * H;
-const PASS_AFTER = 3 * H;     // 報名後 3 小時寄通過基本審查信
+const PASS_AFTER = 30 * 60e3; // 報名後 30 分鐘寄通過基本審查信（夜間報名改到早上 09:00，見 passDue）
 const UPLOAD_DAYS = 5;        // 補件期限：通過信寄出後 5 天
 const TYPES: Record<string, string> = {
   profile: "補件基本資料（兵役、學經歷、申請動機、AI 使用經驗）",
@@ -57,6 +58,17 @@ function finalAt(deadline: Date) {
   const t = tw(deadline);
   const nine = new Date(`${t.y}-${t.m}-${t.d}T09:00:00+08:00`);
   return deadline.getTime() - nine.getTime() >= H ? nine : new Date(deadline.getTime() - 12 * H);
+}
+
+// 通過基本審查信最早可寄出的時間：報名後 30 分鐘；22:00 以後報名改隔天 09:00，00:00–09:00 報名改當天 09:00
+function passDue(createdIso: string) {
+  const created = new Date(createdIso).getTime();
+  const t = tw(new Date(created));
+  const nine = new Date(`${t.y}-${t.m}-${t.d}T09:00:00+08:00`).getTime();
+  const hour = Number(t.hh);
+  if (hour >= 22) return nine + D;
+  if (hour < 9) return Math.max(nine, created + PASS_AFTER);
+  return created + PASS_AFTER;
 }
 
 const FOOTER = `
@@ -131,12 +143,14 @@ Deno.serve(async (req) => {
   const now = Date.now();
   const out: { id: string; kind: string; result: string; subject?: string }[] = [];
 
-  // ── 1. 報名滿 3 小時：寄「通過基本審查」＋補件網址 ──
+  // ── 1. 報名滿 30 分鐘（夜間報名等到早上 09:00）：寄「通過基本審查」＋補件網址 ──
   const { data: fresh, error: e1 } = await db.from("registrations").select(COLS)
     .is("pass_at", null).not("notified_at", "is", null)
-    .lte("created_at", new Date(now - PASS_AFTER).toISOString()).gte("created_at", CUTOFF).limit(100);
+    .lte("created_at", new Date(now - PASS_AFTER).toISOString()).gte("created_at", CUTOFF)
+    .order("created_at", { ascending: true }).limit(200);
   if (e1) return json({ error: e1.message }, 500);
   for (const r of (fresh || []) as Reg[]) {
+    if (now < passDue(r.created_at)) continue; // 夜間報名，還沒到早上 09:00
     const deadline = new Date(now + UPLOAD_DAYS * D);
     if (dry) { out.push({ id: r.id, kind: "pass", result: "due", subject: passMail(r, deadline).subject }); continue; }
     const { data: got } = await db.from("registrations")

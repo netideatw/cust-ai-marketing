@@ -43,7 +43,7 @@ window.RegDB = (function () {
         body: JSON.stringify(row)
       }).then(function (r) {
         if (r.ok) return;
-        return r.text().then(function (t) { throw new Error(/DUPLICATE_REGISTRATION/.test(t) ? 'DUPLICATE' : 'HTTP ' + r.status) });
+        return r.text().then(function (t) { throw new Error(/DUPLICATE_REGISTRATION/.test(t) ? 'DUPLICATE' : /EDU_NOT_ELIGIBLE/.test(t) ? 'EDU' : 'HTTP ' + r.status) });
       });
     },
 

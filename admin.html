@@ -519,7 +519,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/regdb.js?v=18"></script>
+<script src="assets/regdb.js?v=19"></script>
 <script>
 (function(){
   var SITE=location.href.replace(/admin\.html.*$/,'').replace(/[?#].*$/,'');
@@ -709,6 +709,8 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   // 目前線上只需上傳身分證與畢業證書；申請表、成績單、同意書與基本資料改為面試時補填（欄位保留）
   var DOC_REQ=['id_card','diploma'],PROFILE_REQ=false,LATER=['apply','transcript','consent'];
   DOCT.profile='補件基本資料';
+  // 最高學歷看起來是高中職以下（與報名表、資料庫同一套判斷）
+  function eduLow(r){return /高中|高職|國中|國小|中學|高商|高工|高農|職業學校/.test(r.school||'')}
   function docState(r){
     var mine=docs.filter(function(d){return d.registration_id===r.id});
     var miss=(r.profile_at||!PROFILE_REQ?[]:['profile']).concat(DOC_REQ.filter(function(k){return !mine.some(function(d){return d.doc_type===k})}));
@@ -841,7 +843,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
     $('rCnt').textContent=l.length;
     $('rBody').innerHTML=l.length?l.map(function(r){
       return '<tr><td class="num">'+fmt(r.created_at)+'</td><td class="nw">'+esc(r.batch||'—')+'</td><td><b>'+esc(r.name)+'</b></td><td class="num">'+esc(r.phone)+'</td><td>'+esc(r.line)+'</td><td>'+esc(r.email)+'</td>'+
-        '<td>'+esc(r.school)+'<br><span class="muted">'+esc(r.dept)+'</span></td><td class="muted">'+esc((r.channels||[]).join('、'))+'</td>'+
+        '<td>'+esc(r.school)+(eduLow(r)?' <span class="ds late">學歷不符</span>':'')+'<br><span class="muted">'+esc(r.dept)+'</span></td><td class="muted">'+esc((r.channels||[]).join('、'))+'</td>'+
         '<td>'+docBadge(r)+'</td><td>'+esc(pname(r.ref))+'</td><td><textarea class="memo" rows="2" maxlength="500" data-memo="'+esc(r.id)+'" aria-label="'+esc(r.name)+' 的備註" placeholder="輸入備註">'+esc(r.admin_note)+'</textarea><span class="memoMsg" aria-live="polite"></span></td><td class="acts"><button type="button" data-view="'+esc(r.id)+'">詳細</button> <button type="button" class="del" data-del="'+esc(r.id)+'">刪除</button></td></tr>';
     }).join(''):'<tr><td colspan="12" class="empty">目前沒有報名資料</td></tr>';
     var c=$('fRef').value,chip=$('fChip');
@@ -881,7 +883,7 @@ td.r,th.r{text-align:right;font-family:var(--f-num)}
   });
   function view(r){
     var rows=[['報名時間',fmt(r.created_at)],['報名班次',r.batch||'—'],['姓名',r.name],['出生日期',r.birth_date||'—'],['Email',r.email],['聯絡電話',r.phone],['LINE ID',r.line],['符合報名資格','是'],
-      ['最高學歷／學校',r.school],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||(r.profile_at?'無':'—')],
+      ['最高學歷／學校',r.school+(eduLow(r)?'（高中職以下學歷，不符報名資格）':'')],['畢業科系',r.dept],['畢業（預計）日期',r.grad_date||'—'],['兵役狀況',r.military||'—'],['工作經驗',r.work_exp||(r.profile_at?'無':'—')],
       ['申請動機',r.motivation||'—'],['AI 使用經驗',r.ai_exp||'—'],
       ['得知管道',(r.channels||[]).join('、')],['備註',r.admin_note||'—'],['推廣人',pname(r.ref)+(r.ref?'（'+r.ref+'）':'')]];
     // 舊報名才有的留言與參訓須知，有資料才顯示

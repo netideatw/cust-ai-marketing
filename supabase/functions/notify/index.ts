@@ -143,7 +143,7 @@ async function onRegistration(id: string) {
   }
   const results: Record<string, string> = {};
 
-  // 給報名者：已收到報名資料，一天內通知基本審查結果（實際由 reg-remind 於報名滿 3 小時寄出，對外不寫）
+  // 給報名者：已收到報名資料，一天內通知基本審查結果（實際由 reg-remind 於報名滿 30 分鐘寄出，22:00 後報名改隔天 09:00，對外不寫）
   try {
     await send(r.email, "【已收到報名資料】一天內通知基本審查結果｜AI行銷自動化與服務創新實戰班", wrap(
       `<p>${esc(r.name)} 您好：</p>
